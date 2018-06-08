@@ -1,0 +1,48 @@
+{
+  "name": "xcoobee-sdk-js",
+  "version": "0.0.0-alpha",
+  "description": "",
+  "keywords": [
+    "javascript",
+    "js",
+    "sdk",
+    "xcoobee"
+  ],
+  "author": {
+    "name": "XcooBee",
+    "email": "sdk.js@xcoobee.com"
+  },
+  "contributors": [
+    {
+      "name": "Danny Hurlburt"
+    }
+  ],
+  "homepage": "https://github.com/XcooBee/xcoobee-js-sdk",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.8.6"
+  },
+  "files": [
+    "dist/"
+  ],
+  "main": "",
+  "bugs": {
+    "url": "https://github.com/XcooBee/xcoobee-js-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XcooBee/xcoobee-js-sdk.git"
+  },
+  "scripts": {
+    "build": "",
+    "clean": "",
+    "coverage": "",
+    "start": "",
+    "test": ""
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
