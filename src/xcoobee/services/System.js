@@ -14,13 +14,16 @@ class System {
   }
 
   /**
-   * TODO: Document this function.
+   * Adds an event subscription to web hooks.
    *
-   * @param {*} events
-   * @param {*} campaignId
+   * @param {Map<WebHookName, HandlerName>|Object<WebHookName, HandlerName>} events
+   *   - A lookup from web hook names to handler names.
+   * @param {CampaignId} [campaignId] - The ID of the campaign for which to subscribe
+   *   handlers.  If `null` or `undefined`, then the default campaign ID will be used
+   *   from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
@@ -30,13 +33,15 @@ class System {
   }
 
   /**
-   * TODO: Document this function.
+   * Deletes any event subscriptions from the specified campaign.
    *
-   * @param {*} events
-   * @param {*} campaignId
+   * @param {WebHookName[]|Map<WebHookName, *>|Object<WebHookName, *>|Set<WebHookName>} events - The event
+   * @param {CampaignId} [campaignId] - The ID of the campaign for which to delete
+   *   the event subscriptions.  If `null` or `undefined`, then the default campaign
+   *   ID will be used from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
@@ -46,12 +51,14 @@ class System {
   }
 
   /**
-   * TODO: Document this function.
+   * Lists the current event subscriptions for the specified campaign.
    *
-   * @param {*} campaignId
+   * @param {CampaignId} [campaignId] - The ID of the campaign for which to list the
+   *   event subscriptions.  If `null` or `undefined`, then the default campaign ID
+   *   will be used from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
@@ -61,11 +68,13 @@ class System {
   }
 
   /**
-   * TODO: Document this function.
+   * Can be called to check whether the current configuration will connect to the
+   * XcooBee system.  This will return an error if your API user does not have a
+   * public PGP key on their profile.
    *
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */

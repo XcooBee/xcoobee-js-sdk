@@ -14,13 +14,28 @@ class Bees {
   }
 
   /**
-   * Returns a list of bees that match the specified search text.
+   * Returns a list of bees in the system that your account is able to hire that
+   * match the specified search text.
    *
-   * @param {string} searchText - The search text.  It is used to match on TODO:
-   *   Document what it is used to match on. Bee name? Other?
-   * @param {Config} [config] - The configuration to use instead of the default.
+   * ```js
+   * listBees('social')
+   *   .then((res) => {
+   *     // TODO: Handle response.
+   *     let { code, data, errors, time } = res;
+   *     if (code >= 300) {
+   *       console.error(errors);
+   *       return;
+   *     }
+   *     let { bee-systemname, bee-label, bee-cost, cost-type } = data;
+   *   })
+   * ```
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @param {string} searchText - The search text.  It is a string of keywords to
+   *  search for in the bee system name or label in the language of your account.
+   * @param {Config} [config] - If specified, the configuration to use instead of the
+   *   default.
+   *
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
@@ -31,7 +46,7 @@ class Bees {
 
   /**
    *
-   * @param {Object} bees - A mapping of bee names to bee parameters.
+   * @param {string[]} bees - A mapping of bee names to bee parameters.
    * @param {string} bees<key> - The bee name.
    * @param {Object} bees<value> - The bee parameters.
    * @param {Object} options - The bee take off options.
@@ -40,7 +55,8 @@ class Bees {
    * @param {?} options.process.fileNames -
    * @param {Object} [options.process.userReference] -
    * @param {?} [subscriptions]
-   * @param {Config} [config] - The configuration to use instead of the default.
+   * @param {Config} [config] - If specified, the configuration to use instead of the
+   *   default.
    *
    * @returns {Promise<?>} TODO: Document structure.
    *
@@ -52,14 +68,19 @@ class Bees {
   }
 
   /**
-   * Uploads specified files.
+   * Uploads specified files to XcooBee.
    *
-   * @param {string[]} files - TODO: Document what the files should look like.
-   *   Are they file paths? Absolute? Relative? Relative to what?
-   * @param {string} endpoint - TODO: Document available endpoint values.
-   * @param {Config} [config] - The configuration to use instead of the default.
+   * @param {string[]} files - File paths of the files on the local file system
+   *   to be uploaded.  For example, 'C:\Temp\MyPic.jpg' or '~/MyPic.jpg`.
+   *   TODO: Test what file paths actually work and make sure the documentation is
+   *   adequate.  Be sure to show examples of various path types.
+   * @param {string} [endpoint] - One of the "outbox" endpoints defined in the
+   *   XcooBee UI.  If an endpoint is not specified, then be sure to call the
+   *   `takeOff` function afterwards.
+   * @param {Config} [config] - If specified, the configuration to use instead of the
+   *   default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
