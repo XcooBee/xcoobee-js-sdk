@@ -9,6 +9,10 @@ class Bees {
     };
   }
 
+  set config(config) {
+    this._.config = config;
+  }
+
   /**
    * Returns a list of bees that match the specified search text.
    *

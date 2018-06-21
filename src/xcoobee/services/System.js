@@ -9,6 +9,10 @@ class System {
     };
   }
 
+  set config(config) {
+    this._.config = config;
+  }
+
   /**
    * TODO: Document this function.
    *

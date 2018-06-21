@@ -1,3 +1,8 @@
+import Bees from './services/Bees';
+import Consents from './services/Consents';
+import System from './services/System';
+import Users from './services/Users';
+
 /**
  * The SDK entry point.
  *
@@ -21,12 +26,13 @@ class XcooBee {
    *   is not specified with individual SDK calls.
    */
   constructor(config) {
+    let cfg = config || null;
     this._ = {
-      bees: null, // TODO: Instantiate Bees service.
-      config: config || null,
-      consents: null, // TODO: Instantiate Consents service.
-      system: null, // TODO: Instantiate System service.
-      users: null, // TODO: Instantiate Users service.
+      bees: new Bees(cfg),
+      config: cfg,
+      consents: new Consents(cfg),
+      system: new System(cfg),
+      users: new Users(cfg),
     }
   }
 
@@ -40,6 +46,10 @@ class XcooBee {
 
   set config(config) {
     // TODO: Validate config.
+    this._.bees.config = config;
+    this._.consents.config = config;
+    this._.system.config = config;
+    this._.users.config = config;
     this._.config = config;
   }
 
