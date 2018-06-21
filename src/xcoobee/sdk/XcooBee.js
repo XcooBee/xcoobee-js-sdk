@@ -1,7 +1,7 @@
-import Bees from './services/Bees';
-import Consents from './services/Consents';
-import System from './services/System';
-import Users from './services/Users';
+import Bees from './Bees';
+import Consents from './Consents';
+import System from './System';
+import Users from './Users';
 
 /**
  * The SDK entry point.

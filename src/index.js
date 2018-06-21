@@ -1,3 +1,3 @@
-import XcooBee from './xcoobee/XcooBee';
+import XcooBee from './xcoobee/sdk/XcooBee';
 
 export default XcooBee;
