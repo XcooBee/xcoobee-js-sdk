@@ -1,5 +1,3 @@
-import XcooBeeError from '../core/XcooBeeError';
-
 import ApiUtils from './ApiUtils';
 
 /**
