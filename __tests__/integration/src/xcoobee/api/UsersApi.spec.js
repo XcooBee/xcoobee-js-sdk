@@ -19,11 +19,11 @@ describe('UsersApi', function () {
         })
           .then((apiAccessToken) => {
             UsersApi.user(apiAccessToken, '')
-              .then((user) => {
-                expect(user).toBeDefined();
-                expect('cursor' in user).toBe(true);
-                expect('pgp_public_key' in user).toBe(true);
-                expect('xcoobee_id' in user).toBe(true);
+              .then((userInfo) => {
+                expect(userInfo).toBeDefined();
+                expect('cursor' in userInfo).toBe(true);
+                expect('pgp_public_key' in userInfo).toBe(true);
+                expect('xcoobee_id' in userInfo).toBe(true);
                 done();
               })
           });

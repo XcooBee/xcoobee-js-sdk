@@ -32,7 +32,7 @@ describe('ApiAccessTokenCache', function () {
 
       });
 
-      describe('called with a valid API key/secret pair multiple times back-to-back', function () {
+      describe('called with a valid API key/secret pair multiple times back to back', function () {
 
         it('should return the cached API access token', function (done) {
           let cache = new ApiAccessTokenCache();
