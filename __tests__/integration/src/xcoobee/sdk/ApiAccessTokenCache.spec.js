@@ -54,7 +54,6 @@ describe('ApiAccessTokenCache', function () {
           let cache = new ApiAccessTokenCache();
           cache.get(apiKey, apiSecret)
             .then((apiAccessToken1) => {
-
               cache.get(apiKey, apiSecret)
                 .then((apiAccessToken2) => {
                   expect(apiAccessToken1).toBe(apiAccessToken2);
@@ -71,7 +70,7 @@ describe('ApiAccessTokenCache', function () {
           let cache = new ApiAccessTokenCache();
           cache.get(apiKey, apiSecret)
             .then((apiAccessToken1) => {
-              sleep(20000)
+              sleep(10000)
                 .then(() => {
                   cache.get(apiKey, apiSecret)
                     .then((apiAccessToken2) => {

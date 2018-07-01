@@ -32,41 +32,6 @@ class ApiAccessTokenCache {
       });
   }
 
-  // hasApiAccessToken(apiKey, apiSecret) {
-  //   let key = `${apiKey}:${apiSecret}`;
-
-  //   let hasApiAccessToken = key in this._;
-  //   return hasApiAccessToken;
-  // }
-
-  // set(apiKey, apiSecret, apiAccessToken) {
-  //   // TODO: Validate arguments.
-  //   let key = `${apiKey}:${apiSecret}`;
-  //   this._[key] = apiAccessToken;
-  // }
-
-  /**
-   * Invalidates entire cache.
-   */
-  /**
-   * Invalidates the cache for the specified API key/secret pair.
-   *
-   * @param {string} apiKey
-   * @param {string} apiSecret
-   */
-  // invalidate(apiKey, apiSecret) {
-  //   if (arguments.length === 0) {
-  //     this._ = {};
-  //   }
-  //   else if (arguments.length === 2) {
-  //     let key = `${apiKey}:${apiSecret}`;
-  //     delete this._[key];
-  //   }
-  //   else {
-  //     throw TypeError('Invalid arguments.');
-  //   }
-  // }
-
 }
 
 export default ApiAccessTokenCache;
