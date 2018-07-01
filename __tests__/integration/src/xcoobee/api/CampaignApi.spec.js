@@ -14,7 +14,7 @@ describe('CampaignApi', function () {
 
       describe('and called with a known campaign ID', function () {
 
-        it('should return with no data', function (done) {
+        it('should return with expected campaign info', function (done) {
           TokenApi.getApiAccessToken({
             apiKey,
             apiSecret,

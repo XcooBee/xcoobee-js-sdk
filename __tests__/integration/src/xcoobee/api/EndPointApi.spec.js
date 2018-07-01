@@ -14,7 +14,7 @@ describe('EndPointApi', function () {
 
       describe('and called with a known user ID', function () {
 
-        it('should return with no data', function (done) {
+        it('should return the user\'s outbox endpoints', function (done) {
           TokenApi.getApiAccessToken({
             apiKey,
             apiSecret,

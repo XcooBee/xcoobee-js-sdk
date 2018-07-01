@@ -12,7 +12,7 @@ describe('BeesApi', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return with an API access token', function (done) {
+      it('should fetch and return with a list of bees', function (done) {
         TokenApi.getApiAccessToken({
           apiKey,
           apiSecret,
