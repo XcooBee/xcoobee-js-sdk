@@ -1,6 +1,6 @@
-import { BASE64_URL_ENCODED__RE } from '../../../../lib/Utils';
-
 import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
+
+import { BASE64_URL_ENCODED__RE } from '../../../../lib/Utils';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;

@@ -25,6 +25,17 @@ export const loadEnv = (path) => {
   }
 };
 
+export const sleep = (ms, ...args) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(
+      () => {
+        resolve(...args)
+      },
+      ms
+    );
+  });
+}
+
 /**
  * A reference to the Base64 URL encoded regular expression.
  */
@@ -33,6 +44,7 @@ export const BASE64_URL_ENCODED__RE = /^[-\w]+$/;
 const Utils = {
   BASE64_URL_ENCODED__RE,
   loadEnv,
+  sleep,
 };
 
 export default Utils;

@@ -18,16 +18,29 @@ const MSG__GENERIC_ERROR = 'Unable to get an API access token.';
  * @throws Error if unable to acquire an access token.
  */
 export function getApiAccessToken(apiCfg) {
+  // Note: There is no need to make multiple requests for an API access token with
+  // the same API key/secret if the first request has not been fulfilled yet.  Here
+  // we simply return any existing unfulfilled promises instead of making a new
+  // request.
+  let { apiKey, apiSecret } = apiCfg;
+  let key = `${apiKey}:${apiSecret}`;
+  if (key in getApiAccessToken._.unfulfilledPromises) {
+    let unfulfilledPromise = getApiAccessToken._.unfulfilledPromises[key];
+    return unfulfilledPromise;
+  }
+
   const apiAccessTokenUrl = process.env.XCOOBEE__API_ACCESS_TOKEN_URL;
   const reqData = {
-    key: apiCfg.apiKey,
-    secret: apiCfg.apiSecret,
+    key: apiKey,
+    secret: apiSecret,
   };
   const cfg = {
     timeout: 30000,
   };
-  return axios.post(apiAccessTokenUrl, reqData, cfg)
+  let unfulfilledPromise = axios.post(apiAccessTokenUrl, reqData, cfg);
+  unfulfilledPromise = unfulfilledPromise
     .then((response) => {
+      delete getApiAccessToken._.unfulfilledPromises[key];
       let msg = [];
       if (response.status >= 200 && response.status < 300) {
         // The API is returning error messages even when the status is a 200.
@@ -51,6 +64,7 @@ export function getApiAccessToken(apiCfg) {
       }
       throw new XcooBeeError(msg.join(' '));
     }, (err) => {
+      delete getApiAccessToken._.unfulfilledPromises[key];
       // console.log('An error occurred:');
       // console.error(err);
       let msg = [];
@@ -68,8 +82,16 @@ export function getApiAccessToken(apiCfg) {
       }
 
       throw new XcooBeeError(msg.join(' '));
-    })
+    });
+
+  getApiAccessToken._.unfulfilledPromises[key] = unfulfilledPromise;
+
+  return unfulfilledPromise;
 }
+
+getApiAccessToken._ = {
+  unfulfilledPromises: {},
+};
 
 export default {
   getApiAccessToken,
