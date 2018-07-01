@@ -8,7 +8,7 @@ jest.setTimeout(60000);
 
 describe('EndPointApi', function () {
 
-  describe('.getOutboxEndpoints', function () {
+  describe('.outbox_endpoints', function () {
 
     describe('called with a valid API access token', function () {
 
@@ -21,7 +21,7 @@ describe('EndPointApi', function () {
           })
             .then((apiAccessToken) => {
               const userId = 'known'; // FIXME: TODO: Get a legit user ID.
-              EndPointApi.getOutboxEndpoints(apiAccessToken, userId)
+              EndPointApi.outbox_endpoints(apiAccessToken, userId)
                 .then((res) => {
                   console.dir(res);
                   expect(res).toBeDefined();
@@ -42,7 +42,7 @@ describe('EndPointApi', function () {
           })
             .then((apiAccessToken) => {
               const userId = 'unknown';
-              EndPointApi.getOutboxEndpoints(apiAccessToken, userId)
+              EndPointApi.outbox_endpoints(apiAccessToken, userId)
                 .then((res) => {
                   console.dir(res);
                   expect(res).toBeDefined();

@@ -9,7 +9,7 @@ import { createClient } from './ApiUtils';
  *
  * @returns {Promise<Bees[]>}
  */
-export function getOutboxEndpoints(apiAccessToken, userId) {
+export function outbox_endpoints(apiAccessToken, userId) {
   // TODO: Find out if we can rename getEndpoint to getOutboxEndpoints in the
   // following query.
   const query = `
@@ -47,5 +47,5 @@ export function getOutboxEndpoints(apiAccessToken, userId) {
 }
 
 export default {
-  getOutboxEndpoints,
+  outbox_endpoints,
 };
