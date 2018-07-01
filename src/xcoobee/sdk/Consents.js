@@ -13,6 +13,12 @@ class Consents {
     this._.config = config;
   }
 
+  _assertValidState() {
+    if (!this._.config) {
+      throw TypeError('Illegal State: Default config has not been set yet.');
+    }
+  }
+
   // TODO: Document CampaignId
   // TODO: Document CampaignStruct
   // * @returns {string} return.response.data.campaign_name
@@ -43,6 +49,7 @@ class Consents {
    * @throws XcooBeeError
    */
   activateCampaign(campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -62,6 +69,7 @@ class Consents {
    * @throws XcooBeeError
    */
   createCampaign(data, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -82,6 +90,7 @@ class Consents {
    * @throws XcooBeeError
    */
   confirmConsentChange(consentId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -102,6 +111,7 @@ class Consents {
    * @throws XcooBeeError
    */
   confirmDataDelete(consentId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -124,6 +134,7 @@ class Consents {
    * @throws XcooBeeError
    */
   getCampaignInfo(campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -143,6 +154,7 @@ class Consents {
    * @throws XcooBeeError
    */
   getConsentData(consentId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -168,6 +180,7 @@ class Consents {
    * @throws XcooBeeError
    */
   getCookieConsent(xcooBeeId, campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -186,6 +199,7 @@ class Consents {
    * @throws XcooBeeError
    */
   listCampaigns(config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -208,6 +222,7 @@ class Consents {
    * @throws XcooBeeError
    */
   modifyCampaign(campaignId, data, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -237,6 +252,7 @@ class Consents {
    * @throws XcooBeeError
    */
   requestConsent(xcooBeeId, reqRefId, campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -265,6 +281,7 @@ class Consents {
    * @throws XcooBeeError
    */
   setUserDataResponse(message, consentId, requestRef, filename, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }

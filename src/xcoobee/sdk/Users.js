@@ -13,6 +13,12 @@ class Users {
     this._.config = config;
   }
 
+  _assertValidState() {
+    if (!this._.config) {
+      throw TypeError('Illegal State: Default config has not been set yet.');
+    }
+  }
+
   /**
    * TODO: Document this function.
    *
@@ -26,6 +32,7 @@ class Users {
    * @throws XcooBeeError
    */
   getConversation(userId, first, after, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -42,6 +49,7 @@ class Users {
    * @throws XcooBeeError
    */
   getConversations(first, after, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -56,6 +64,7 @@ class Users {
    * @throws XcooBeeError
    */
   getUser(config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -73,6 +82,7 @@ class Users {
    * @throws XcooBeeError
    */
   sendUserMessage(message, consentId, breachId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }

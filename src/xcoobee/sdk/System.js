@@ -13,6 +13,12 @@ class System {
     this._.config = config;
   }
 
+  _assertValidState() {
+    if (!this._.config) {
+      throw TypeError('Illegal State: Default config has not been set yet.');
+    }
+  }
+
   /**
    * Adds an event subscription to web hooks.
    *
@@ -28,6 +34,7 @@ class System {
    * @throws XcooBeeError
    */
   addEventSubscription(events, campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -46,6 +53,7 @@ class System {
    * @throws XcooBeeError
    */
   deleteEventSubscription(events, campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -63,6 +71,7 @@ class System {
    * @throws XcooBeeError
    */
   listEventSubscriptions(campaignId, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -79,6 +88,7 @@ class System {
    * @throws XcooBeeError
    */
   ping(config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }

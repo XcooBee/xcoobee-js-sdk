@@ -13,6 +13,12 @@ class Bees {
     this._.config = config;
   }
 
+  _assertValidState() {
+    if (!this._.config) {
+      throw TypeError('Illegal State: Default config has not been set yet.');
+    }
+  }
+
   /**
    * Returns a list of bees in the system that your account is able to hire that
    * match the specified search text.
@@ -40,8 +46,7 @@ class Bees {
    * @throws XcooBeeError
    */
   listBees(searchText, config) {
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    this._assertValidState();
   }
 
   /**
@@ -63,6 +68,7 @@ class Bees {
    * @throws XcooBeeError
    */
   takeOff(bees, options, subscriptions, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
@@ -85,6 +91,7 @@ class Bees {
    * @throws XcooBeeError
    */
   uploadFiles(files, endpoint, config) {
+    this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
   }
