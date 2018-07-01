@@ -42,6 +42,7 @@
     "test": ""
   },
   "dependencies": {
+    "qc-to_bool": "^1.1.2",
   },
   "devDependencies": {
   }
