@@ -1,0 +1,6 @@
+# This is the XcooBee SDK configuration file.  Comments begin with an octothorpe
+# (#).
+apiKey = testApiKeyWithComments # The API key can be found in Settings > Security > API Key
+
+# The API Secret.  You only get one chance to download it.
+apiSecret = testApiSecretWithComments

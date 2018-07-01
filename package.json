@@ -37,13 +37,21 @@
   "scripts": {
     "build": "",
     "clean": "",
-    "coverage": "",
+    "coverage": "jest --coverage",
     "start": "",
-    "test": ""
+    "test:unit": "jest --config=__tests__/unit/jest.config.js",
   },
   "dependencies": {
     "qc-to_bool": "^1.1.2",
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.0.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "dotenv": "^6.0.0",
+    "jest": "^23.1.0",
+    "regenerator-runtime": "^0.11.1"
   }
 }
