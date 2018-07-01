@@ -10,5 +10,6 @@ module.exports = {
     // '<rootDir>/xcoobee/api/EndPointApi.spec.js',
     // '<rootDir>/xcoobee/api/EventSubscriptionsApi.spec.js',
     // '<rootDir>/xcoobee/api/TokenApi.spec.js',
+    // '<rootDir>/xcoobee/api/UsersApi.spec.js',
   ],
 };
