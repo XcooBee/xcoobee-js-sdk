@@ -5,19 +5,17 @@ import ApiUtils, { createClient } from './ApiUtils';
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign ID.
  *
- * @returns {CampaignInfo}
+ * @returns {Promise<EventSubscriptions[]>}
  */
-export function getCampaignInfo(apiAccessToken, campaignId) {
+export function listEventSubscriptions(apiAccessToken, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
-    query getCampaignInfo($campaignId: String!) {
-      campaign(campaign_cursor: $campaignId) {
-        campaign_name
-        date_c
-        date_e
-        status
-        xcoobee_targets {
-          xcoobee_id
+    query listEventSubscriptions($campaignId: String!) {
+      event_subscriptions(campaign_cursor: $campaignId) {
+        data {
+          event_type,
+          handler,
+          date_c
         }
       }
     }
@@ -26,14 +24,15 @@ export function getCampaignInfo(apiAccessToken, campaignId) {
     campaignId,
   })
     .then((response) => {
-      const { campaign } = response;
+      const { event_subscriptions } = response;
+      const { data } = event_subscriptions;
       // TODO: Transform data if necessary.
-      return Promise.resolve(campaign);
+      return Promise.resolve(data);
     }, (err) => {
       throw ApiUtils.transformError(err);
     });
 }
 
 export default {
-  getCampaignInfo,
+  listEventSubscriptions,
 };
