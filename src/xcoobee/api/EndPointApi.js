@@ -1,4 +1,4 @@
-import XcooBeeError from '../core/XcooBeeError';
+import ApiUtils from '../api/ApiUtils';
 
 import { createClient } from './ApiUtils';
 
