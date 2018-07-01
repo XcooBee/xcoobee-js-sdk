@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 
 import XcooBeeError from '../core/XcooBeeError';
 
@@ -30,58 +30,57 @@ export function getApiAccessToken(apiCfg) {
   }
 
   const apiAccessTokenUrl = process.env.XCOOBEE__API_ACCESS_TOKEN_URL;
-  const reqData = {
-    key: apiKey,
-    secret: apiSecret,
-  };
-  const cfg = {
-    timeout: 30000,
-  };
-  let unfulfilledPromise = axios.post(apiAccessTokenUrl, reqData, cfg);
+  let unfulfilledPromise = fetch(
+    apiAccessTokenUrl,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        key: apiKey,
+        secret: apiSecret,
+      }),
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      timeout: 30000,
+    }
+  );
   unfulfilledPromise = unfulfilledPromise
     .then((response) => {
       delete getApiAccessToken._.unfulfilledPromises[key];
-      let msg = [];
-      if (response.status >= 200 && response.status < 300) {
-        // The API is returning error messages even when the status is a 200.
-        if (typeof response.data.errorType === 'string' && response.data.errorType.length > 0) {
-          if (response.data.errorMessage) {
-            msg.push(response.data.errorMessage);
+      return response.json()
+        .then((body) => {
+          let msg = [];
+          if (response.ok) {
+            // The API is returning error messages even when the status is a 200.
+            if (typeof body.errorType === 'string' && body.errorType.length > 0) {
+              if (body.errorMessage) {
+                msg.push(body.errorMessage);
+              }
+              else {
+                msg.push(MSG__GENERIC_ERROR);
+              }
+            }
+            else if (typeof body.token !== 'string' || body.token.trim().length === 0) {
+              msg.push(MSG__GENERIC_ERROR);
+            }
+          }
+          else if (response.status === 403) {
+            msg.push('Forbidden.');
+            if (body.message) {
+              msg.push(body.message);
+            }
           }
           else {
             msg.push(MSG__GENERIC_ERROR);
           }
-        }
-        else if (typeof response.data.token !== 'string' || response.data.token.trim().length === 0) {
-          msg.push(MSG__GENERIC_ERROR);
-        }
-      }
-      else {
-        msg.push(MSG__GENERIC_ERROR);
-      }
-      if (msg.length === 0) {
-        return response.data.token.trim();
-      }
-      throw new XcooBeeError(msg.join(' '));
+          if (msg.length === 0) {
+            return body.token.trim();
+          }
+          throw new XcooBeeError(msg.join(' '));
+        });
     }, (err) => {
       delete getApiAccessToken._.unfulfilledPromises[key];
-      // console.log('An error occurred:');
-      // console.error(err);
-      let msg = [];
-
-      if (err.response) {
-        if (err.response.status === 403) {
-          msg.push('Forbidden.');
-        }
-        if (err.response.data.message) {
-          msg.push(err.response.data.message);
-        }
-      }
-      if (msg.length === 0) {
-        msg.push(MSG__GENERIC_ERROR);
-      }
-
-      throw new XcooBeeError(msg.join(' '));
+      throw new XcooBeeError(err);
     });
 
   getApiAccessToken._.unfulfilledPromises[key] = unfulfilledPromise;
