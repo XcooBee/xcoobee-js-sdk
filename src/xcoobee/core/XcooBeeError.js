@@ -11,4 +11,11 @@ class XcooBeeError extends Error {
 
 }
 
+// NOTE: By default, Babel does not correctly extend a class.  An instance of the
+// above will still be an `Error`.  Fortunately, there is a plugin named
+// 'babel-plugin-transform-builtin-extend' that extends the default behavior of
+// Babel.
+
+XcooBeeError.prototype.name = 'XcooBeeError';
+
 export default XcooBeeError;
