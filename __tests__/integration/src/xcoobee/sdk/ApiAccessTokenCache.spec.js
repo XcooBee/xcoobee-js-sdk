@@ -1,6 +1,6 @@
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 
-import { BASE64_URL_ENCODED__RE, sleep } from '../../../../lib/Utils';
+import { assertIsJwtToken, sleep } from '../../../../lib/Utils';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -20,12 +20,7 @@ describe('ApiAccessTokenCache', function () {
             .then((apiAccessToken) => {
               expect(apiAccessToken).toBeDefined();
 
-              let apiAccessTokenParts = apiAccessToken.split('.');
-              expect(apiAccessTokenParts.length).toBe(3);
-
-              expect(apiAccessTokenParts[0]).toMatch(BASE64_URL_ENCODED__RE);
-              expect(apiAccessTokenParts[1]).toMatch(BASE64_URL_ENCODED__RE);
-              expect(apiAccessTokenParts[2]).toMatch(BASE64_URL_ENCODED__RE);
+              assertIsJwtToken(apiAccessToken);
               done();
             });
         });
