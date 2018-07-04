@@ -1,5 +1,6 @@
 import CampaignApi from '../../../../../src/xcoobee/api/CampaignApi';
 import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
+import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -43,12 +44,16 @@ describe('CampaignApi', function () {
             .then((apiAccessToken) => {
               const campaignId = 'unknown';
               CampaignApi.getCampaignInfo(apiAccessToken, campaignId)
-                .then((campaignInfo) => {
-                  console.dir(campaignInfo);
-                  expect(campaignInfo).toBeDefined();
-                  // TODO: Add more expectations.
-                  done();
+                .then(() => {
+                  // This should not be called.
+                  expect(true).toBe(false);
                 })
+                .catch((err) => {
+                  expect(err).toBeInstanceOf(XcooBeeError);
+                  expect(err.message).toBe('Wrong key at line: 3, column: 7');
+                  expect(err.name).toBe('XcooBeeError');
+                  done();
+                });
             });
         });
 

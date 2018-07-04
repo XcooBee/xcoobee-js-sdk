@@ -1,5 +1,6 @@
 import EndPointApi from '../../../../../src/xcoobee/api/EndPointApi';
 import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
+import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -41,14 +42,18 @@ describe('EndPointApi', function () {
             apiSecret,
           })
             .then((apiAccessToken) => {
-              const userId = 'unknown';
-              EndPointApi.outbox_endpoints(apiAccessToken, userId)
-                .then((res) => {
-                  console.dir(res);
-                  expect(res).toBeDefined();
-                  // TODO: Add more expectations.
-                  done();
+              const userCursor = 'unknown';
+              EndPointApi.outbox_endpoints(apiAccessToken, userCursor)
+                .then(() => {
+                  // This should not be called.
+                  expect(true).toBe(false);
                 })
+                .catch((err) => {
+                  expect(err).toBeInstanceOf(XcooBeeError);
+                  expect(err.message).toBe('Wrong key at line: 3, column: 7');
+                  expect(err.name).toBe('XcooBeeError');
+                  done();
+                });
             });
         });
 
