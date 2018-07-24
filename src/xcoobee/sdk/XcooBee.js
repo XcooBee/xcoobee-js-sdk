@@ -34,7 +34,7 @@ class XcooBee {
     this._ = {
       bees: new Bees(cfg),
       config: cfg,
-      consents: new Consents(cfg),
+      consents: new Consents(cfg, apiAccessTokenCache, usersCache),
       system: new System(cfg, apiAccessTokenCache, usersCache),
       users: new Users(cfg, apiAccessTokenCache, usersCache),
     }

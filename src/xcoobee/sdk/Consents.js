@@ -1,11 +1,19 @@
+import CampaignApi from '../../xcoobee/api/CampaignApi';
+
+import ErrorResponse from './ErrorResponse';
+import SdkUtils from './SdkUtils';
+import SuccessResponse from './SuccessResponse';
+
 /**
  * The Consents service.
  */
 class Consents {
 
-  constructor(config) {
+  constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
+      apiAccessTokenCache,
       config: config || null,
+      usersCache,
     };
   }
 
@@ -198,10 +206,25 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  listCampaigns(config) {
+  async listCampaigns(config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiKey, apiSecret)
+      const userCursor = user.cursor;
+      const campaigns = await CampaignApi.getCampaigns(apiAccessToken, userCursor);
+      const response = new SuccessResponse(campaigns);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**

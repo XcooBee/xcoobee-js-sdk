@@ -1,4 +1,4 @@
-import fs from 'fs';
+import Fs from 'fs';
 import Path from 'path';
 import { toBool } from 'qc-to_bool';
 import readline from 'readline';
@@ -32,7 +32,7 @@ export function createConfigFromFile(xcoobPath) {
   return new Promise((resolve, reject) => {
     const configData = {};
     try {
-      const configReadStream = fs.createReadStream(cfgFilename);
+      const configReadStream = Fs.createReadStream(cfgFilename);
 
       configReadStream.on('error', (err) => {
         reject(err);
@@ -85,7 +85,7 @@ export function createConfigFromFile(xcoobPath) {
           // Note: To avoid the race condition between checking for existance of a file and
           // reading it, it is best practice to just attempt to read it and handle the case
           // when it doesn't exist.
-          fs.readFile(pgpSecretFilename, (err, data) => {
+          Fs.readFile(pgpSecretFilename, (err, data) => {
             if (err) {
               // If the file doesn't exist, then that is fine.
               if (err.code === 'ENOENT') {

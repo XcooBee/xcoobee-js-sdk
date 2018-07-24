@@ -1,6 +1,8 @@
 import CampaignApi from '../../../../../src/xcoobee/api/CampaignApi';
 import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
+import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -8,6 +10,9 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 jest.setTimeout(60000);
 
 describe('CampaignApi', function () {
+
+  const apiAccessTokenCache = new ApiAccessTokenCache();
+  const usersCache = new UsersCache(apiAccessTokenCache);
 
   describe('.getCampaignInfo', function () {
 
@@ -63,4 +68,23 @@ describe('CampaignApi', function () {
 
   });
 
-});
+  describe('.getCampaigns', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should return the user\'s campaigns', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+        const user = await usersCache.get(apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const campaigns = await CampaignApi.getCampaigns(apiAccessToken, userCursor);
+        expect(campaigns).toBeInstanceOf(Array);
+        expect(campaigns.length).toBe(0);
+        // TODO: Add more expectations.
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.getCampaigns')
+
+});// eo describe('CampaignApi')
