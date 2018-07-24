@@ -1,5 +1,4 @@
 import CampaignApi from '../../../../../src/xcoobee/api/CampaignApi';
-import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
@@ -18,55 +17,46 @@ describe('CampaignApi', function () {
 
     describe('called with a valid API access token', function () {
 
-      describe('and called with a known campaign ID', function () {
+      describe('and called with a known campaign cursor', function () {
 
-        it('should return with expected campaign info', function (done) {
-          TokenApi.getApiAccessToken({
-            apiKey,
-            apiSecret,
-          })
-            .then((apiAccessToken) => {
-              const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-              CampaignApi.getCampaignInfo(apiAccessToken, campaignId)
-                .then((campaignInfo) => {
-                  console.dir(campaignInfo);
-                  expect(campaignInfo).toBeDefined();
-                  // TODO: Add more expectations.
-                  done();
-                })
-            });
-        });
+        xit('should return with expected campaign info', async function (done) {
+          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const campaignCursor = 'known'; // FIXME: TODO: Get a legit campaign cursor.
+          const consentCampaign = await CampaignApi.getCampaignInfo(apiAccessToken, campaignCursor);
+          expect(consentCampaign).toBeDefined();
+          expect(consentCampaign.campaign_name).toBeDefined();
+          expect(consentCampaign.date_c).toBeDefined();
+          expect(consentCampaign.date_e).toBeDefined();
+          expect(consentCampaign.status).toBeDefined();
+          expect(consentCampaign.xcoobee_targets).toBeDefined();
+          expect(consentCampaign.xcoobee_targets.xcoobee_id).toBeDefined();
+          done();
+        });// eo it
 
-      });
+      });// eo describe
 
-      describe('and called with an unknown campaign ID', function () {
+      describe('and called with an unknown campaign cursor', function () {
 
-        it('should return with no data', function (done) {
-          TokenApi.getApiAccessToken({
-            apiKey,
-            apiSecret,
-          })
-            .then((apiAccessToken) => {
-              const campaignId = 'unknown';
-              CampaignApi.getCampaignInfo(apiAccessToken, campaignId)
-                .then(() => {
-                  // This should not be called.
-                  expect(true).toBe(false);
-                })
-                .catch((err) => {
-                  expect(err).toBeInstanceOf(XcooBeeError);
-                  expect(err.message).toBe('Wrong key at line: 3, column: 7');
-                  expect(err.name).toBe('XcooBeeError');
-                  done();
-                });
-            });
-        });
+        it('should return with no data', async function (done) {
+          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const campaignCursor = 'unknown';
+          try {
+            await CampaignApi.getCampaignInfo(apiAccessToken, campaignCursor);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (err) {
+            expect(err).toBeInstanceOf(XcooBeeError);
+            expect(err.message).toBe('Wrong key at line: 3, column: 7');
+            expect(err.name).toBe('XcooBeeError');
+            done();
+          }
+        });// eo it
 
-      });
+      });// eo describe
 
-    });
+    });// eo describe
 
-  });
+  });// eo describe('.getCampaignInfo')
 
   describe('.getCampaigns', function () {
 

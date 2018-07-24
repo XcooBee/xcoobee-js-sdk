@@ -1,5 +1,5 @@
 import BeesApi from '../../../../../src/xcoobee/api/BeesApi';
-import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
+import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -8,29 +8,23 @@ jest.setTimeout(60000);
 
 describe('BeesApi', function () {
 
+  const apiAccessTokenCache = new ApiAccessTokenCache();
+
   describe('.bees', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return with a list of bees', function (done) {
-        TokenApi.getApiAccessToken({
-          apiKey,
-          apiSecret,
-        })
-          .then((apiAccessToken) => {
-            BeesApi.bees(apiAccessToken, '')
-              .then((bees) => {
-                expect(bees).toBeDefined();
-                expect(bees).toBeInstanceOf(Array);
-                expect(bees.length).toBe(0);
-                // TODO: Add more expectations.
-                done();
-              })
-          });
-      });
+      it('should fetch and return with a list of bees', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+        const bees = await BeesApi.bees(apiAccessToken, '');
+        expect(bees).toBeInstanceOf(Array);
+        expect(bees.length).toBe(0);
+        // TODO: Add more expectations.
+        done();
+      });// eo it
 
-    });
+    });// eo describe
 
-  });
+  });// eo describe('.bees')
 
-});
+});// eo describe('BeesApi')
