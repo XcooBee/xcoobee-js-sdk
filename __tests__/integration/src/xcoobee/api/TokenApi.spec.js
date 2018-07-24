@@ -1,6 +1,7 @@
+import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
 
-import { BASE64_URL_ENCODED__RE } from '../../../../lib/Utils';
+import { assertIsJwtToken } from '../../../../lib/Utils';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -11,7 +12,7 @@ describe('TokenApi', function () {
 
   describe('.getApiAccessToken', function () {
 
-    describe('called with a valid API key and API secret', function () {
+    describe('called with a valid API key/secret pair', function () {
 
       it('should fetch and return with an API access token', function (done) {
         TokenApi.getApiAccessToken({
@@ -20,19 +21,79 @@ describe('TokenApi', function () {
         })
           .then((apiAccessToken) => {
             expect(apiAccessToken).toBeDefined();
-
-            let apiAccessTokenParts = apiAccessToken.split('.');
-            expect(apiAccessTokenParts.length).toBe(3);
-
-            expect(apiAccessTokenParts[0]).toMatch(BASE64_URL_ENCODED__RE);
-            expect(apiAccessTokenParts[1]).toMatch(BASE64_URL_ENCODED__RE);
-            expect(apiAccessTokenParts[2]).toMatch(BASE64_URL_ENCODED__RE);
+            assertIsJwtToken(apiAccessToken);
             done();
           })
-      });
+      });// eo it
 
-    });
+    });// eo describe
 
-  });
+    describe('called with a valid API key/secret pair multiple times back to back', function () {
 
-});
+      it('should return the same promise', function (done) {
+        let promise1 = TokenApi.getApiAccessToken({
+          apiKey,
+          apiSecret,
+        });
+        let promise2 = TokenApi.getApiAccessToken({
+          apiKey,
+          apiSecret,
+        });
+        expect(promise1).toBe(promise2);
+        Promise.all([
+          promise1,
+          promise2,
+        ])
+          .then((apiAccessTokens) => {
+            expect(apiAccessTokens[0]).toBe(apiAccessTokens[1]);
+            done();
+          });
+      });// eo it
+
+    });// eo describe
+
+    describe('called with a valid API key/secret pair multiple times sequentially with a long enough pause in between', function () {
+
+      it('should return different promises and different access tokens', function (done) {
+        let promise1 = TokenApi.getApiAccessToken({
+          apiKey,
+          apiSecret,
+        });
+        promise1.then((apiAccessToken1) => {
+          let promise2 = TokenApi.getApiAccessToken({
+            apiKey,
+            apiSecret,
+          });
+          expect(promise1).not.toBe(promise2);
+          promise2.then((apiAccessToken2) => {
+            expect(apiAccessToken1).not.toBe(apiAccessToken2);
+            done();
+          });
+        });
+      });// eo it
+
+    });// eo describe
+
+    describe('called with an invalid API key/secret pair', function () {
+
+      it('should reject with a XcooBeeError', function (done) {
+        const apiKey = 'invalid';
+        const apiSecret = 'invalid';
+
+        TokenApi.getApiAccessToken(apiKey, apiSecret)
+          .then((apiAccessToken) => {
+            // This should not be called.
+            expect(true).toBe(false);
+          })
+          .catch((err) => {
+            expect(err).toBeInstanceOf(XcooBeeError);
+            expect(err.message).toBe('Unable to get an API access token.');
+            done();
+          });
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.getApiAccessToken')
+
+});// eo describe('TokenApi')
