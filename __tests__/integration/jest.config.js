@@ -14,6 +14,7 @@ module.exports = {
     '<rootDir>/xcoobee/api/UsersApi.spec.js',
     '<rootDir>/xcoobee/sdk/ApiAccessTokenCache.spec.js',
     '<rootDir>/xcoobee/sdk/System.spec.js',
+    '<rootDir>/xcoobee/sdk/Users.spec.js',
     '<rootDir>/xcoobee/sdk/UsersCache.spec.js',
   ],
 };

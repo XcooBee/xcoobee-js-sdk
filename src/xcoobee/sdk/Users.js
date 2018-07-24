@@ -1,11 +1,19 @@
+import UsersApi from '../../xcoobee/api/UsersApi';
+
+import ErrorResponse from './ErrorResponse';
+import SdkUtils from './SdkUtils';
+import SuccessResponse from './SuccessResponse';
+
 /**
  * The Users service.
  */
 class Users {
 
-  constructor(config) {
+  constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
+      apiAccessTokenCache,
       config: config || null,
+      usersCache,
     };
   }
 
@@ -27,7 +35,7 @@ class Users {
    * @param {*} after
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
@@ -44,7 +52,7 @@ class Users {
    * @param {*} after
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
@@ -59,14 +67,27 @@ class Users {
    *
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
-  getUser(config) {
+  async getUser(config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
+      const userInfo = await this._.usersCache.get(apiKey, apiSecret)
+      const response = new SuccessResponse(userInfo);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
@@ -77,7 +98,7 @@ class Users {
    * @param {*} breachId
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<?>} TODO: Document structure.
+   * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */

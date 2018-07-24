@@ -36,7 +36,7 @@ class XcooBee {
       config: cfg,
       consents: new Consents(cfg),
       system: new System(cfg, apiAccessTokenCache, usersCache),
-      users: new Users(cfg),
+      users: new Users(cfg, apiAccessTokenCache, usersCache),
     }
   }
 
