@@ -32,7 +32,7 @@ class XcooBee {
     let apiAccessTokenCache = new ApiAccessTokenCache();
     let usersCache = new UsersCache(apiAccessTokenCache);
     this._ = {
-      bees: new Bees(cfg),
+      bees: new Bees(cfg, apiAccessTokenCache, usersCache),
       config: cfg,
       consents: new Consents(cfg, apiAccessTokenCache, usersCache),
       system: new System(cfg, apiAccessTokenCache, usersCache),

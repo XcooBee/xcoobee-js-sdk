@@ -1,11 +1,19 @@
+import BeesApi from '../../xcoobee/api/BeesApi';
+
+import ErrorResponse from './ErrorResponse';
+import SdkUtils from './SdkUtils';
+import SuccessResponse from './SuccessResponse';
+
 /**
  * The Bees service.
  */
 class Bees {
 
-  constructor(config) {
+  constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
+      apiAccessTokenCache,
       config: config || null,
+      usersCache,
     };
   }
 
@@ -26,13 +34,18 @@ class Bees {
    * ```js
    * listBees('social')
    *   .then((res) => {
-   *     // TODO: Handle response.
-   *     let { code, data, errors, time } = res;
-   *     if (code >= 300) {
-   *       console.error(errors);
+   *     const { code, data, errors, time } = res;
+   *     if (code >= 300 || errors) {
+   *       if (errors) {
+   *         console.error(errors);
+   *       }
    *       return;
    *     }
-   *     let { bee-systemname, bee-label, bee-cost, cost-type } = data;
+   *     const bees = data;
+   *     bees.forEach((bee) => {
+   *       const { bee_system_name, description, bee_icon, ...etc } = bee;
+   *       // DO something with this data.
+   *     });
    *   })
    * ```
    *
@@ -45,8 +58,23 @@ class Bees {
    *
    * @throws XcooBeeError
    */
-  listBees(searchText, config) {
+  async listBees(searchText, config) {
     this._assertValidState();
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
+      const beesList = await BeesApi.bees(apiAccessToken, searchText);
+      const response = new SuccessResponse(beesList);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
