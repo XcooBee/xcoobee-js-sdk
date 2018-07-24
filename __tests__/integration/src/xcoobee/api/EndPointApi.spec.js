@@ -23,10 +23,17 @@ describe('EndPointApi', function () {
             .then((apiAccessToken) => {
               const userId = 'known'; // FIXME: TODO: Get a legit user ID.
               EndPointApi.outbox_endpoints(apiAccessToken, userId)
-                .then((res) => {
-                  console.dir(res);
-                  expect(res).toBeDefined();
-                  // TODO: Add more expectations.
+                .then((endPoints) => {
+                  expect(endPoints).toBeInstanceOf(Array);
+                  // Not yet sure if this will always be the case, but it is right now.
+                  expect(endPoints.length).toBe(1);
+                  const endPoint = endPoints[0];
+                  expect('cursor' in endPoint).toBe(true);
+                  assertIsCursorLike(endPoint.cursor);
+                  expect('date_c' in endPoint).toBe(true);
+                  assertIso8601Like(endPoint.date_c)
+                  expect('name' in endPoint).toBe(true);
+                  expect(endPoint.name).toBe('flex');
                   done();
                 })
             });

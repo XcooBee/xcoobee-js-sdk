@@ -1,3 +1,5 @@
+import Path from 'path';
+
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 import Bees from '../../../../../src/xcoobee/sdk/Bees';
 import Config from '../../../../../src/xcoobee/sdk/Config';
@@ -88,6 +90,38 @@ describe('Bees', function () {
       });// eo describe
 
     });// eo describe('.listBees')
+
+    describe('.uploadFiles', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('using default config', function () {
+
+          it('should successfully upload files', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+            });
+
+            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt');
+            const files = [file];
+            const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
+            const response = await beesSdk.uploadFiles(files);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const results = response.data;
+            expect(results).toBeInstanceOf(Array);
+            expect(results.length).toBe(1);
+            const result = results[0];
+            expect(result.file).toBe(file);
+            // TODO: Add more expectations.
+            done();
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe('.uploadFiles')
 
   });// eo describe('instance')
 

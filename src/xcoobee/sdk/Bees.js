@@ -1,8 +1,24 @@
 import BeesApi from '../../xcoobee/api/BeesApi';
+import EndPointApi from '../../xcoobee/api/EndPointApi';
+import PolicyApi from '../../xcoobee/api/PolicyApi';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
+import XcooBeeError from '../core/XcooBeeError';
+
+function _zip(files, policies) {
+  const pairs = [];
+  // Note: Not expecting the lengths between the two arrays to be different, but
+  // it doesn't hurt to be robust.
+  const maxLen = Math.max(files.length, policies.length);
+  for (let i = 0; i < maxLen; ++i) {
+    const file = files[i] || null;
+    const policy = policies[i] || null;
+    pairs.push({ file, policy });
+  }
+  return pairs;
+}
 
 /**
  * The Bees service.
@@ -108,9 +124,9 @@ class Bees {
    *   to be uploaded.  For example, 'C:\Temp\MyPic.jpg' or '~/MyPic.jpg`.
    *   TODO: Test what file paths actually work and make sure the documentation is
    *   adequate.  Be sure to show examples of various path types.
-   * @param {string} [endpoint] - One of the "outbox" endpoints defined in the
+   * @param {string} [intent] - One of the "outbox" endpoints defined in the
    *   XcooBee UI.  If an endpoint is not specified, then be sure to call the
-   *   `takeOff` function afterwards.
+   *   `takeOff` function afterwards.  TODO: Make sure this documentation is accurate.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -118,10 +134,57 @@ class Bees {
    *
    * @throws XcooBeeError
    */
-  uploadFiles(files, endpoint, config) {
+  async uploadFiles(files, intent, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    let apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiKey, apiSecret);
+      const userCursor = user.cursor;
+      const endPoints = await EndPointApi.outbox_endpoints(apiAccessToken, userCursor);
+      const endPointName = intent || 'outbox';
+
+      // Find the endpoint with the name matching the specified intent.
+      let candidateEndPoints = endPoints.filter(endPoint => endPoint.name === endPointName);
+      // TODO: Verify that this is the correct logic.  It doesn't seem to be because
+      // PolicyApi.upload_policy errors when using a 'flex' endpoint.
+      // If that endpoint is not found, then fallback to the 'flex' endpoint.
+      if (candidateEndPoints.length === 0) {
+        candidateEndPoints = endPoints.filter(endPoint => endPoint.name === 'flex');
+      }
+
+      if (candidateEndPoints.length !== 1) {
+        throw new XcooBeeError(`Unable to find an endpoint named ${endPointName} or the fallback end point.`);
+      }
+
+      const endPoint = candidateEndPoints[0];
+      const policies = await PolicyApi.upload_policy(apiAccessToken, endPoint, files);
+      const policyFilePairs = _zip(files, policies);
+      // Note: We don't want to upload one file, wait for the promise to resolve,
+      // and then repeat.  Here we are uploading all files back-to-back. ...
+      const filePromisePairs = policyFilePairs.map(pair => {
+        const { file, policy } = pair;
+
+        return { file, promise: FileApi.upload_file(file, policy) };
+      });
+
+      // ... Then here we resolve each promise.
+      const results = filePromisePairs.map(async (pair) => {
+        const { file, promise } = pair;
+        const success = await promise;
+        return { file, success: !!success };
+      });
+      const response = new SuccessResponse(results);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
 }// eo class Bees

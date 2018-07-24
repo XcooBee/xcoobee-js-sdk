@@ -5,32 +5,24 @@ import { createClient } from './ApiUtils';
 /**
  *
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {string} userId - The ID of the user.
+ * @param {string} userCursor - The user's cursor.
  *
- * @returns {Promise<Bees[]>}
+ * @returns {Promise<OutboxEndpoint[]>}
  */
-export function outbox_endpoints(apiAccessToken, userId) {
-  // TODO: Find out if we can rename getEndpoint to getOutboxEndpoints in the
-  // following query.
+export function outbox_endpoints(apiAccessToken, userCursor) {
   const query = `
-    query getEndpoint($userId: String!) {
+    query getOutboxEndpoints($userId: String!) {
       outbox_endpoints(user_cursor: $userId) {
         data {
-          content {
-            filename
-            size
-          }
           cursor
           date_c
           name
-          user_cursor
-          type
         }
       }
     }
   `;
   return createClient(apiAccessToken).request(query, {
-    userId,
+    userId: userCursor,
   })
     .then((response) => {
       const { outbox_endpoints } = response;
