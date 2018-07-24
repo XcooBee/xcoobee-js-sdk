@@ -1,7 +1,19 @@
 import UsersApi from '../../xcoobee/api/UsersApi';
 
+// FIXME: TODO: Move this class to xcoobee/api "namespace".
+
+/**
+ * A cache for user information fetched using the `xcoobee/api/UserApi.user`
+ * function.
+ */
 class UsersCache {
 
+  /**
+   * Constructs a new user cache with the specified configuration.
+   *
+   * @param {ApiAccessTokenCache} apiAccessTokenCache The API access token cache to
+   *   use so that a new API access token is not needed on each call.
+   */
   constructor(apiAccessTokenCache) {
     this._ = {
       apiAccessTokenCache,
@@ -10,10 +22,15 @@ class UsersCache {
   }
 
   /**
+   * Fetches the user information for the specified API key/secret pair.
    *
-   * @param {string} apiKey
-   * @param {string} apiSecret
-   * @param {boolean} [fresh=false]
+   * @param {string} apiKey - Your API key.
+   * @param {string} apiSecret - Your API secret.
+   * @param {boolean} [fresh=false] - Flag indicating whether to force fetching
+   *   fresh user information instead of returning a cached version.
+   *
+   * @returns {Promise<Object>} An object with information about the user that
+   *   corresponds with the specified API key/secret pair.
    */
   get(apiKey, apiSecret, fresh) {
     let key = `${apiKey}:${apiSecret}`;
@@ -25,19 +42,19 @@ class UsersCache {
 
     return this._.apiAccessTokenCache.get(apiKey, apiSecret)
       .then((apiAccessToken) => {
-        return UsersApi.user(apiAccessToken)
+        return UsersApi.getUser(apiAccessToken)
           .then((user) => {
             this._.internalCache[key] = user;
             return Promise.resolve(user);
           }, (err) => {
             // If unable to fetch the user, then it may be due to an old expired API access
             // token.
-            // TODO: Only preform the following if we are sure the err here is due to an
+            // TODO: Only perform the following if we are sure the `err` here is due to an
             // invalid API access token.
             const fresh = true;
             return this._.apiAccessTokenCache.get(apiKey, apiSecret, fresh)
               .then((apiAccessToken) => {
-                return UsersApi.user(apiAccessToken)
+                return UsersApi.getUser(apiAccessToken)
                   .then((user) => {
                     this._.internalCache[key] = user;
                     return Promise.resolve(user);

@@ -39,12 +39,15 @@ export function createClient(apiAccessToken) {
  */
 export function transformError(inputError) {
   // TODO: Come up with a standard way to handle errors.
+  if (inputError instanceof XcooBeeError) {
+    return inputError;
+  }
   let status = 0;
   if (inputError.response && typeof inputError.response.status === 'number') {
     status = inputError.response.status;
   }
   if (status === 401) {
-    throw new XcooBeeError('401 Unauthorized.  Please make sure your API access token is fresh.');
+    return new XcooBeeError('401 Unauthorized.  Please make sure your API access token is fresh.');
   }
   if (inputError.response && inputError.response.errors) {
     let errors = inputError.response.errors;
@@ -52,9 +55,9 @@ export function transformError(inputError) {
       errors = [errors];
     }
     let msg = errors.map(errorToMessage).join('\n');
-    throw new XcooBeeError(msg);
+    return new XcooBeeError(msg);
   }
-  throw new XcooBeeError(inputError);
+  return new XcooBeeError(inputError);
 }
 
 function errorToMessage(error) {

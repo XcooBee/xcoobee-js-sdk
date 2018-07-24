@@ -40,11 +40,12 @@
     "coverage": "jest --coverage",
     "start": "",
     "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "jest --config=__tests__/unit/jest.config.js",
-    "test:integration": "jest --config=__tests__/integration/jest.config.js"
+    "test:integration": "jest --config=__tests__/integration/jest.config.js",
+    "test:unit": "jest --config=__tests__/unit/jest.config.js"
   },
   "dependencies": {
     "graphql-request": "^1.6.0",
+    "jsonwebtoken": "^8.3.0",
     "node-fetch": "^2.1.2",
     "qc-to_bool": "^1.1.2"
   },

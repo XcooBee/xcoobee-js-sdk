@@ -5,10 +5,10 @@
  */
 class Response {
 
-  constructor(data) {
-    // TODO: Validate data.
+  constructor(info) {
+    // TODO: Validate info.
     this._ = {
-      ...data,
+      ...info,
       time: new Date, // TODO: Format as: Y-m-d H:i:s.
     };
   }

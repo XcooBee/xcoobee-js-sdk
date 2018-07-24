@@ -1,7 +1,7 @@
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
-import { sleep } from '../../../../lib/Utils';
+import { assertIsCursorLike, sleep } from '../../../../lib/Utils';
 
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -10,30 +10,29 @@ jest.setTimeout(60000);
 
 describe('UsersCache', function () {
 
+  const apiAccessTokenCache = new ApiAccessTokenCache();
+
   describe('instance', function () {
 
     describe('.get', function () {
 
       describe('called with a valid API key/secret pair', function () {
 
-        it('should fetch and return with user info', function (done) {
-          let apiAccessTokenCache = new ApiAccessTokenCache();
-          (new UsersCache(apiAccessTokenCache)).get(apiKey, apiSecret)
-            .then((userInfo) => {
-              expect(userInfo).toBeDefined();
-              expect('cursor' in userInfo).toBe(true);
-              expect('pgp_public_key' in userInfo).toBe(true);
-              expect('xcoobee_id' in userInfo).toBe(true);
-              done();
-            });
-        });
+        it('should fetch and return with user info', async function (done) {
+          const userInfo = await (new UsersCache(apiAccessTokenCache)).get(apiKey, apiSecret);
+          expect(userInfo).toBeDefined();
+          expect('cursor' in userInfo).toBe(true);
+          assertIsCursorLike(userInfo.cursor);
+          expect('pgp_public_key' in userInfo).toBe(true);
+          expect('xcoobee_id' in userInfo).toBe(true);
+          done();
+        });// eo it
 
       });// eo describe
 
       describe('called with a valid API key/secret pair multiple times back to back', function () {
 
-        it('should return the cached user info', function (done) {
-          let apiAccessTokenCache = new ApiAccessTokenCache();
+        it('should return the cached user info', async function (done) {
           let usersCache = new UsersCache(apiAccessTokenCache);
           Promise.all([
             usersCache.get(apiKey, apiSecret),
@@ -42,14 +41,21 @@ describe('UsersCache', function () {
             expect(userInfoList[0]).toBe(userInfoList[1]);
             done();
           });
-        });
+
+          usersCache = new UsersCache(apiAccessTokenCache);
+          const userInfoList = await Promise.all([
+            usersCache.get(apiKey, apiSecret),
+            usersCache.get(apiKey, apiSecret),
+          ]);
+          expect(userInfoList[0]).toBe(userInfoList[1]);
+          done();
+        });// eo it
 
       });// eo describe
 
       describe('called with a valid API key/secret pair multiple times sequentially', function () {
 
-        it('should return the cached user info', function (done) {
-          let apiAccessTokenCache = new ApiAccessTokenCache();
+        it('should return the cached user info', async function (done) {
           let usersCache = new UsersCache(apiAccessTokenCache);
           usersCache.get(apiKey, apiSecret)
             .then((userInfo1) => {
@@ -59,14 +65,19 @@ describe('UsersCache', function () {
                   done();
                 });
             });
-        });
+
+          usersCache = new UsersCache(apiAccessTokenCache);
+          const userInfo1 = await usersCache.get(apiKey, apiSecret);
+          const userInfo2 = await usersCache.get(apiKey, apiSecret);
+          expect(userInfo1).toBe(userInfo2);
+          done();
+        });// eo it
 
       });// eo describe
 
       describe('called with a valid API key/secret pair multiple times sequentially with a pause in between', function () {
 
-        it('should return the cached user info', function (done) {
-          let apiAccessTokenCache = new ApiAccessTokenCache();
+        it('should return the cached user info', async function (done) {
           let usersCache = new UsersCache(apiAccessTokenCache);
           usersCache.get(apiKey, apiSecret)
             .then((userInfo1) => {
@@ -79,7 +90,14 @@ describe('UsersCache', function () {
                     });
                 });
             });
-        });
+
+          usersCache = new UsersCache(apiAccessTokenCache);
+          const userInfo1 = await usersCache.get(apiKey, apiSecret);
+          await sleep(10000);
+          const userInfo2 = await usersCache.get(apiKey, apiSecret);
+          expect(userInfo1).toBe(userInfo2);
+          done();
+        });// eo it
 
       });// eo describe
 

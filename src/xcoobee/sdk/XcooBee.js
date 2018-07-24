@@ -1,7 +1,9 @@
+import ApiAccessTokenCache from './ApiAccessTokenCache';
 import Bees from './Bees';
 import Consents from './Consents';
 import System from './System';
 import Users from './Users';
+import UsersCache from './UsersCache';
 
 /**
  * The SDK entry point.
@@ -27,11 +29,13 @@ class XcooBee {
    */
   constructor(config) {
     let cfg = config || null;
+    let apiAccessTokenCache = new ApiAccessTokenCache();
+    let usersCache = new UsersCache(apiAccessTokenCache);
     this._ = {
       bees: new Bees(cfg),
       config: cfg,
       consents: new Consents(cfg),
-      system: new System(cfg),
+      system: new System(cfg, apiAccessTokenCache, usersCache),
       users: new Users(cfg),
     }
   }

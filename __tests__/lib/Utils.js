@@ -7,6 +7,27 @@ import Path from 'path';
  */
 export const BASE64_URL_ENCODED__RE = /^[-\w]+$/;
 
+// Example cursor: MBDYlKvqdrL826G8Dey9kLltEAPBphR/n1go6b9ER7KOZXTvkUBvkgvK8bWazyztrlis4w==
+/**
+ * A reference to the cursor regular expression that can be used to test if a
+ * string appears to be a cursor.
+ */
+export const CURSOR__RE = /^[\w/=]+$/;
+
+/**
+ * Asserts that the specified value appears to be a cursor.
+ *
+ * @param {string} value - The value to check.
+ */
+export const assertIsCursorLike = (value) => {
+  expect(value).toMatch(CURSOR__RE);
+};
+
+/**
+ * Asserts that the presumed token is a a JWT.
+ *
+ * @param {string} presumedToken - The value presumed to be a JWT.
+ */
 export const assertIsJwtToken = (presumedToken) => {
   const presumedTokenParts = presumedToken.split('.');
   expect(presumedTokenParts.length).toBe(3);
@@ -58,6 +79,7 @@ export const sleep = (ms, ...args) => {
 }
 
 const Utils = {
+  assertIsCursorLike,
   assertIsJwtToken,
   BASE64_URL_ENCODED__RE,
   loadEnv,

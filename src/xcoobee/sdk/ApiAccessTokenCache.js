@@ -4,6 +4,8 @@ import TokenApi from '../../xcoobee/api/TokenApi';
 
 const EXPIRATION_TOLERANCE_IN_MS__DEFAULT = 10000;
 
+// FIXME: TODO: Move this class to xcoobee/api "namespace".
+
 /**
  * A cache for API access tokens fetched using the
  * `xcoobee/api/TokenApi.getApiAccessToken` function.
@@ -33,8 +35,8 @@ class ApiAccessTokenCache {
    *
    * @param {string} apiKey - Your API key.
    * @param {string} apiSecret - Your API secret.
-   * @param {boolean} fresh - Flag indicating whether to force a fresh API access
-   *   token instead of returning a cached version.
+   * @param {boolean} [fresh=false] - Flag indicating whether to force a fresh API
+   *   access token instead of returning a cached version.
    *
    * @returns {Promise<string>} An API access token for the specified API key/secret
    *   pair.
