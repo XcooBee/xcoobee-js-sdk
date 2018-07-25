@@ -42,10 +42,24 @@ class System {
    *
    * @throws XcooBeeError
    */
-  addEventSubscription(events, campaignId, config) {
+  async addEventSubscription(events, campaignId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
+      const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiAccessToken, events, resolvedCampaignId);
+      const response = new SuccessResponse(eventSubscriptions);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
