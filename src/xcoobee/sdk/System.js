@@ -1,4 +1,5 @@
 import EventsApi from '../../xcoobee/api/EventsApi';
+import EventSubscriptionsApi from '../../xcoobee/api/EventSubscriptionsApi';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
@@ -99,18 +100,33 @@ class System {
    * Lists the current event subscriptions for the specified campaign.
    *
    * @param {CampaignId} [campaignId] - The ID of the campaign for which to list the
-   *   event subscriptions.  If `null` or `undefined`, then the default campaign ID
-   *   will be used from the config.
+   *   event subscriptions.  If `null` or `undefined`, then the campaign ID from the
+   *   overriding config will be used.  If `config.campaignId` is `null` or
+   *   `undefined`, then the campaign ID from the default config will be used.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<Response>} TODO: Document structure.
    *
    * @throws XcooBeeError
    */
-  listEventSubscriptions(campaignId, config) {
+  async listEventSubscriptions(campaignId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
+      const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiAccessToken, resolvedCampaignId);
+      const response = new SuccessResponse(eventSubscriptions);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
