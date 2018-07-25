@@ -1,6 +1,4 @@
-import ApiUtils from '../api/ApiUtils';
-
-import { createClient } from './ApiUtils';
+import ApiUtils from './ApiUtils';
 
 /**
  *
@@ -21,7 +19,7 @@ export function outbox_endpoints(apiAccessToken, userCursor) {
       }
     }
   `;
-  return createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiAccessToken).request(query, {
     userId: userCursor,
   })
     .then((response) => {
