@@ -22,7 +22,7 @@ describe('FileApi', function () {
 
     describe('called with a valid policy', function () {
 
-      it('should successfully upload a file', async function (done) {
+      xit('should successfully upload a file', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
         const user = await usersCache.get(apiKey, apiSecret);
         const userCursor = user.cursor;

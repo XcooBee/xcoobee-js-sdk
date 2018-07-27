@@ -97,7 +97,7 @@ describe('Bees', function () {
 
         describe('using default config', function () {
 
-          it('should successfully upload files', async function (done) {
+          xit('should successfully upload files', async function (done) {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,

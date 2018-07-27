@@ -23,7 +23,7 @@ describe('PolicyApi', function () {
 
       describe('and called with an "outbox" intent', function () {
 
-        it('should', async function (done) {
+        xit('should', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
           const user = await usersCache.get(apiKey, apiSecret);
           const userCursor = user.cursor;
