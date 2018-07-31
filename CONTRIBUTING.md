@@ -7,6 +7,19 @@
 ## Installation
 
 
+## Building
+
+Currently, the build script creates a bundle designed to run in the browser.  A
+development and a production version can be build depending on the `mode`
+option.
+
+```sh
+npm run build -- --mode=development
+# Or
+npm run build -- --mode=production
+```
+
+
 ## Testing
 
 
