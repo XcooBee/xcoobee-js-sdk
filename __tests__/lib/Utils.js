@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import Jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 import Path from 'path';
 
 /**
@@ -43,11 +43,11 @@ export const assertIsJwtToken = (presumedToken) => {
   expect(presumedTokenParts[1]).toMatch(BASE64_URL_ENCODED__RE);
   expect(presumedTokenParts[2]).toMatch(BASE64_URL_ENCODED__RE);
 
-  const decoded = Jwt.decode(presumedToken, { complete: true });
-  expect(decoded).not.toBeNull();
-  expect(decoded).toBeDefined();
-  expect(decoded.header).toBeDefined();
-  expect(decoded.payload).toBeDefined();
+  const decodedPayload = jwtDecode(presumedToken);
+  expect(decodedPayload).not.toBeNull();
+  expect(decodedPayload).toBeDefined();
+  expect(decodedPayload.exp).toBeDefined();
+  expect(decodedPayload.iat).toBeDefined();
 };
 
 /**

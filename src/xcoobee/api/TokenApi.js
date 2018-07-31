@@ -33,7 +33,7 @@ export function getApiAccessToken(apiCfg) {
   }
 
   let unfulfilledPromise = new Promise((resolve, reject) => {
-    const apiAccessTokenUrl = process.env.XCOOBEE__API_ACCESS_TOKEN_URL;
+    const apiAccessTokenUrl = process.env.XCOOBEE__API_ACCESS_TOKEN_URL || 'https://api.xcoobee.net/get_token';
 
     try {
       fetch(

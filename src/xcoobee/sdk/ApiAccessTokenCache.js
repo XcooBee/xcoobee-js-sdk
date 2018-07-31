@@ -1,4 +1,4 @@
-import Jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 
 import TokenApi from '../../xcoobee/api/TokenApi';
 
@@ -48,7 +48,7 @@ class ApiAccessTokenCache {
       const apiAccessToken = this._.internalCache[key];
 
       // Assert that token is not expired or is not about to expire.
-      const jwtTokenPayload = Jwt.decode(apiAccessToken);
+      const jwtTokenPayload = jwtDecode(apiAccessToken);
       const exp = jwtTokenPayload.exp;
       const now = Date.now();
       const expInMs = typeof exp === 'number' && exp === exp ? exp * 1000 : now;

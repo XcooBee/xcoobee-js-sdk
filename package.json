@@ -35,7 +35,7 @@
     "url": "https://github.com/XcooBee/xcoobee-js-sdk.git"
   },
   "scripts": {
-    "build": "",
+    "build": "webpack",
     "clean": "",
     "coverage": "jest --coverage",
     "start": "",
@@ -47,18 +47,21 @@
     "cross-fetch": "^2.2.2",
     "form-data": "^2.3.2",
     "graphql-request": "^1.6.0",
-    "jsonwebtoken": "^8.3.0",
+    "jwt-decode": "^2.2.0",
     "qc-to_bool": "^1.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^23.0.1",
+    "babel-loader": "^7.1.5",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "dotenv": "^6.0.0",
     "jest": "^23.1.0",
-    "regenerator-runtime": "^0.11.1"
+    "regenerator-runtime": "^0.11.1",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0"
   }
 }

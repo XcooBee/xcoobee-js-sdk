@@ -17,10 +17,10 @@ import UsersCache from './UsersCache';
  *   pgpPassword: null,
  *   pgpSecret: null,
  * };
- * const xcooBee = new XcooBee(config);
+ * const xcooBeeSdk = new Sdk(config);
  * ```
  */
-class XcooBee {
+class Sdk {
 
   /**
    *
@@ -69,6 +69,6 @@ class XcooBee {
     return this._.users;
   }
 
-}// eo class XcooBee
+}// eo class Sdk
 
-export default XcooBee;
+export default Sdk;

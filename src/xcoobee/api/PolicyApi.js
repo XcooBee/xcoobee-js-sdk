@@ -16,7 +16,13 @@ export function upload_policy(apiAccessToken, endPoint, files) {
   // TODO: Validate arguments;
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
-    let baseName = Path.basename(file);
+    let baseName;
+    if (file instanceof File) {
+      baseName = file.name;
+    }
+    else {
+      baseName = Path.basename(file);
+    }
 
     query.push(`  policy${idx}: upload_policy(filePath: "${baseName}", intent: ${endPoint.name}, identifier: "${endPoint.cursor}") {`);
     query.push('    credential');

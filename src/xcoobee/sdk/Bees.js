@@ -1,5 +1,6 @@
 import BeesApi from '../../xcoobee/api/BeesApi';
 import EndPointApi from '../../xcoobee/api/EndPointApi';
+import FileApi from '../../xcoobee/api/FileApi';
 import PolicyApi from '../../xcoobee/api/PolicyApi';
 
 import ErrorResponse from './ErrorResponse';
@@ -120,8 +121,9 @@ class Bees {
   /**
    * Uploads specified files to XcooBee.
    *
-   * @param {string[]} files - File paths of the files on the local file system
-   *   to be uploaded.  For example, 'C:\Temp\MyPic.jpg' or '~/MyPic.jpg`.
+   * @param {string[]|File[]} files - File paths of the files on the local file system
+   *   to be uploaded.  For example, 'C:\Temp\MyPic.jpg' or '~/MyPic.jpg`.  Or an array
+   *   of 'File' objects as is available in a modern browser.
    *   TODO: Test what file paths actually work and make sure the documentation is
    *   adequate.  Be sure to show examples of various path types.
    * @param {string} [intent] - One of the "outbox" endpoints defined in the

@@ -8,7 +8,7 @@ import ApiUtils from './ApiUtils';
 /**
  * Uploads the specified file to the system.
  *
- * @param {*} filePath The path to the file to be uploaded.
+ * @param {*} file The path to the file to be uploaded. Or a `File` instance.
  * @param {Object} policy - The policy used for S3 authentication.
  * @param {String} policy.credential
  * @param {String} policy.date
@@ -20,7 +20,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws XcooBeeError
  */
-export function upload_file(filePath, policy) {
+export function upload_file(file, policy) {
   const url = policy.upload_url;
   // See https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
   const formData = new FormData();
@@ -32,7 +32,12 @@ export function upload_file(filePath, policy) {
   formData.append('X-Amz-meta-identifier', policy.identifier);
   formData.append('Policy', policy.policy);
   formData.append('X-Amz-Signature', policy.signature);
-  formData.append('file', Fs.createReadStream(filePath));
+  if (file instanceof File) {
+    formData.append('file', file);
+  }
+  else {
+    formData.append('file', Fs.createReadStream(filePath));
+  }
 
   return new Promise((resolve, reject) => {
     formData.submit(url, (err, res /*: IncomingMessage */) => {
@@ -41,6 +46,13 @@ export function upload_file(filePath, policy) {
       }
       const statusCode = res.statusCode;
       if (statusCode >= 300) {
+        let filePath;
+        if (file instanceof File) {
+          filePath = file.name;
+        }
+        else {
+          filePath = file;
+        }
         throw new XcooBeeError(`Failed to upload file at: ${filePath} using policy: ${JSON.stringify(policy)}`);
       }
 

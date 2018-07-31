@@ -21,7 +21,7 @@ export function assertAppearsToBeACampaignId(campaignId) {
  * @returns {GraphQLClient}
  */
 export function createClient(apiAccessToken) {
-  const graphqlApiUrl = process.env.XCOOBEE__GRAPHQL_API_URL;
+  const graphqlApiUrl = process.env.XCOOBEE__GRAPHQL_API_URL || 'https://api.xcoobee.net/graphql';
   return new GraphQLClient(graphqlApiUrl, {
     headers: {
       // TODO: Suggest that 'Bearer ' should be included in Authorization header.
