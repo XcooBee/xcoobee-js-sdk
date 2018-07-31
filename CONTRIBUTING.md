@@ -6,6 +6,14 @@
 
 ## Installation
 
+All that needs to be installed to start contributing to this project besides
+`node` and `npm` is the project's dependencies.  These can be installed using
+the following command.
+
+```sh
+npm install
+```
+
 
 ## Building
 
