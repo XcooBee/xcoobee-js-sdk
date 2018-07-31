@@ -78,11 +78,11 @@ class Bees {
   async listBees(searchText, config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const beesList = await BeesApi.bees(apiAccessToken, searchText);
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const beesList = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText);
       const response = new SuccessResponse(beesList);
       return Promise.resolve(response);
     } catch (err) {
@@ -139,13 +139,13 @@ class Bees {
   async uploadFiles(files, intent, config) {
     this._assertValidState();
     let apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiKey, apiSecret);
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const endPoints = await EndPointApi.outbox_endpoints(apiAccessToken, userCursor);
+      const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
       const endPointName = intent || 'outbox';
 
       // Find the endpoint with the name matching the specified intent.
@@ -162,7 +162,7 @@ class Bees {
       }
 
       const endPoint = candidateEndPoints[0];
-      const policies = await PolicyApi.upload_policy(apiAccessToken, endPoint, files);
+      const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files);
       const policyFilePairs = _zip(files, policies);
       // Note: We don't want to upload one file, wait for the promise to resolve,
       // and then repeat.  Here we are uploading all files back-to-back. ...

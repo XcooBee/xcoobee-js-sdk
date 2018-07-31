@@ -14,6 +14,7 @@ const MSG__GENERIC_ERROR = 'Unable to get an API access token.';
  *   instance since it has the same shape.
  * @param {string} apiCfg.apiKey - Your API key.
  * @param {string} apiCfg.apiSecret - Your API secret.
+ * @param {string} apiCfg.apiUrlRoot - The root of the API URL.
  *
  * @returns {Promise<ApiAccessToken>} An access token.
  *
@@ -25,7 +26,7 @@ export function getApiAccessToken(apiCfg) {
   // we simply return any existing unfulfilled promises instead of making a new
   // request.
 
-  let { apiKey, apiSecret } = apiCfg;
+  let { apiKey, apiSecret, apiUrlRoot } = apiCfg;
   let key = `${apiKey}:${apiSecret}`;
   if (key in getApiAccessToken._.unfulfilledPromises) {
     let unfulfilledPromise = getApiAccessToken._.unfulfilledPromises[key];
@@ -33,7 +34,7 @@ export function getApiAccessToken(apiCfg) {
   }
 
   let unfulfilledPromise = new Promise((resolve, reject) => {
-    const apiAccessTokenUrl = process.env.XCOOBEE__API_ACCESS_TOKEN_URL || 'https://api.xcoobee.net/get_token';
+    const apiAccessTokenUrl = apiUrlRoot + '/get_token';
 
     try {
       fetch(

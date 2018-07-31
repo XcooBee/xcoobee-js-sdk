@@ -7,6 +7,7 @@ import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -29,6 +30,7 @@ describe('Bees', function () {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
@@ -49,10 +51,12 @@ describe('Bees', function () {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
+              apiUrlRoot: 'should_be_unused',
             });
             const overridingConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
@@ -75,6 +79,7 @@ describe('Bees', function () {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
+            apiUrlRoot,
           });
 
           const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
@@ -101,6 +106,7 @@ describe('Bees', function () {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt');

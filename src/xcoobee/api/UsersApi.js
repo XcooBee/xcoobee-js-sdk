@@ -3,11 +3,12 @@ import ApiUtils from './ApiUtils';
 /**
  * Fetches user information associated with the specified API access token.
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  *
  * @returns {Promise<User>}
  */
-export function getUser(apiAccessToken) {
+export function getUser(apiUrlRoot, apiAccessToken) {
   // Note: There is no need to make multiple requests for user info with the same API
   // access token if the first request has not been fulfilled yet.  Here we simply
   // return any existing unfulfilled promises instead of making a new request.
@@ -19,7 +20,7 @@ export function getUser(apiAccessToken) {
 
   let unfulfilledPromise = new Promise((resolve, reject) => {
     try {
-      const client = ApiUtils.createClient(apiAccessToken);
+      const client = ApiUtils.createClient(apiUrlRoot, apiAccessToken);
       const query = `
         query {
           user {

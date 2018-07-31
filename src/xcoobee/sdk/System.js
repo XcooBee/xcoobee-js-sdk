@@ -46,11 +46,11 @@ class System {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiAccessToken, events, resolvedCampaignId);
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, events, resolvedCampaignId);
       const response = new SuccessResponse(eventSubscriptions);
       return Promise.resolve(response);
     } catch (err) {
@@ -92,13 +92,13 @@ class System {
   async getEvents(config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiKey, apiSecret)
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const events = await EventsApi.getEvents(apiAccessToken, userCursor);
+      const events = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor);
       const response = new SuccessResponse(events);
       return Promise.resolve(response);
     } catch (err) {
@@ -127,11 +127,11 @@ class System {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiAccessToken, resolvedCampaignId);
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, resolvedCampaignId);
       const response = new SuccessResponse(eventSubscriptions);
       return Promise.resolve(response);
     } catch (err) {

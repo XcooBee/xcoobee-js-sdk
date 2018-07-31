@@ -10,11 +10,13 @@ describe('Config', function () {
         let config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
         });
 
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBeNull();
         expect(config.encrypt).toBe(false);
         expect(config.pgpPassword).toBeNull();
@@ -24,12 +26,14 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           campaignId: null,
         });
 
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBeNull();
         expect(config.encrypt).toBe(false);
         expect(config.pgpPassword).toBeNull();
@@ -39,12 +43,14 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           campaignId: 'xxxxxx-xxxx-xxxx-xxxxxxx',
         });
 
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBe('xxxxxx-xxxx-xxxx-xxxxxxx');
         expect(config.encrypt).toBe(false);
         expect(config.pgpPassword).toBeNull();
@@ -54,12 +60,14 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           encrypt: false,
         });
 
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBeNull();
         expect(config.encrypt).toBe(false);
         expect(config.pgpPassword).toBeNull();
@@ -69,6 +77,7 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           encrypt: true,
           pgpPassword: 'testPgpPassword',
           pgpSecret: 'testPgpSecret',
@@ -77,6 +86,7 @@ describe('Config', function () {
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBeNull();
         expect(config.encrypt).toBe(true);
         expect(config.pgpPassword).toBe('testPgpPassword');
@@ -87,6 +97,7 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           pgpPassword: 'testPgpPassword',
           pgpSecret: 'testPgpSecret',
         });
@@ -94,6 +105,7 @@ describe('Config', function () {
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBeNull();
         expect(config.encrypt).toBe(false);
         expect(config.pgpPassword).toBe('testPgpPassword');
@@ -102,6 +114,7 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           encrypt: false,
           pgpPassword: 'testPgpPassword',
           pgpSecret: 'testPgpSecret',
@@ -110,6 +123,7 @@ describe('Config', function () {
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBeNull();
         expect(config.encrypt).toBe(false);
         expect(config.pgpPassword).toBe('testPgpPassword');
@@ -119,6 +133,7 @@ describe('Config', function () {
         config = new Config({
           apiKey: 'testApiKey',
           apiSecret: 'testApiSecret',
+          apiUrlRoot: 'https://api.xcoobee.net',
           campaignId: 'xxxxxx-xxxx-xxxx-xxxxxxx',
           encrypt: true,
           pgpPassword: 'testPgpPassword',
@@ -128,6 +143,7 @@ describe('Config', function () {
         expect(config).toBeInstanceOf(Config);
         expect(config.apiKey).toBe('testApiKey');
         expect(config.apiSecret).toBe('testApiSecret');
+        expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
         expect(config.campaignId).toBe('xxxxxx-xxxx-xxxx-xxxxxxx');
         expect(config.encrypt).toBe(true);
         expect(config.pgpPassword).toBe('testPgpPassword');

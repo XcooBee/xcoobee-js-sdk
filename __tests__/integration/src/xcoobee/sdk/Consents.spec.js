@@ -5,6 +5,7 @@ import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import Consents from '../../../../../src/xcoobee/sdk/Consents';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -27,6 +28,7 @@ describe('Consents', function () {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
@@ -49,10 +51,12 @@ describe('Consents', function () {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
+              apiUrlRoot: 'should_be_unused',
             });
             const overridingConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
@@ -77,6 +81,7 @@ describe('Consents', function () {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
+            apiUrlRoot,
           });
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);

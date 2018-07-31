@@ -7,6 +7,7 @@ import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import System from '../../../../../src/xcoobee/sdk/System';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -33,6 +34,7 @@ describe('System', function () {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
+                  apiUrlRoot,
                   campaignId: 'known', // FIXME: TODO: Get a legit campaign cursor.
                 });
                 const eventsMapping = {
@@ -62,6 +64,7 @@ describe('System', function () {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
+                  apiUrlRoot: 'should_be_unused',
                   campaignId: 'default-campaign-id',
                 });
                 const eventsMapping = {
@@ -70,6 +73,7 @@ describe('System', function () {
                 const overridingConfig = new Config({
                   apiKey,
                   apiSecret,
+                  apiUrlRoot,
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Get a legit campaign cursor.
                 });
 
@@ -96,6 +100,7 @@ describe('System', function () {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
+                  apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const eventsMapping = {
@@ -104,6 +109,7 @@ describe('System', function () {
                 const overridingConfig = new Config({
                   apiKey,
                   apiSecret,
+                  apiUrlRoot,
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const campaignId = 'known'; // FIXME: TODO: Get a legit campaign cursor.
@@ -144,11 +150,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'known', // FIXME: TODO: Get a legit campaign ID.
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'known', // FIXME: TODO: Get a legit campaign ID.
               });
               const eventsMapping = {
@@ -203,6 +211,7 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'unknown',
               });
               const eventsMapping = {
@@ -251,11 +260,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
+                apiUrlRoot: 'should_be_unused',
                 campaignId: 'known', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'unknown',
               });
               const eventsMapping = {
@@ -284,11 +295,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const campaignId = 'unknown';
@@ -338,6 +351,7 @@ describe('System', function () {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -360,10 +374,12 @@ describe('System', function () {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
+              apiUrlRoot: 'should_be_unused',
             });
             const overridingConfig = new Config({
               apiKey,
               apiSecret,
+              apiUrlRoot,
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -388,6 +404,7 @@ describe('System', function () {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
+            apiUrlRoot,
           });
 
           const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -417,6 +434,7 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'known', // FIXME: TODO: Get a legit campaign cursor.
               });
 
@@ -438,11 +456,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
+                apiUrlRoot: 'should_be_unused',
                 campaignId: 'default-campaign-id',
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'overriding-campaign-id', // FIXME: TODO: Get a legit campaign cursor.
               });
 
@@ -464,11 +484,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const campaignId = 'known'; // FIXME: TODO: Get a legit campaign cursor.
@@ -503,6 +525,7 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'unknown',
               });
 
@@ -548,11 +571,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
+                apiUrlRoot: 'should_be_unused',
                 campaignId: 'known', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'unknown',
               });
 
@@ -578,11 +603,13 @@ describe('System', function () {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
+                apiUrlRoot,
                 campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
               const campaignId = 'unknown';

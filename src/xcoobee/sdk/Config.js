@@ -12,6 +12,7 @@ class Config {
    * @param {Object} data - The configuration data.
    * @param {string} data.apiKey - Your API key.
    * @param {string} data.apiSecret - Your API secret associated with your API key.
+   * @param {string} data.apiUrlRoot - The root of the API URL.
    * @param {string} [data.campaignId] - The default campaign ID to use if a campaign
    *   ID is not explicitly set during an SDK call.
    * @param {boolean} [data.encrypt=false] - Flag indicating whether data should be
@@ -25,7 +26,7 @@ class Config {
    */
   constructor(data) {
     // TODO: Validate data.
-    let { apiKey, apiSecret, campaignId, encrypt, pgpPassword, pgpSecret } = data;
+    let { apiKey, apiSecret, apiUrlRoot, campaignId, encrypt, pgpPassword, pgpSecret } = data;
     campaignId = campaignId === undefined ? null : campaignId;
     encrypt = encrypt === undefined ? false : encrypt;
     pgpPassword = pgpPassword === undefined ? null : pgpPassword;
@@ -37,6 +38,10 @@ class Config {
 
     if (!apiSecret || typeof apiSecret !== 'string') {
       throw new TypeError('API secret is required.');
+    }
+
+    if (!apiUrlRoot || typeof apiUrlRoot !== 'string') {
+      throw new TypeError('API URL root is required.');
     }
 
     if ((campaignId !== null && typeof campaignId !== 'string') || (typeof campaignId === 'string' && campaignId.length === 0)) {
@@ -55,6 +60,7 @@ class Config {
     this._ = {
       apiKey,
       apiSecret,
+      apiUrlRoot,
       campaignId,
       encrypt,
       pgpPassword,
@@ -68,6 +74,10 @@ class Config {
 
   get apiSecret() {
     return this._.apiSecret;
+  }
+
+  get apiUrlRoot() {
+    return this._.apiUrlRoot;
   }
 
   /**

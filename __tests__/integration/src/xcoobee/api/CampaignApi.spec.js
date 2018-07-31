@@ -3,6 +3,7 @@ import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -20,9 +21,9 @@ describe('CampaignApi', function () {
       describe('and called with a known campaign cursor', function () {
 
         xit('should return with expected campaign info', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignCursor = 'known'; // FIXME: TODO: Get a legit campaign cursor.
-          const consentCampaign = await CampaignApi.getCampaignInfo(apiAccessToken, campaignCursor);
+          const consentCampaign = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
           expect(consentCampaign).toBeDefined();
           expect(consentCampaign.campaign_name).toBeDefined();
           expect(consentCampaign.date_c).toBeDefined();
@@ -38,10 +39,10 @@ describe('CampaignApi', function () {
       describe('and called with an unknown campaign cursor', function () {
 
         it('should return with no data', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignCursor = 'unknown';
           try {
-            await CampaignApi.getCampaignInfo(apiAccessToken, campaignCursor);
+            await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {
@@ -63,10 +64,10 @@ describe('CampaignApi', function () {
     describe('called with a valid API access token', function () {
 
       it('should return the user\'s campaigns', async function (done) {
-        const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
-        const user = await usersCache.get(apiKey, apiSecret);
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
-        const campaigns = await CampaignApi.getCampaigns(apiAccessToken, userCursor);
+        const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
         expect(campaigns).toBeInstanceOf(Array);
         expect(campaigns.length).toBe(0);
         // TODO: Add more expectations.

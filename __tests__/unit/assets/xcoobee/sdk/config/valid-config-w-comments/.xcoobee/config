@@ -4,3 +4,7 @@ apiKey = testApiKeyWithComments # The API key can be found in Settings > Securit
 
 # The API Secret.  You only get one chance to download it.
 apiSecret = testApiSecretWithComments
+
+# The root of the API URL.  This determines whether you are using production or
+# the test system.
+apiUrlRoot = https://api.xcoobee.net

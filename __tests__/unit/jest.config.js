@@ -5,6 +5,9 @@ module.exports = {
     // '../setup.js',
   ],
   testPathIgnorePatterns: [
-    // '<rootDir>/xcoobee/api/TokenApi.test.js',
+    // '<rootDir>/xcoobee/core/XcooBeeError.spec.js',
+    // '<rootDir>/xcoobee/sdk/Config.spec.js',
+    // '<rootDir>/xcoobee/sdk/ConfigUtils.spec.js',
+    // '<rootDir>/xcoobee/sdk/SdkUtils.spec.js',
   ],
 };

@@ -74,11 +74,10 @@ class Users {
   async getUser(config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const userInfo = await this._.usersCache.get(apiKey, apiSecret)
+      const userInfo = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const response = new SuccessResponse(userInfo);
       return Promise.resolve(response);
     } catch (err) {

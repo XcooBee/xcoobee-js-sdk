@@ -20,6 +20,7 @@ describe('ConfigUtils', function () {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKey');
           expect(config.apiSecret).toBe('testApiSecret');
+          expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
           expect(config.campaignId).toBeNull();
           expect(config.encrypt).toBe(false);
           expect(config.pgpPassword).toBeNull();
@@ -41,6 +42,7 @@ describe('ConfigUtils', function () {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKeyWithComments');
           expect(config.apiSecret).toBe('testApiSecretWithComments');
+          expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
           expect(config.campaignId).toBeNull();
           expect(config.encrypt).toBe(false);
           expect(config.pgpPassword).toBeNull();
@@ -62,6 +64,7 @@ describe('ConfigUtils', function () {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKeyWithBlankLines');
           expect(config.apiSecret).toBe('testApiSecretWithBlankLines');
+          expect(config.apiUrlRoot).toBe('https://api.xcoobee.net');
           expect(config.campaignId).toBeNull();
           expect(config.encrypt).toBe(false);
           expect(config.pgpPassword).toBeNull();

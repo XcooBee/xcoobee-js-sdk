@@ -209,13 +209,13 @@ class Consents {
   async listCampaigns(config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret } = apiCfg;
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiKey, apiSecret)
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const campaigns = await CampaignApi.getCampaigns(apiAccessToken, userCursor);
+      const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
       const response = new SuccessResponse(campaigns);
       return Promise.resolve(response);
     } catch (err) {

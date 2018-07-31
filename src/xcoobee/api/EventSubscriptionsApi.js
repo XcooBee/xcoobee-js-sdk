@@ -4,6 +4,7 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {Object} eventsMapping - A mapping between event subscription type and
  *   handler.
@@ -11,7 +12,7 @@ import ApiUtils from './ApiUtils';
  *
  * @returns {Promise<EventSubscription[]>}
  */
-export function addEventSubscription(apiAccessToken, eventsMapping, campaignId) {
+export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   let events = [];
 
@@ -42,7 +43,7 @@ export function addEventSubscription(apiAccessToken, eventsMapping, campaignId) 
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(mutation, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: addSubscriptionsConfig,
   })
     .then((response) => {
@@ -63,12 +64,13 @@ export function addEventSubscription(apiAccessToken, eventsMapping, campaignId) 
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
  * @returns {Promise<EventSubscription[]>}
  */
-export function listEventSubscriptions(apiAccessToken, campaignId) {
+export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
     query listEventSubscriptions($campaignId: String!) {
@@ -85,7 +87,7 @@ export function listEventSubscriptions(apiAccessToken, campaignId) {
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
     .then((response) => {

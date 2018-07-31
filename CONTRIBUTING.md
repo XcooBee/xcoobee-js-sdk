@@ -15,11 +15,13 @@
 **Setup**
 
 - In `__tests__/integration/`, create a file named `.env.local`.
-  + Add an `XCOOBEE__API_KEY` variable using an API key from a `developer` account.
+  + Add an `XCOOBEE__API_KEY` variable using an API key from a `developer` account
+    on the test system.
   + Add an `XCOOBEE__API_SECRET` variable using an API secret from the same
     `developer` account.
-  + Optionally, add a `XCOOBEE__GRAPHQL_API_URL` variable set to a URI pointing to
-    the GraphQL endpoint of the XcooBee API you want to test.
+  + Optionally, add a `XCOOBEE__API_URL_ROOT` variable set to a URI pointing to
+    the root of the API URL you want to test.  Be sure to update the
+    `XCOOBEE__API_KEY` and `XCOOBEE__API_SECRET` accordingly.
 
 **Running**
 

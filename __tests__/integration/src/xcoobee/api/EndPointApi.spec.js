@@ -5,6 +5,7 @@ import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
 import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -22,10 +23,10 @@ describe('EndPointApi', function () {
       describe('and called with a known user ID', function () {
 
         it('should return the user\'s outbox endpoints', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
-          const user = await usersCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+          const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
-          const endPoints = await EndPointApi.outbox_endpoints(apiAccessToken, userCursor);
+          const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
           expect(endPoints).toBeInstanceOf(Array);
           // Not yet sure if this will always be the case, but it is right now.
           expect(endPoints.length).toBe(1);
@@ -44,10 +45,10 @@ describe('EndPointApi', function () {
       describe('and called with an unknown user ID', function () {
 
         it('should return with no data', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = 'unknown';
           try {
-            await EndPointApi.outbox_endpoints(apiAccessToken, userCursor);
+            await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {

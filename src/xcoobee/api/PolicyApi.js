@@ -4,6 +4,7 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {EndPoint} endPoint
  * @param {'bee_icon'|'invite_list'|'outbox'|'profile_image'} endPoint.name
@@ -12,7 +13,7 @@ import ApiUtils from './ApiUtils';
  *
  * @returns {Promise<Policy[]>}
  */
-export function upload_policy(apiAccessToken, endPoint, files) {
+export function upload_policy(apiUrlRoot, apiAccessToken, endPoint, files) {
   // TODO: Validate arguments;
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
@@ -37,7 +38,7 @@ export function upload_policy(apiAccessToken, endPoint, files) {
   query.push('}');
   query = query.join('\n')
 
-  return ApiUtils.createClient(apiAccessToken).request(query)
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query)
     .then((response) => {
       const policies = [];
 

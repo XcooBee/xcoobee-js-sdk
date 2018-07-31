@@ -2,12 +2,13 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
  *
  * @returns {Promise<OutboxEndpoint[]>}
  */
-export function outbox_endpoints(apiAccessToken, userCursor) {
+export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor) {
   const query = `
     query getOutboxEndpoints($userId: String!) {
       outbox_endpoints(user_cursor: $userId) {
@@ -19,7 +20,7 @@ export function outbox_endpoints(apiAccessToken, userCursor) {
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userId: userCursor,
   })
     .then((response) => {

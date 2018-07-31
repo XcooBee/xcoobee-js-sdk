@@ -33,6 +33,7 @@ class ApiAccessTokenCache {
    * Note: If a cached token is expired or about to expire, then a fresh token is
    * automatically fetched.
    *
+   * @param {string} apiUrlRoot - The root of the API URL.
    * @param {string} apiKey - Your API key.
    * @param {string} apiSecret - Your API secret.
    * @param {boolean} [fresh=false] - Flag indicating whether to force a fresh API
@@ -41,8 +42,8 @@ class ApiAccessTokenCache {
    * @returns {Promise<string>} An API access token for the specified API key/secret
    *   pair.
    */
-  get(apiKey, apiSecret, fresh) {
-    const key = `${apiKey}:${apiSecret}`;
+  get(apiUrlRoot, apiKey, apiSecret, fresh) {
+    const key = `${apiUrlRoot}:${apiKey}:${apiSecret}`;
 
     if (fresh !== true && key in this._.internalCache) {
       const apiAccessToken = this._.internalCache[key];
@@ -63,6 +64,7 @@ class ApiAccessTokenCache {
     return TokenApi.getApiAccessToken({
       apiKey,
       apiSecret,
+      apiUrlRoot,
     })
       .then((apiAccessToken) => {
         this._.internalCache[key] = apiAccessToken;

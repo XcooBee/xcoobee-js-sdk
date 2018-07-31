@@ -3,6 +3,7 @@ import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCa
 
 import { assertIsJwtToken, sleep } from '../../../../lib/Utils';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -17,7 +18,7 @@ describe('ApiAccessTokenCache', function () {
       describe('called with a valid API key/secret pair', function () {
 
         it('should fetch and return an API access token', async function (done) {
-          const apiAccessToken = await (new ApiAccessTokenCache()).get(apiKey, apiSecret);
+          const apiAccessToken = await (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret);
           expect(apiAccessToken).toBeDefined();
           assertIsJwtToken(apiAccessToken);
           done();
@@ -32,8 +33,8 @@ describe('ApiAccessTokenCache', function () {
 
           // Note: Not using async/await here since we need the calls to be back to back.
           Promise.all([
-            cache.get(apiKey, apiSecret),
-            cache.get(apiKey, apiSecret),
+            cache.get(apiUrlRoot, apiKey, apiSecret),
+            cache.get(apiUrlRoot, apiKey, apiSecret),
           ])
             .then((apiAccessTokens) => {
               expect(apiAccessTokens[0]).toBe(apiAccessTokens[1]);
@@ -41,8 +42,8 @@ describe('ApiAccessTokenCache', function () {
             });
 
           const apiAccessTokens = await Promise.all([
-            cache.get(apiKey, apiSecret),
-            cache.get(apiKey, apiSecret),
+            cache.get(apiUrlRoot, apiKey, apiSecret),
+            cache.get(apiUrlRoot, apiKey, apiSecret),
           ]);
           expect(apiAccessTokens[0]).toBe(apiAccessTokens[1]);
           done();
@@ -54,9 +55,9 @@ describe('ApiAccessTokenCache', function () {
 
         it('should return the cached API access token', async function (done) {
           let cache = new ApiAccessTokenCache();
-          cache.get(apiKey, apiSecret)
+          cache.get(apiUrlRoot, apiKey, apiSecret)
             .then((apiAccessToken1) => {
-              cache.get(apiKey, apiSecret)
+              cache.get(apiUrlRoot, apiKey, apiSecret)
                 .then((apiAccessToken2) => {
                   expect(apiAccessToken1).toBe(apiAccessToken2);
                   done();
@@ -64,8 +65,8 @@ describe('ApiAccessTokenCache', function () {
             });
 
           cache = new ApiAccessTokenCache();
-          const apiAccessToken1 = await cache.get(apiKey, apiSecret);
-          const apiAccessToken2 = await cache.get(apiKey, apiSecret);
+          const apiAccessToken1 = await cache.get(apiUrlRoot, apiKey, apiSecret);
+          const apiAccessToken2 = await cache.get(apiUrlRoot, apiKey, apiSecret);
           expect(apiAccessToken1).toBe(apiAccessToken2);
           done();
         });// eo it
@@ -76,11 +77,11 @@ describe('ApiAccessTokenCache', function () {
 
         it('should return the cached API access token', async function (done) {
           let cache = new ApiAccessTokenCache();
-          cache.get(apiKey, apiSecret)
+          cache.get(apiUrlRoot, apiKey, apiSecret)
             .then((apiAccessToken1) => {
               sleep(10000)
                 .then(() => {
-                  cache.get(apiKey, apiSecret)
+                  cache.get(apiUrlRoot, apiKey, apiSecret)
                     .then((apiAccessToken2) => {
                       expect(apiAccessToken1).toBe(apiAccessToken2);
                       done();
@@ -89,9 +90,9 @@ describe('ApiAccessTokenCache', function () {
             });
 
           cache = new ApiAccessTokenCache();
-          const apiAccessToken1 = await cache.get(apiKey, apiSecret);
+          const apiAccessToken1 = await cache.get(apiUrlRoot, apiKey, apiSecret);
           await sleep(10000);
-          const apiAccessToken2 = await cache.get(apiKey, apiSecret);
+          const apiAccessToken2 = await cache.get(apiUrlRoot, apiKey, apiSecret);
           expect(apiAccessToken1).toBe(apiAccessToken2);
           done();
         });// eo it
@@ -104,7 +105,7 @@ describe('ApiAccessTokenCache', function () {
           const apiKey = 'invalid';
           const apiSecret = 'invalid';
 
-          (new ApiAccessTokenCache()).get(apiKey, apiSecret)
+          (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret)
             .then((apiAccessToken) => {
               // This should not be called.
               expect(true).toBe(false);
@@ -116,7 +117,7 @@ describe('ApiAccessTokenCache', function () {
             });
 
           try {
-            await (new ApiAccessTokenCache()).get(apiKey, apiSecret);
+            await (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {

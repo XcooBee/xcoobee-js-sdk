@@ -2,12 +2,13 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign ID.
  *
  * @returns {CampaignInfo}
  */
-export function getCampaignInfo(apiAccessToken, campaignId) {
+export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
     query getCampaignInfo($campaignId: String!) {
@@ -22,7 +23,7 @@ export function getCampaignInfo(apiAccessToken, campaignId) {
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
     .then((response) => {
@@ -34,7 +35,7 @@ export function getCampaignInfo(apiAccessToken, campaignId) {
     });
 }
 
-export function getCampaigns(apiAccessToken, userCursor) {
+export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
   /*
   Available Campaign Data:
     campaign_cursor
@@ -95,7 +96,7 @@ export function getCampaigns(apiAccessToken, userCursor) {
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userCursor,
   })
     .then((response) => {

@@ -3,6 +3,7 @@ import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
 
 import { assertIsJwtToken } from '../../../../lib/Utils';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -18,6 +19,7 @@ describe('TokenApi', function () {
         TokenApi.getApiAccessToken({
           apiKey,
           apiSecret,
+          apiUrlRoot,
         })
           .then((apiAccessToken) => {
             expect(apiAccessToken).toBeDefined();
@@ -34,10 +36,12 @@ describe('TokenApi', function () {
         let promise1 = TokenApi.getApiAccessToken({
           apiKey,
           apiSecret,
+          apiUrlRoot,
         });
         let promise2 = TokenApi.getApiAccessToken({
           apiKey,
           apiSecret,
+          apiUrlRoot,
         });
         expect(promise1).toBe(promise2);
         Promise.all([
@@ -58,11 +62,13 @@ describe('TokenApi', function () {
         let promise1 = TokenApi.getApiAccessToken({
           apiKey,
           apiSecret,
+          apiUrlRoot,
         });
         promise1.then((apiAccessToken1) => {
           let promise2 = TokenApi.getApiAccessToken({
             apiKey,
             apiSecret,
+            apiUrlRoot,
           });
           expect(promise1).not.toBe(promise2);
           promise2.then((apiAccessToken2) => {
@@ -80,8 +86,8 @@ describe('TokenApi', function () {
         const apiKey = 'invalid';
         const apiSecret = 'invalid';
 
-        TokenApi.getApiAccessToken(apiKey, apiSecret)
-          .then((apiAccessToken) => {
+        TokenApi.getApiAccessToken({ apiKey, apiSecret, apiUrlRoot })
+          .then((apiAccessToken_unused) => {
             // This should not be called.
             expect(true).toBe(false);
           })

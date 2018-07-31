@@ -5,3 +5,4 @@ apiSecret = testApiSecretWithBlankLines
 
 
 
+apiUrlRoot = https://api.xcoobee.net

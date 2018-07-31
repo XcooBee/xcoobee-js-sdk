@@ -7,12 +7,14 @@ describe('SdkUtils', function () {
     const defaultConfig = {
       apiKey: 'default-api-key',
       apiSecret: 'default-api-secret',
+      apiUrlRoot: 'https://default.api.xcoobee.net',
       mayHaveOther: 'NameValuePairs',
     };
 
     const overridingConfig = {
       apiKey: 'overriding-api-key',
       apiSecret: 'overriding-api-secret',
+      apiUrlRoot: 'https://overriding.api.xcoobee.net',
       mayHaveOther: 'NameValuePairs',
     };
 
@@ -23,6 +25,7 @@ describe('SdkUtils', function () {
         expect(apiCfg).toBeDefined();
         expect(apiCfg.apiKey).toBe('overriding-api-key');
         expect(apiCfg.apiSecret).toBe('overriding-api-secret');
+        expect(apiCfg.apiUrlRoot).toBe('https://overriding.api.xcoobee.net');
       });
 
     });// eo describe
@@ -34,11 +37,13 @@ describe('SdkUtils', function () {
         expect(apiCfg).toBeDefined();
         expect(apiCfg.apiKey).toBe('default-api-key');
         expect(apiCfg.apiSecret).toBe('default-api-secret');
+        expect(apiCfg.apiUrlRoot).toBe('https://default.api.xcoobee.net');
 
         apiCfg = SdkUtils.resolveApiCfg(undefined, defaultConfig);
         expect(apiCfg).toBeDefined();
         expect(apiCfg.apiKey).toBe('default-api-key');
         expect(apiCfg.apiSecret).toBe('default-api-secret');
+        expect(apiCfg.apiUrlRoot).toBe('https://default.api.xcoobee.net');
       });
 
     });// eo describe
@@ -77,6 +82,7 @@ describe('SdkUtils', function () {
     const defaultConfig = {
       apiKey: 'default-api-key',
       apiSecret: 'default-api-secret',
+      apiUrlRoot: 'https://default.api.xcoobee.net',
       campaignId: 'default-campaign-id',
       mayHaveOther: 'NameValuePairs',
     };
@@ -84,6 +90,7 @@ describe('SdkUtils', function () {
     const overridingConfig = {
       apiKey: 'overriding-api-key',
       apiSecret: 'overriding-api-secret',
+      apiUrlRoot: 'https://overriding.api.xcoobee.net',
       campaignId: 'overriding-campaign-id',
       mayHaveOther: 'NameValuePairs',
     };

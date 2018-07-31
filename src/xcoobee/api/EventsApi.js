@@ -2,12 +2,13 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
  *
  * @returns {Promise<Event[]>}
  */
-export function getEvents(apiAccessToken, userCursor) {
+export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
   const query = `
     query getEvents($userId: String!) {
       events(user_cursor: $userId) {
@@ -24,7 +25,7 @@ export function getEvents(apiAccessToken, userCursor) {
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userId: userCursor,
   })
     .then((response) => {

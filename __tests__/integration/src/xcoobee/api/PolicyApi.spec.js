@@ -7,6 +7,7 @@ import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
 import { assertIsCursorLike } from '../../../../lib/Utils';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -24,10 +25,10 @@ describe('PolicyApi', function () {
       describe('and called with an "outbox" intent', function () {
 
         xit('should', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
-          const user = await usersCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+          const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
-          const endPoints = await EndPointApi.outbox_endpoints(apiAccessToken, userCursor);
+          const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
           const intent = 'outbox';
           expect(endPoints).toBeInstanceOf(Array);
           let candidateEndPoints = endPoints.filter((endPoint) => {
@@ -40,7 +41,7 @@ describe('PolicyApi', function () {
           const files = [
             Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt'),
           ];
-          const policies = await PolicyApi.upload_policy(apiAccessToken, endPoint, files);
+          const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files);
           expect(policies).toBeInstanceOf(Array);
           expect(policies.length).toBe(1);
           const policy = policies[0];

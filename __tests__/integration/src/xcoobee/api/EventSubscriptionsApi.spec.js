@@ -2,6 +2,7 @@ import EventSubscriptionsApi from '../../../../../src/xcoobee/api/EventSubscript
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -20,12 +21,12 @@ describe('EventSubscriptionsApi', function () {
         xdescribe('and a valid events mapping', function () {
 
           it('should add the event subscriptions', async function (done) {
-            const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const eventsMapping = {
               ConsentApproved: 'OnConsentApproved',
             };
             const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-            const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiAccessToken, eventsMapping, campaignId);
+            const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
             expect(eventSubscriptions).toBeInstanceOf(Array);
             expect(eventSubscriptions.length).toBe(1);
             const eventSubscription = eventSubscriptions[0];
@@ -48,7 +49,7 @@ describe('EventSubscriptionsApi', function () {
             };
             const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
             try {
-              await EventSubscriptionsApi.addEventSubscription(apiAccessToken, eventsMapping, campaignId);
+              await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
               // This should not be called.
               expect(true).toBe(false);
             } catch (err) {
@@ -67,13 +68,13 @@ describe('EventSubscriptionsApi', function () {
       describe('and an unknown campaign ID', async function () {
 
         it('should throw an error', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const eventsMapping = {
             ConsentApproved: 'OnConsentApproved',
           };
           const campaignId = 'unknown';
           try {
-            await EventSubscriptionsApi.addEventSubscription(apiAccessToken, eventsMapping, campaignId);
+            await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {
@@ -98,9 +99,9 @@ describe('EventSubscriptionsApi', function () {
       xdescribe('and called with a known campaign ID', function () {
 
         it('should return with a list of event subscriptions', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-          const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiAccessToken, campaignId);
+          const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId);
           expect(eventSubscriptions).toBeInstanceOf(Array);
           expect(eventSubscriptions.length).toBe(0);
           // const eventSubscription = eventSubscriptions[0];
@@ -116,10 +117,10 @@ describe('EventSubscriptionsApi', function () {
       describe('and called with an unknown campaign ID', async function () {
 
         it('should throw an error', async function (done) {
-          const apiAccessToken = await apiAccessTokenCache.get(apiKey, apiSecret);
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignId = 'unknown';
           try {
-            await EventSubscriptionsApi.listEventSubscriptions(apiAccessToken, campaignId);
+            await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {

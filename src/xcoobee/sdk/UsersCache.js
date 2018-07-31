@@ -24,6 +24,7 @@ class UsersCache {
   /**
    * Fetches the user information for the specified API key/secret pair.
    *
+   * @param {string} apiUrlRoot - The root of the API URL.
    * @param {string} apiKey - Your API key.
    * @param {string} apiSecret - Your API secret.
    * @param {boolean} [fresh=false] - Flag indicating whether to force fetching
@@ -32,7 +33,7 @@ class UsersCache {
    * @returns {Promise<Object>} An object with information about the user that
    *   corresponds with the specified API key/secret pair.
    */
-  get(apiKey, apiSecret, fresh) {
+  get(apiUrlRoot, apiKey, apiSecret, fresh) {
     let key = `${apiKey}:${apiSecret}`;
 
     if (fresh !== true && key in this._.internalCache) {
@@ -40,9 +41,9 @@ class UsersCache {
       return Promise.resolve(user);
     }
 
-    return this._.apiAccessTokenCache.get(apiKey, apiSecret)
+    return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret)
       .then((apiAccessToken) => {
-        return UsersApi.getUser(apiAccessToken)
+        return UsersApi.getUser(apiUrlRoot, apiAccessToken)
           .then((user) => {
             this._.internalCache[key] = user;
             return Promise.resolve(user);
@@ -52,9 +53,9 @@ class UsersCache {
             // TODO: Only perform the following if we are sure the `err` here is due to an
             // invalid API access token.
             const fresh = true;
-            return this._.apiAccessTokenCache.get(apiKey, apiSecret, fresh)
+            return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret, fresh)
               .then((apiAccessToken) => {
-                return UsersApi.getUser(apiAccessToken)
+                return UsersApi.getUser(apiUrlRoot, apiAccessToken)
                   .then((user) => {
                     this._.internalCache[key] = user;
                     return Promise.resolve(user);

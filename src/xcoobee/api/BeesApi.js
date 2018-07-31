@@ -2,12 +2,13 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} [searchText=''] - The search text.
  *
  * @returns {Promise<Bees[]>}
  */
-export function bees(apiAccessToken, searchText) {
+export function bees(apiUrlRoot, apiAccessToken, searchText) {
   const query = `
     query getBees($searchText: String) {
       bees(search: $searchText) {
@@ -35,7 +36,7 @@ export function bees(apiAccessToken, searchText) {
       }
     }
   `;
-  return ApiUtils.createClient(apiAccessToken).request(query, {
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     searchText,
   })
     .then((response) => {
