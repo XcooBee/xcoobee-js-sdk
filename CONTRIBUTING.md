@@ -30,6 +30,8 @@ npm run build -- --mode=production
 
 ## Testing
 
+There are both unit tests and integration tests.  Unit tests are avaiable to
+test the code that doesn't have dependencies on a running API.
 
 ### Integration Testing
 
