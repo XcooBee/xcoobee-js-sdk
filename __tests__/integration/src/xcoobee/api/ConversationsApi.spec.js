@@ -19,7 +19,7 @@ describe('ConversationsApi', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return with user info', async function (done) {
+      it('should fetch and return with conversations', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const targetCursor = 'known'; // FIXME: TODO: Get a legit target cursor.
         const conversations = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor);
@@ -45,7 +45,7 @@ describe('ConversationsApi', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return with user info', async function (done) {
+      it('should fetch and return with conversations', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
