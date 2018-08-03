@@ -1,3 +1,4 @@
+import ConversationsApi from '../../xcoobee/api/ConversationsApi';
 import UsersApi from '../../xcoobee/api/UsersApi';
 
 import ErrorResponse from './ErrorResponse';
@@ -30,7 +31,7 @@ class Users {
   /**
    * TODO: Document this function.
    *
-   * @param {*} userId
+   * @param {*} targetCursor
    * @param {*} first
    * @param {*} after
    * @param {Config} [config] - The configuration to use instead of the default.
@@ -39,10 +40,23 @@ class Users {
    *
    * @throws XcooBeeError
    */
-  getConversation(userId, first, after, config) {
+  async getConversation(targetCursor, first, after, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const conversations = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor, first, after);
+      const response = new SuccessResponse(conversations);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
@@ -56,10 +70,25 @@ class Users {
    *
    * @throws XcooBeeError
    */
-  getConversations(first, after, config) {
+  async getConversations(first, after, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const userCursor = user.cursor;
+      const conversations = await ConversationsApi.getConversations(apiUrlRoot, apiAccessToken, userCursor, first, after);
+      const response = new SuccessResponse(conversations);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
