@@ -2,7 +2,7 @@ import ConversationsApi from '../../../../../src/xcoobee/api/ConversationsApi';
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
-import { assertIsCursorLike } from '../../../../lib/Utils';
+import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -27,12 +27,11 @@ describe('ConversationsApi', function () {
         expect(conversations).toBeInstanceOf(Array);
         expect(conversations.length).toBe(0);
         // let conversation = conversations[0];
-        // expect('consent_cursor' in conversation).toBe(true);
-        // assertIsCursorLike(conversation.consent_cursor);
         // expect('date_c' in conversation).toBe(true);
         // assertIso8601Like(conversation.date_c)
         // expect('display_name' in conversation).toBe(true);
         // expect('note_text' in conversation).toBe(true);
+        // expect('note_type' in conversation).toBe(true);
         // expect('target_cursor' in conversation).toBe(true);
         // assertIsCursorLike(conversation.target_cursor);
         done();
@@ -55,14 +54,25 @@ describe('ConversationsApi', function () {
         expect(conversations).toBeInstanceOf(Array);
         expect(conversations.length).toBe(0);
         // let conversation = conversations[0];
+        // expect('breach_cursor' in conversation).toBe(true);
+        // assertIsCursorLike(conversation.breach_cursor);
         // expect('consent_cursor' in conversation).toBe(true);
         // assertIsCursorLike(conversation.consent_cursor);
         // expect('date_c' in conversation).toBe(true);
         // assertIso8601Like(conversation.date_c)
+        // expect('date_e' in conversation).toBe(true);
+        // assertIso8601Like(conversation.date_e)
+        // expect('display_city' in conversation).toBe(true);
+        // expect('display_country' in conversation).toBe(true);
         // expect('display_name' in conversation).toBe(true);
+        // expect('display_province' in conversation).toBe(true);
+        // expect('is_outbound' in conversation).toBe(true);
         // expect('note_text' in conversation).toBe(true);
+        // expect('note_type' in conversation).toBe(true);
+        // expect('photo_url' in conversation).toBe(true);
         // expect('target_cursor' in conversation).toBe(true);
         // assertIsCursorLike(conversation.target_cursor);
+        // expect('xcoobee_id' in conversation).toBe(true);
         done();
       });// eo it
 
