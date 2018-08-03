@@ -106,7 +106,7 @@ describe('Users', function () {
 
     });// eo describe('.getConversations')
 
-    xdescribe('.getUser', function () {
+    describe('.getUser', function () {
 
       describe('called with a valid API key/secret pair', function () {
 
