@@ -1,4 +1,5 @@
 import ApiUtils from './ApiUtils';
+import ConsentStatuses from './ConsentStatuses';
 
 /**
  * TODO: Complete documentation.
@@ -77,8 +78,14 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
  * @param {ConsentStatus} status
  *
  * @returns {Promise<Consent>}
+ * @throws TypeError
  */
 export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
+  if (typeof status === 'string') {
+    if (!ConsentStatuses.values.includes(status)) {
+      throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
+    }
+  }
   // TODO: Decide what data should be returned.
   // Additional Consent Fields:
   // - allow_affiliates
