@@ -1,5 +1,82 @@
 import ApiUtils from './ApiUtils';
+import ConsentDataTypes from './ConsentDataTypes';
 import ConsentStatuses from './ConsentStatuses';
+import ConsentTypes from './ConsentTypes';
+
+/**
+ * TODO: Complete documentation.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} xcoobeeId
+ * @param {*} userCursor
+ * @param {*} campaignId
+ *
+ * @returns {Promise<Object<ConsentDataType, boolean>>}
+ */
+export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId) {
+  ApiUtils.assertAppearsToBeACampaignId(campaignId);
+  const query = `
+    query listConsents($userCursor: String!, $campaignId: String!, $status: ConsentStatus) {
+      consents(campaign_owner_cursor: $userCursor, campaign_cursor: $campaignId, status: $status) {
+        data {
+          consent_type,
+          request_data_types,
+          user_xcoobee_id,
+        }
+        page_info {
+          end_cursor
+          has_next_page
+        }
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    campaignId,
+    status: ConsentStatuses.ACTIVE,
+    userCursor,
+  })
+    .then((response) => {
+      const { consents } = response;
+      const { data, page_info } = consents;
+
+      // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
+      // true, then do more requests need to be made for more data?
+
+      // Unfortunately, the consents query does not yet allow searching by
+      // user_xcoobee_id, multiple consent_types, or multiple request_data_types.
+      // So, we have to post-process the data.
+      const cookieConsents = {
+        [ConsentDataTypes.ADVERTISING_COOKIE]: false,
+        [ConsentDataTypes.APPLICATION_COOKIE]: false,
+        [ConsentDataTypes.STATISTICS_COOKIE]: false,
+        [ConsentDataTypes.USAGE_COOKIE]: false,
+      };
+
+      data.forEach((consent) => {
+        if (consent.user_xcoobee_id === xcoobeeId) {
+          if ([ConsentTypes.WEB_APPLICATION_TRACKING, ConsentTypes.WEBSITE_TRACKING].includes(consent.consent_type)) {
+            if (consent.request_data_types.includes(ConsentDataTypes.ADVERTISING_COOKIE)) {
+              cookieConsents[ConsentDataTypes.ADVERTISING_COOKIE] = true;
+            }
+            if (consent.request_data_types.includes(ConsentDataTypes.APPLICATION_COOKIE)) {
+              cookieConsents[ConsentDataTypes.APPLICATION_COOKIE] = true;
+            }
+            if (consent.request_data_types.includes(ConsentDataTypes.STATISTICS_COOKIE)) {
+              cookieConsents[ConsentDataTypes.STATISTICS_COOKIE] = true;
+            }
+            if (consent.request_data_types.includes(ConsentDataTypes.USAGE_COOKIE)) {
+              cookieConsents[ConsentDataTypes.USAGE_COOKIE] = true;
+            }
+          }
+        }
+      });
+
+      return Promise.resolve(cookieConsents);
+    }, (err) => {
+      throw ApiUtils.transformError(err);
+    });
+}
 
 /**
  * TODO: Complete documentation.
@@ -154,6 +231,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
 }
 
 export default {
+  getCookieConsent,
   getConsentData,
   listConsents,
 };

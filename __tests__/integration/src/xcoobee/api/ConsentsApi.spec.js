@@ -1,4 +1,5 @@
 import ConsentsApi from '../../../../../src/xcoobee/api/ConsentsApi';
+import CookieDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
 
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
@@ -16,6 +17,29 @@ describe('ConsentsApi', function () {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
+
+  xdescribe('.getCookieConsent', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should fetch and return with consent info', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const xcoobeeId = '~SDK_Tester';
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
+        const cookieConsents = await ConsentsApi.getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId);
+        expect(cookieConsents).toBeDefined();
+        expect(typeof cookieConsents[CookieDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
+        expect(typeof cookieConsents[CookieDataTypes.APPLICATION_COOKIE]).toBe('boolean');
+        expect(typeof cookieConsents[CookieDataTypes.STATISTICS_COOKIE]).toBe('boolean');
+        expect(typeof cookieConsents[CookieDataTypes.USAGE_COOKIE]).toBe('boolean');
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.getCookieConsent')
 
   xdescribe('.getConsentData', function () {
 
