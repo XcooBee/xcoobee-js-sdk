@@ -7,6 +7,7 @@ module.exports = {
   testPathIgnorePatterns: [
     '<rootDir>/xcoobee/api/BeesApi.spec.js',
     '<rootDir>/xcoobee/api/CampaignApi.spec.js',
+    '<rootDir>/xcoobee/api/ConsentsApi.spec.js',
     '<rootDir>/xcoobee/api/ConversationsApi.spec.js',
     '<rootDir>/xcoobee/api/EndPointApi.spec.js',
     '<rootDir>/xcoobee/api/EventsApi.spec.js',

@@ -57,7 +57,6 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
     });
 }
 
-
 /**
  * TODO: Complete documentation.
  *
