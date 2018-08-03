@@ -1,5 +1,6 @@
 import ConsentsApi from '../../../../../src/xcoobee/api/ConsentsApi';
 import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
+import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
 import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
@@ -12,12 +13,13 @@ jest.setTimeout(60000);
 describe('ConsentsApi', function () {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
+  const usersCache = new UsersCache(apiAccessTokenCache);
 
   xdescribe('.getConsentData', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return with user info', async function (done) {
+      it('should fetch and return with consent info', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
         const consent = await ConsentsApi.getConsentData(apiUrlRoot, apiAccessToken, consentCursor);
@@ -46,6 +48,35 @@ describe('ConsentsApi', function () {
 
     });// eo describe
 
-  });// eo describe('.getConsentDatas')
+  });// eo describe('.getConsentData')
+
+  describe('.listConsents', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should fetch and return with user\'s consents', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+        // TODO: Find a way to get conversations back.
+        expect(consents).toBeInstanceOf(Array);
+        expect(consents.length).toBe(0);
+        // let consent = consents[0];
+        // expect('consent_cursor' in consent).toBe(true);
+        // assertIsCursorLike(consent.consent_cursor);
+        // expect('consent_status' in consent).toBe(true);
+        // expect('date_c' in consent).toBe(true);
+        // assertIso8601Like(consent.date_c)
+        // expect('date_e' in consent).toBe(true);
+        // assertIso8601Like(consent.date_e)
+        // expect('user_xcoobee_id' in consent).toBe(true);
+        done();
+      });// eo it
+
+      // TODO: Test with various consent statuses.
+    });// eo describe
+
+  });// eo describe('.listConsents')
 
 });// eo describe('ConsentsApi')
