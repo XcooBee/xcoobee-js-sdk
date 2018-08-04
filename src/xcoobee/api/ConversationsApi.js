@@ -1,4 +1,5 @@
 import ApiUtils from './ApiUtils';
+import NoteTypes from './NoteTypes';
 
 /**
  * TODO: Complete documentation.
@@ -103,7 +104,47 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
     });
 }
 
+/**
+ * TODO: Complete documentation.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} message
+ * @param {*} userCursor
+ * @param {*} consentId
+ * @param {*} [breachId]
+ *
+ * @returns {Promise<Note>}
+ */
+export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId) {
+  const mutation = `
+    mutation sendUserMessage($config: SendMessageConfig) {
+      send_message(config: $config) {
+        note_text
+      }
+    }
+  `;
+  const noteType = breachId ? NoteTypes.BREACH : NoteTypes.CONSENT;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    config: {
+      breach_cursor: breachId,
+      consent_cursor: consentId,
+      message,
+      note_type: noteType,
+      user_cursor: userCursor,
+    },
+  })
+    .then((response) => {
+      const { send_message } = response;
+
+      return Promise.resolve(send_message);
+    }, (err) => {
+      throw ApiUtils.transformError(err);
+    });
+}
+
 export default {
   getConversation,
   getConversations,
+  sendUserMessage,
 };

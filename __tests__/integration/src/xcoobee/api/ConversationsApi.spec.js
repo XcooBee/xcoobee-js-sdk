@@ -80,4 +80,25 @@ describe('ConversationsApi', function () {
 
   });// eo describe('.getConversations')
 
+  xdescribe('.sendUserMessage', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should create, send, and return a note', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const message = 'Testing. 1, 2, 3!';
+        const userCursor = user.cursor;
+        const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
+        const note = await ConversationsApi.sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor, consentId);
+        expect(note).toBeDefined();
+        // expect('note_text' in note).toBe(true);
+        done();
+      });// eo it
+
+      // TODO: Test with a breach ID.
+    });// eo describe
+
+  });// eo describe('.sendUserMessage')
+
 });// eo describe('ConversationsApi')
