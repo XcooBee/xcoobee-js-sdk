@@ -154,7 +154,7 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
  * @param {*} userCursor
  * @param {ConsentStatus} status
  *
- * @returns {Promise<Consent>}
+ * @returns {Promise<Consent[]>}
  * @throws TypeError
  */
 export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {

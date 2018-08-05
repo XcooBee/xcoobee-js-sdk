@@ -1,4 +1,5 @@
 import CampaignApi from '../../xcoobee/api/CampaignApi';
+import ConsentsApi from '../../xcoobee/api/ConsentsApi';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
@@ -58,7 +59,7 @@ class Consents {
    */
   activateCampaign(campaignId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
+    // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
     throw Error('NotYetImplemented');
   }
 
@@ -78,7 +79,7 @@ class Consents {
    */
   createCampaign(data, config) {
     this._assertValidState();
-    // TODO: To be implemented.
+    // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
     throw Error('NotYetImplemented');
   }
 
@@ -228,6 +229,39 @@ class Consents {
   }
 
   /**
+   * Fetches the list of consents.
+   *
+   * @param {ConsentStatus} status
+   * @param {Config} [config] - If specified, the configuration to use instead of the
+   *   default.
+   *
+   * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
+   * @returns {Response} return.response
+   *
+   * @throws XcooBeeError
+   */
+  async listConsents(status, config) {
+    this._assertValidState();
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const userCursor = user.cursor;
+      const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status);
+      const response = new SuccessResponse(consents);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
+  }
+
+  /**
    * Modifies the campaign with the specified ID.
    *
    * @param {CampaignId} [campaignId] - The ID of the campaign to modify.  If not
@@ -246,7 +280,7 @@ class Consents {
    */
   modifyCampaign(campaignId, data, config) {
     this._assertValidState();
-    // TODO: To be implemented.
+    // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
     throw Error('NotYetImplemented');
   }
 

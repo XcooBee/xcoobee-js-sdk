@@ -83,7 +83,7 @@ describe('ConsentsApi', function () {
 
         describe('but no consent status', function () {
 
-          it('should fetch and return with user\'s consents of any consent status', async function (done) {
+          it('should fetch and return with the user\'s consents of any status', async function (done) {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
@@ -107,7 +107,7 @@ describe('ConsentsApi', function () {
 
         describe('and active consent status', function () {
 
-          it('should fetch and return with user\'s active consents', async function (done) {
+          it('should fetch and return with the user\'s active consents', async function (done) {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
