@@ -647,6 +647,39 @@ describe('System', function () {
 
     });// eo describe('.listEventSubscriptions')
 
+    describe('.ping', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        // FIXME: TODO: Update ~SDK_Tester to have a PGP public key.
+        xdescribe('using default config without a campaign ID', function () {
+
+          it('should error out due to not finding a campaign', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+            const response = await systemSdk.ping();
+            expect(response).toBeInstanceOf(ErrorResponse);
+            let errors = response.errors;
+            expect(errors).toBeInstanceOf(Array);
+            expect(errors.length).toBe(1);
+            let error = errors[0];
+            expect(error).toBeInstanceOf(XcooBeeError);
+            expect(error.message).toBe('Campaign not found.');
+            expect(error.name).toBe('XcooBeeError');
+            done();
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe('.ping')
+
   });// eo describe('instance')
 
 });// eo describe('System')

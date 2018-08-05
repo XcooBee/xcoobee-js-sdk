@@ -6,7 +6,7 @@ import ApiUtils from './ApiUtils';
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign ID.
  *
- * @returns {CampaignInfo}
+ * @returns {Promise<CampaignInfo>}
  */
 export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
@@ -28,7 +28,6 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   })
     .then((response) => {
       const { campaign } = response;
-      // TODO: Transform data if necessary.
       return Promise.resolve(campaign);
     }, (err) => {
       throw ApiUtils.transformError(err);

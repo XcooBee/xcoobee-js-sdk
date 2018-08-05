@@ -1,5 +1,8 @@
+import CampaignApi from '../../xcoobee/api/CampaignApi';
 import EventsApi from '../../xcoobee/api/EventsApi';
 import EventSubscriptionsApi from '../../xcoobee/api/EventSubscriptionsApi';
+
+import XcooBeeError from '../../xcoobee/core/XcooBeeError';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
@@ -154,10 +157,39 @@ class System {
    *
    * @throws XcooBeeError
    */
-  ping(config) {
+  async ping(config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(null, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const pgpPublicKey = user.pgp_public_key;
+
+      let err = null;
+      if (pgpPublicKey) {
+        const campaignInfo = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
+        if (campaignInfo) {
+          const response = new SuccessResponse(true);
+          return Promise.resolve(response);
+        }
+        err = new XcooBeeError('Campaign not found.');
+      }
+      else {
+        err = new XcooBeeError('PGP key not found.');
+      }
+      const code = 400;
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
 }// eo class System
