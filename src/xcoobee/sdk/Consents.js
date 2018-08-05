@@ -162,10 +162,21 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  getConsentData(consentId, config) {
+  async getConsentData(consentId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const consents = await ConsentsApi.getConsentData(apiUrlRoot, apiAccessToken, consentId);
+      const response = new SuccessResponse(consents);
+      return Promise.resolve(response);
+    } catch (err) {
+      const code = 400;
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**
@@ -253,9 +264,7 @@ class Consents {
       const response = new SuccessResponse(consents);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
