@@ -6,14 +6,13 @@ import ApiUtils from './ApiUtils';
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {EndPoint} endPoint
- * @param {'bee_icon'|'invite_list'|'outbox'|'profile_image'} endPoint.name
- * @param {string} endPoint.cursor
+ * @param {'bee_icon'|'invite_list'|'outbox'|'profile_image'} intent
+ * @param {string} endPointCursor
  * @param {string[]} files
  *
  * @returns {Promise<Policy[]>}
  */
-export function upload_policy(apiUrlRoot, apiAccessToken, endPoint, files) {
+export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor, files) {
   // TODO: Validate arguments;
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
@@ -25,7 +24,7 @@ export function upload_policy(apiUrlRoot, apiAccessToken, endPoint, files) {
       baseName = Path.basename(file);
     }
 
-    query.push(`  policy${idx}: upload_policy(filePath: "${baseName}", intent: ${endPoint.name}, identifier: "${endPoint.cursor}") {`);
+    query.push(`  policy${idx}: upload_policy(filePath: "${baseName}", intent: ${intent}, identifier: "${endPointCursor}") {`);
     query.push('    credential');
     query.push('    date');
     query.push('    identifier');

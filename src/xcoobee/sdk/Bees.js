@@ -2,6 +2,7 @@ import BeesApi from '../../xcoobee/api/BeesApi';
 import EndPointApi from '../../xcoobee/api/EndPointApi';
 import FileApi from '../../xcoobee/api/FileApi';
 import PolicyApi from '../../xcoobee/api/PolicyApi';
+import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
@@ -146,13 +147,15 @@ class Bees {
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
-      const endPointName = intent || 'outbox';
+      const endPointName = intent || UploadPolicyIntents.OUTBOX;
+
+      if (endPointName !== UploadPolicyIntents.OUTBOX) {
+        throw new XcooBeeError(`The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`);
+      }
 
       // Find the endpoint with the name matching the specified intent.
       let candidateEndPoints = endPoints.filter(endPoint => endPoint.name === endPointName);
-      // TODO: Verify that this is the correct logic.  It doesn't seem to be because
-      // PolicyApi.upload_policy errors when using a 'flex' endpoint.
-      // If that endpoint is not found, then fallback to the 'flex' endpoint.
+      // If not found, then fallback to the flex end point.
       if (candidateEndPoints.length === 0) {
         candidateEndPoints = endPoints.filter(endPoint => endPoint.name === 'flex');
       }
@@ -162,21 +165,26 @@ class Bees {
       }
 
       const endPoint = candidateEndPoints[0];
-      const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files);
+      const endPointCursor = endPoint.cursor;
+
+      const uploadPolicyIntent = endPointName;
+
+      const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, uploadPolicyIntent, endPointCursor, files);
       const policyFilePairs = _zip(files, policies);
       // Note: We don't want to upload one file, wait for the promise to resolve,
       // and then repeat.  Here we are uploading all files back-to-back. ...
-      const filePromisePairs = policyFilePairs.map(pair => {
+      const fileUploadPromises = policyFilePairs.map(pair => {
         const { file, policy } = pair;
 
-        return { file, promise: FileApi.upload_file(file, policy) };
+        return FileApi.upload_file(file, policy);
       });
 
       // ... Then here we resolve each promise.
-      const results = filePromisePairs.map(async (pair) => {
-        const { file, promise } = pair;
-        const success = await promise;
-        return { file, success: !!success };
+      const fileUploadResults = await Promise.all(fileUploadPromises);
+      const results = policyFilePairs.map((pair, idx) => {
+        const { file } = pair;
+        const fileUploadResult = fileUploadResults[idx];
+        return { file, success: !!fileUploadResult };
       });
       const response = new SuccessResponse(results);
       return Promise.resolve(response);

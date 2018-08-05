@@ -8,8 +8,10 @@ import ApiUtils from './ApiUtils';
 /**
  * Uploads the specified file to the system.
  *
- * @param {*} file The path to the file to be uploaded. Or a `File` instance.
- * @param {Object} policy - The policy used for S3 authentication.
+ * @param {File|string} file The path to the file to be uploaded or a `File`
+ *   instance.
+ * @param {Object} policy - The policy returned from `PolicyApi.upload_policy`.  It
+ *   is used for S3 authentication.
  * @param {String} policy.credential
  * @param {String} policy.date
  * @param {String} policy.identifier
@@ -18,6 +20,7 @@ import ApiUtils from './ApiUtils';
  * @param {String} policy.signature
  * @param {String} policy.upload_url
  *
+ * @returns {Promise<IncomingMessage>}
  * @throws XcooBeeError
  */
 export function upload_file(file, policy) {
@@ -36,7 +39,7 @@ export function upload_file(file, policy) {
     formData.append('file', file);
   }
   else {
-    formData.append('file', Fs.createReadStream(filePath));
+    formData.append('file', Fs.createReadStream(file));
   }
 
   return new Promise((resolve, reject) => {

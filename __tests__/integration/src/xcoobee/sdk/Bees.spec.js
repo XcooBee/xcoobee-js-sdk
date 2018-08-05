@@ -102,7 +102,7 @@ describe('Bees', function () {
 
         describe('using default config', function () {
 
-          xit('should successfully upload files', async function (done) {
+          it('should successfully upload files', async function (done) {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -119,10 +119,11 @@ describe('Bees', function () {
             expect(results.length).toBe(1);
             const result = results[0];
             expect(result.file).toBe(file);
-            // TODO: Add more expectations.
+            expect(result.success).toBe(true);
             done();
           });// eo it
 
+          // TODO: Test with multiple files.
         });// eo describe
 
       });// eo describe

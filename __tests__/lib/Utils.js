@@ -17,6 +17,9 @@ export const CURSOR__RE = /^[\w/=]+$/;
 // Example ISO 8601 Date: 2018-06-20T16:04:50Z
 const ISO8601__RE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/;
 
+// Example ISO 8601 Date: 20180620T160450123Z
+const ISO8601__COMPACT__RE = /\d{4}\d{2}\d{2}T\d{2}\d{2}\d{2}\d{3}Z/;
+
 /**
  * Asserts that the specified value appears to be a cursor.
  *
@@ -28,6 +31,12 @@ export const assertIsCursorLike = (value) => {
 
 export const assertIso8601Like = (value) => {
   expect(value).toMatch(ISO8601__RE);
+};
+
+// TODO: Figure out why we have multiple ISO8601 date formats being returned from
+// the GraphQL API.  Seems we should settle on just one.
+export const assertCompactIso8601Like = (value) => {
+  expect(value).toMatch(ISO8601__COMPACT__RE);
 };
 
 /**
