@@ -96,6 +96,41 @@ describe('Bees', function () {
 
     });// eo describe('.listBees')
 
+    describe('.takeOff', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('using default config', function () {
+
+          it('should make bees take off', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
+            const bees = [];
+            const options = {
+              process: {
+                fileNames: [],
+              },
+            };
+            const response = await beesSdk.takeOff(bees, options);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const refId = response.data;
+            expect(refId).toBeDefined();
+            done();
+
+            // TODO: Test with a variety of arguments.
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe('.takeOff')
+
     describe('.uploadFiles', function () {
 
       describe('called with a valid API key/secret pair', function () {

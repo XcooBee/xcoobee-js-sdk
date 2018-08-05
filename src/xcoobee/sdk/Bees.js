@@ -1,4 +1,6 @@
+import ApiUtils from '../../xcoobee/api/ApiUtils';
 import BeesApi from '../../xcoobee/api/BeesApi';
+import DirectiveApi from '../../xcoobee/api/DirectiveApi';
 import EndPointApi from '../../xcoobee/api/EndPointApi';
 import FileApi from '../../xcoobee/api/FileApi';
 import PolicyApi from '../../xcoobee/api/PolicyApi';
@@ -98,7 +100,7 @@ class Bees {
   /**
    *
    * @param {string[]} bees - A mapping of bee names to bee parameters.
-   * @param {string} bees<key> - The bee name.
+   * @param {string} bees<key> - The bee name.  A 'transfer' bee will be ignored.
    * @param {Object} bees<value> - The bee parameters.
    * @param {Object} options - The bee take off options.
    * @param {Object} options.process -
@@ -113,10 +115,49 @@ class Bees {
    *
    * @throws XcooBeeError
    */
-  takeOff(bees, options, subscriptions, config) {
+  async takeOff(bees, options, subscriptions, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    const directiveInput = {
+      filenames: options.process.fileNames,
+      user_reference: options.process.userReference || null,
+    };
+
+    if (subscriptions) {
+      directiveInput.subscriptions = subscriptions;
+    }
+
+    if (Array.isArray(options.process.destinations) && options.process.destinations.length > 0) {
+      directiveInput.destinations = options.process.destinations.map(destination => {
+        if (ApiUtils.appearsToBeAnEmailAddress(destination)) {
+          return { email: destination };
+        }
+        return { xcoobee_id: destination };
+      });
+    }
+
+    directiveInput.bees = [];
+    for (let beeName in bees) {
+      if (beeName !== 'transfer') {
+        let beeParams = bees[beeName];
+        directiveInput.bees.push({ bee_name: beeName, params: JSON.stringify(beeParams) });
+      }
+    }
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const directiveResult = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
+      const response = new SuccessResponse(directiveResult.ref_id);
+      return Promise.resolve(response);
+    } catch (err) {
+      // TODO: Get status code from err.
+      const code = 400;
+      // TODO: Translate errors to correct shape.
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**

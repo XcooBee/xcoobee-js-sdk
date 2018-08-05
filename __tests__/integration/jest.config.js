@@ -9,6 +9,7 @@ module.exports = {
     '<rootDir>/xcoobee/api/CampaignApi.spec.js',
     '<rootDir>/xcoobee/api/ConsentsApi.spec.js',
     '<rootDir>/xcoobee/api/ConversationsApi.spec.js',
+    '<rootDir>/xcoobee/api/DirectiveApi.spec.js',
     '<rootDir>/xcoobee/api/EndPointApi.spec.js',
     '<rootDir>/xcoobee/api/EventsApi.spec.js',
     '<rootDir>/xcoobee/api/EventSubscriptionsApi.spec.js',

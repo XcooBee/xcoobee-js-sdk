@@ -2,9 +2,14 @@ import { GraphQLClient } from 'graphql-request';
 
 import XcooBeeError from "../core/XcooBeeError";
 
+const EMAIL_ADDRESS__RE = /^[-+\w]+(\.[-+\w]+)*@([-a-z0-9]+\.)+[a-z]{2,6}$/i;
 
 function appearsToBeACampaignId(campaignId) {
   return typeof campaignId === 'string' && campaignId.length > 0;
+}
+
+export function appearsToBeAnEmailAddress(value) {
+  return EMAIL_ADDRESS__RE.test(value);
 }
 
 export function assertAppearsToBeACampaignId(campaignId) {
@@ -81,6 +86,7 @@ function locationToMessage(loc) {
 }
 
 export default {
+  appearsToBeAnEmailAddress,
   assertAppearsToBeACampaignId,
   createClient,
   transformError,
