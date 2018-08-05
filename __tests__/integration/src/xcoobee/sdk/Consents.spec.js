@@ -1,9 +1,10 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
+import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+
 import Config from '../../../../../src/xcoobee/sdk/Config';
+import Consents from '../../../../../src/xcoobee/sdk/Consents';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
-import Consents from '../../../../../src/xcoobee/sdk/Consents';
-import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;

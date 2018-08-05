@@ -1,9 +1,8 @@
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import ConsentsApi from '../../../../../src/xcoobee/api/ConsentsApi';
 import CookieDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
-
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
+import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 

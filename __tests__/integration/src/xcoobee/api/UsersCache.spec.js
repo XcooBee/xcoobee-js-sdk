@@ -1,5 +1,5 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
+import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 import { assertIsCursorLike, sleep } from '../../../../lib/Utils';
 

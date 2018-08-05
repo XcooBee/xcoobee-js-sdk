@@ -5,6 +5,7 @@ module.exports = {
     '../setup.js',
   ],
   testPathIgnorePatterns: [
+    '<rootDir>/xcoobee/api/ApiAccessTokenCache.spec.js',
     '<rootDir>/xcoobee/api/BeesApi.spec.js',
     '<rootDir>/xcoobee/api/CampaignApi.spec.js',
     '<rootDir>/xcoobee/api/ConsentsApi.spec.js',
@@ -17,11 +18,10 @@ module.exports = {
     '<rootDir>/xcoobee/api/PolicyApi.spec.js',
     '<rootDir>/xcoobee/api/TokenApi.spec.js',
     '<rootDir>/xcoobee/api/UsersApi.spec.js',
-    '<rootDir>/xcoobee/sdk/ApiAccessTokenCache.spec.js',
+    '<rootDir>/xcoobee/api/UsersCache.spec.js',
     '<rootDir>/xcoobee/sdk/Bees.spec.js',
     '<rootDir>/xcoobee/sdk/Consents.spec.js',
     '<rootDir>/xcoobee/sdk/System.spec.js',
     '<rootDir>/xcoobee/sdk/Users.spec.js',
-    '<rootDir>/xcoobee/sdk/UsersCache.spec.js',
   ],
 };

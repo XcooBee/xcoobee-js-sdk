@@ -1,5 +1,5 @@
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import UsersApi from '../../../../../src/xcoobee/api/UsersApi';
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 
 import { assertIsCursorLike } from '../../../../lib/Utils';
 

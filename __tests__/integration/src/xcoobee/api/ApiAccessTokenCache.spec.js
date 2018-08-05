@@ -1,5 +1,6 @@
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
+
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 
 import { assertIsJwtToken, sleep } from '../../../../lib/Utils';
 

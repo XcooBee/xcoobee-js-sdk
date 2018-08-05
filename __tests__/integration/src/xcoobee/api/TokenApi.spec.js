@@ -1,5 +1,6 @@
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
+
+import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
 import { assertIsJwtToken } from '../../../../lib/Utils';
 

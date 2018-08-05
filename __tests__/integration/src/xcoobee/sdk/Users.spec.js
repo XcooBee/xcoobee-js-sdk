@@ -1,9 +1,10 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
+import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+
 import Config from '../../../../../src/xcoobee/sdk/Config';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import Users from '../../../../../src/xcoobee/sdk/Users';
-import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
 
 import { assertIsCursorLike } from '../../../../lib/Utils';
 

@@ -1,10 +1,8 @@
 import jwtDecode from 'jwt-decode';
 
-import TokenApi from '../../xcoobee/api/TokenApi';
+import TokenApi from './TokenApi';
 
 const EXPIRATION_TOLERANCE_IN_MS__DEFAULT = 10000;
-
-// FIXME: TODO: Move this class to xcoobee/api "namespace".
 
 /**
  * A cache for API access tokens fetched using the

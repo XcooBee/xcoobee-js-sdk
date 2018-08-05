@@ -1,6 +1,7 @@
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import EventSubscriptionsApi from '../../../../../src/xcoobee/api/EventSubscriptionsApi';
+
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;

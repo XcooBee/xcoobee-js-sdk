@@ -1,6 +1,6 @@
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import ConversationsApi from '../../../../../src/xcoobee/api/ConversationsApi';
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
+import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 

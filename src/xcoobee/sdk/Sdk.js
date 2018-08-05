@@ -1,9 +1,10 @@
-import ApiAccessTokenCache from './ApiAccessTokenCache';
+import ApiAccessTokenCache from '../../xcoobee/api/ApiAccessTokenCache';
+import UsersCache from '../../xcoobee/api/UsersCache';
+
 import Bees from './Bees';
 import Consents from './Consents';
 import System from './System';
 import Users from './Users';
-import UsersCache from './UsersCache';
 
 /**
  * The SDK entry point.

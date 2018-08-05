@@ -1,10 +1,10 @@
 import Path from 'path';
 
+import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import EndPointApi from '../../../../../src/xcoobee/api/EndPointApi';
 import FileApi from '../../../../../src/xcoobee/api/FileApi';
 import PolicyApi from '../../../../../src/xcoobee/api/PolicyApi';
-import ApiAccessTokenCache from '../../../../../src/xcoobee/sdk/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/sdk/UsersCache';
+import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 import { assertIsCursorLike } from '../../../../lib/Utils';
 

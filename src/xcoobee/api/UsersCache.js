@@ -1,6 +1,4 @@
-import UsersApi from '../../xcoobee/api/UsersApi';
-
-// FIXME: TODO: Move this class to xcoobee/api "namespace".
+import UsersApi from './UsersApi';
 
 /**
  * A cache for user information fetched using the `xcoobee/api/UserApi.user`
