@@ -188,6 +188,36 @@ describe('Users', function () {
 
     });// eo describe('.getUser')
 
+    xdescribe('.sendUserMessage', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('using default config', function () {
+
+          it('should send a message', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
+            const message = 'Testing. 1, 2, 3!';
+            const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
+            const response = await usersSdk.sendUserMessage(message, consentId);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const note = response.data;
+            expect(note).toBeDefined();
+            expect('note_text' in note).toBe(true);
+            done();
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe('.sendUserMessage')
+
   });// eo describe('instance')
 
 });// eo describe('Users')

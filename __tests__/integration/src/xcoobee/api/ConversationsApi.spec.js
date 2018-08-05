@@ -92,7 +92,7 @@ describe('ConversationsApi', function () {
         const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
         const note = await ConversationsApi.sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor, consentId);
         expect(note).toBeDefined();
-        // expect('note_text' in note).toBe(true);
+        expect('note_text' in note).toBe(true);
         done();
       });// eo it
 
