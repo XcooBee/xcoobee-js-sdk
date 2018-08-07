@@ -41,6 +41,24 @@ class ApiAccessTokenCache {
    *   pair.
    */
   get(apiUrlRoot, apiKey, apiSecret, fresh) {
+    if (!apiUrlRoot) {
+      throw TypeError('apiUrlRoot is required.');
+    }
+    if (!apiKey) {
+      throw TypeError('apiKey is required.');
+    }
+    if (!apiSecret) {
+      throw TypeError('apiSecret is required.');
+    }
+    if (typeof apiUrlRoot !== 'string') {
+      throw TypeError('apiUrlRoot must be a string.');
+    }
+    if (typeof apiKey !== 'string') {
+      throw TypeError('apiKey must be a string.');
+    }
+    if (typeof apiSecret !== 'string') {
+      throw TypeError('apiSecret must be a string.');
+    }
     const key = `${apiUrlRoot}:${apiKey}:${apiSecret}`;
 
     if (fresh !== true && key in this._.internalCache) {
