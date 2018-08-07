@@ -3,6 +3,7 @@ import UsersCache from '../../xcoobee/api/UsersCache';
 
 import Bees from './Bees';
 import Consents from './Consents';
+import Inbox from './Inbox';
 import System from './System';
 import Users from './Users';
 
@@ -36,6 +37,7 @@ class Sdk {
       bees: new Bees(cfg, apiAccessTokenCache, usersCache),
       config: cfg,
       consents: new Consents(cfg, apiAccessTokenCache, usersCache),
+      inbox: new Inbox(cfg, apiAccessTokenCache, usersCache),
       system: new System(cfg, apiAccessTokenCache, usersCache),
       users: new Users(cfg, apiAccessTokenCache, usersCache),
     }
@@ -53,6 +55,7 @@ class Sdk {
     // TODO: Validate config.
     this._.bees.config = config;
     this._.consents.config = config;
+    this._.inbox.config = config;
     this._.system.config = config;
     this._.users.config = config;
     this._.config = config;
@@ -60,6 +63,10 @@ class Sdk {
 
   get consents() {
     return this._.consents;
+  }
+
+  get inbox() {
+    return this._.inbox;
   }
 
   get system() {
