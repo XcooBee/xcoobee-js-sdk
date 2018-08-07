@@ -57,9 +57,7 @@ class System {
       const response = new SuccessResponse(eventSubscriptions);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -105,9 +103,7 @@ class System {
       const response = new SuccessResponse(events);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -138,9 +134,7 @@ class System {
       const response = new SuccessResponse(eventSubscriptions);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -184,9 +178,7 @@ class System {
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }

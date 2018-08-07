@@ -89,9 +89,7 @@ class Bees {
       const response = new SuccessResponse(beesList);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -152,9 +150,7 @@ class Bees {
       const response = new SuccessResponse(directiveResult.ref_id);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -230,9 +226,7 @@ class Bees {
       const response = new SuccessResponse(results);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }

@@ -51,9 +51,7 @@ class Users {
       const response = new SuccessResponse(conversations);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -83,9 +81,7 @@ class Users {
       const response = new SuccessResponse(conversations);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -110,9 +106,7 @@ class Users {
       const response = new SuccessResponse(userInfo);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
@@ -143,9 +137,7 @@ class Users {
       const response = new SuccessResponse(note);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }

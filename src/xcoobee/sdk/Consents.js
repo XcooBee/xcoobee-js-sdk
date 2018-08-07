@@ -231,9 +231,7 @@ class Consents {
       const response = new SuccessResponse(campaigns);
       return Promise.resolve(response);
     } catch (err) {
-      // TODO: Get status code from err.
       const code = 400;
-      // TODO: Translate errors to correct shape.
       const errors = [err];
       return Promise.resolve(new ErrorResponse(code, errors));
     }
