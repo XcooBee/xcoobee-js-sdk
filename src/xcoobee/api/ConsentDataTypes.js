@@ -180,6 +180,7 @@ const ConsentDataTypes = Object.freeze({
   TWITTER_HANDLE,
   USAGE_COOKIE,
   XCOOBEE_ID,
+  values,
 });
 
 export default ConsentDataTypes;
