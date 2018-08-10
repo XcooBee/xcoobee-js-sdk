@@ -78,8 +78,20 @@ class System {
    */
   deleteEventSubscription(events, campaignId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const deletedCount = await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, events, resolvedCampaignId);
+      const response = new SuccessResponse(deletedCount);
+      return Promise.resolve(response);
+    } catch (err) {
+      const code = 400;
+      const errors = [err];
+      return Promise.resolve(new ErrorResponse(code, errors));
+    }
   }
 
   /**

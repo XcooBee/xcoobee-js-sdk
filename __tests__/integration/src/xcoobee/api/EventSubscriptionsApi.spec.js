@@ -93,6 +93,81 @@ describe('EventSubscriptionsApi', function () {
 
   });// eo describe('.addEventSubscription')
 
+  describe('.deleteEventSubscription', function () {
+
+    describe('called with a valid API access token', function () {
+
+      describe('and a known campaign ID', function () {
+
+        xdescribe('and a valid events mapping', function () {
+
+          it('should add the event subscriptions', async function (done) {
+            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+            const eventsMapping = {
+              ConsentApproved: 'OnConsentApproved',
+            };
+            const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
+            const deleted_number = await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+            expect(typeof deleted_number).toBe('number');
+            // TODO: Add more expectations.
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+        describe('and an invalid events mapping', function () {
+
+          it('should throw an error', async function (done) {
+            const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
+            const eventsMapping = {
+              Invalid: 'invalid',
+            };
+            const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
+            try {
+              await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+              // This should not be called.
+              expect(true).toBe(false);
+            } catch (err) {
+              expect(err).toBeInstanceOf(XcooBeeError);
+              expect(err.message).toBe('Invalid event type provided: "Invalid".');
+              expect(err.name).toBe('XcooBeeError');
+
+              done();
+            }
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+      describe('and an unknown campaign ID', async function () {
+
+        it('should throw an error', async function (done) {
+          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+          const eventsMapping = {
+            ConsentApproved: 'OnConsentApproved',
+          };
+          const campaignId = 'unknown';
+          try {
+            await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (err) {
+            expect(err).toBeInstanceOf(XcooBeeError);
+            expect(err.message).toBe('Wrong key at line: 3, column: 7');
+            expect(err.name).toBe('XcooBeeError');
+
+            done();
+          }
+        });
+
+      });// eo describe
+
+    });// eo describe
+
+  });// eo describe('.deleteEventSubscription')
+
   describe('.listEventSubscriptions', function () {
 
     describe('called with a valid API access token', function () {

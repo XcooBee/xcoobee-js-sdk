@@ -66,6 +66,48 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {Object} eventsMapping - A mapping between event subscription type and
+ *   handler.  The handler is not important here.
+ * @param {CampaignId} campaignId - The campaign cursor.
+ *
+ * @returns {Promise<number>}
+ */
+export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId) {
+  ApiUtils.assertAppearsToBeACampaignId(campaignId);
+
+  let eventTypes = [];
+  for (let type in eventsMapping) {
+    let event_type = toEventType(type);
+    eventTypes.push(event_type);
+  }
+  const deleteSubscriptionsConfig = {
+    campaign_cursor: campaignId,
+    events: eventTypes,
+  };
+  const mutation = `
+    mutation deleteEventSubscription($config: DeleteSubscriptionsConfig!) {
+      delete_event_subscriptions(config: $config) {
+        deleted_number
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    config: deleteSubscriptionsConfig,
+  })
+    .then((response) => {
+      const { delete_event_subscriptions } = response;
+      const { deleted_number } = delete_event_subscriptions;
+
+      return Promise.resolve(deleted_number);
+    }, (err) => {
+      throw ApiUtils.transformError(err);
+    });
+}
+
+/**
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
  * @returns {Promise<EventSubscription[]>}
@@ -140,5 +182,6 @@ function toEventType(type) {
 
 export default {
   addEventSubscription,
+  deleteEventSubscription,
   listEventSubscriptions,
 };
