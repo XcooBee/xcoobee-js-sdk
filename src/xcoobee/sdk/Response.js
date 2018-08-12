@@ -5,8 +5,18 @@
  */
 class Response {
 
+  /**
+   *
+   * @param {Object} info
+   * @param {number} info.code
+   * @param {?} [info.errors]
+   * @param {mixed} [info.results]
+   */
   constructor(info) {
     // TODO: Validate info.
+    if (info.code < 200 || info.code > 599) {
+      throw TypeError('`code` must be a valid HTTP status code.');
+    }
     this._ = {
       ...info,
       time: new Date, // TODO: Format as: Y-m-d H:i:s.
@@ -17,8 +27,8 @@ class Response {
     return this._.code;
   }
 
-  get data() {
-    return this._.data;
+  get results() {
+    return this._.results;
   }
 
   get errors() {

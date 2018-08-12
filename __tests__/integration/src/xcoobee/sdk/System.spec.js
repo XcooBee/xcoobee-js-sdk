@@ -45,7 +45,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const eventSubscriptions = response.data;
+                const eventSubscriptions = response.results;
                 expect(eventSubscriptions).toBeInstanceOf(Array);
                 expect(eventSubscriptions.length).toBe(1);
                 const eventSubscription = eventSubscriptions[0];
@@ -81,7 +81,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const eventSubscriptions = response.data;
+                const eventSubscriptions = response.results;
                 expect(eventSubscriptions).toBeInstanceOf(Array);
                 expect(eventSubscriptions.length).toBe(1);
                 const eventSubscription = eventSubscriptions[0];
@@ -118,7 +118,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                let eventSubscriptions = response.data;
+                let eventSubscriptions = response.results;
                 expect(eventSubscriptions).toBeInstanceOf(Array);
                 expect(eventSubscriptions.length).toBe(1);
                 let eventSubscription = eventSubscriptions[0];
@@ -129,7 +129,7 @@ describe('System', function () {
 
                 response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                eventSubscriptions = response.data;
+                eventSubscriptions = response.results;
                 expect(eventSubscriptions).toBeInstanceOf(Array);
                 expect(eventSubscriptions.length).toBe(1);
                 eventSubscription = eventSubscriptions[0];
@@ -359,7 +359,7 @@ describe('System', function () {
             const response = await systemSdk.getEvents();
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const events = response.data;
+            const events = response.results;
             expect(events).toBeDefined();
             expect(events).toBeInstanceOf(Array);
             expect(events.length).toBe(0);
@@ -387,7 +387,7 @@ describe('System', function () {
             const response = await systemSdk.getEvents(overridingConfig);
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const events = response.data;
+            const events = response.results;
             expect(events).toBeDefined();
             expect(events).toBeInstanceOf(Array);
             expect(events.length).toBe(0);
@@ -442,7 +442,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const eventSubscriptions = response.data;
+              const eventSubscriptions = response.results;
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(0);
               // TODO: Add more expectations.
@@ -470,7 +470,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
-              const events = response.data;
+              const events = response.results;
               expect(events).toBeInstanceOf(Array);
               expect(events.length).toBe(0);
               // TODO: Add more expectations.
@@ -499,14 +499,14 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.listEventSubscriptions(campaignId);
               expect(response).toBeInstanceOf(SuccessResponse);
-              let eventSubscriptions = response.data;
+              let eventSubscriptions = response.results;
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(0);
               // TODO: Add more expectations.
 
               response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
-              eventSubscriptions = response.data;
+              eventSubscriptions = response.results;
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(0);
               // TODO: Add more expectations.

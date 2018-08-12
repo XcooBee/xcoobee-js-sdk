@@ -37,7 +37,7 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.listBees('');
             expect(response).toBeInstanceOf(SuccessResponse);
-            const bees = response.data;
+            const bees = response.results;
             expect(bees).toBeInstanceOf(Array);
             expect(bees.length).toBe(0);
             // TODO: Add more expectations.
@@ -63,7 +63,7 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.listBees('', overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const bees = response.data;
+            const bees = response.results;
             expect(bees).toBeInstanceOf(Array);
             expect(bees.length).toBe(0);
             // TODO: Add more expectations.
@@ -119,7 +119,7 @@ describe('Bees', function () {
             };
             const response = await beesSdk.takeOff(bees, options);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const refId = response.data;
+            const refId = response.results;
             expect(refId).toBeDefined();
             done();
 
@@ -150,7 +150,7 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.uploadFiles(files);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.data;
+            const results = response.results;
             expect(results).toBeInstanceOf(Array);
             expect(results.length).toBe(1);
             const result = results[0];

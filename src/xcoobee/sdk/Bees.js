@@ -54,14 +54,14 @@ class Bees {
    * ```js
    * listBees('social')
    *   .then((res) => {
-   *     const { code, data, errors, time } = res;
+   *     const { code, results, errors, time } = res;
    *     if (code >= 300 || errors) {
    *       if (errors) {
    *         console.error(errors);
    *       }
    *       return;
    *     }
-   *     const bees = data;
+   *     const bees = results;
    *     bees.forEach((bee) => {
    *       const { bee_system_name, description, bee_icon, ...etc } = bee;
    *       // DO something with this data.

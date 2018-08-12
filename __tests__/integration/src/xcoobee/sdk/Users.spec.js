@@ -39,7 +39,7 @@ describe('Users', function () {
             const response = await usersSdk.getConversation(targetCursor);
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const conversations = response.data;
+            const conversations = response.results;
             expect(conversations).toBeInstanceOf(Array);
             expect(conversations.length).toBe(0);
             // let conversation = conversations[0];
@@ -88,7 +88,7 @@ describe('Users', function () {
             const response = await usersSdk.getConversations();
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const conversations = response.data;
+            const conversations = response.results;
             expect(conversations).toBeInstanceOf(Array);
             expect(conversations.length).toBe(0);
             // let conversation = conversations[0];
@@ -124,7 +124,7 @@ describe('Users', function () {
             const response = await usersSdk.getUser();
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const userInfo = response.data;
+            const userInfo = response.results;
             expect('cursor' in userInfo).toBe(true);
             assertIsCursorLike(userInfo.cursor);
             expect('pgp_public_key' in userInfo).toBe(true);
@@ -152,7 +152,7 @@ describe('Users', function () {
             const response = await usersSdk.getUser(overridingConfig);
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const userInfo = response.data;
+            const userInfo = response.results;
             expect('cursor' in userInfo).toBe(true);
             assertIsCursorLike(userInfo.cursor);
             expect('pgp_public_key' in userInfo).toBe(true);
@@ -206,7 +206,7 @@ describe('Users', function () {
             const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
             const response = await usersSdk.sendUserMessage(message, consentId);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const note = response.data;
+            const note = response.results;
             expect(note).toBeDefined();
             expect('note_text' in note).toBe(true);
             done();

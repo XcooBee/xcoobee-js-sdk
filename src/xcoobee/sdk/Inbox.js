@@ -97,10 +97,10 @@ class Inbox {
    * @param {Config} [config]
    *
    * @returns {Promise<Response>} - The response.
-   * @returns {Object} return.data - The results.
-   * @returns {Object} return.data.inbox - A page of the inbox.
-   * @returns {InboxItem[]} return.data.inbox.data - Inbox items for this page.
-   * @returns {PageInfo} return.data.inbox.page_info - The page info.
+   * @returns {Object} return.response.results - The results.
+   * @returns {Object} return.response.results.inbox - A page of the inbox.
+   * @returns {InboxItem[]} return.response.results.inbox.data - Inbox items for this page.
+   * @returns {PageInfo} return.response.results.inbox.page_info - The page info.
    */
   async listInbox(startMessageId, config) {
     this._assertValidState();

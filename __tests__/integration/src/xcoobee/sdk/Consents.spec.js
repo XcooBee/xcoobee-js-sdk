@@ -40,7 +40,7 @@ describe('Consents', function () {
               const response = await consentsSdk.getConsentData(consentId);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consent = response.data;
+              const consent = response.results;
               expect(consent).toBeDefined();
               // TODO: Add more expectations.
               done();
@@ -67,7 +67,7 @@ describe('Consents', function () {
               const response = await consentsSdk.getConsentData(consentId, overridingConfig);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consent = response.data;
+              const consent = response.results;
               expect(consent).toBeDefined();
               // TODO: Add more expectations.
               done();
@@ -121,7 +121,7 @@ describe('Consents', function () {
             const response = await consentsSdk.listCampaigns();
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const campaigns = response.data;
+            const campaigns = response.results;
             expect(campaigns).toBeDefined();
             expect(campaigns).toBeInstanceOf(Array);
             expect(campaigns.length).toBe(0);
@@ -149,7 +149,7 @@ describe('Consents', function () {
             const response = await consentsSdk.listCampaigns(overridingConfig);
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const campaigns = response.data;
+            const campaigns = response.results;
             expect(campaigns).toBeDefined();
             expect(campaigns).toBeInstanceOf(Array);
             expect(campaigns.length).toBe(0);
@@ -204,7 +204,7 @@ describe('Consents', function () {
               const response = await consentsSdk.listConsents();
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consents = response.data;
+              const consents = response.results;
               expect(consents).toBeInstanceOf(Array);
               expect(consents.length).toBe(0);
               // let consent = consents[0];
@@ -239,7 +239,7 @@ describe('Consents', function () {
               const response = await consentsSdk.listConsents(null, overridingConfig);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consents = response.data;
+              const consents = response.results;
               expect(consents).toBeDefined();
               expect(consents).toBeInstanceOf(Array);
               expect(consents.length).toBe(0);
@@ -274,7 +274,7 @@ describe('Consents', function () {
               const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consents = response.data;
+              const consents = response.results;
               expect(consents).toBeInstanceOf(Array);
               expect(consents.length).toBe(0);
               // let consent = consents[0];
@@ -309,7 +309,7 @@ describe('Consents', function () {
               const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, overridingConfig);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consents = response.data;
+              const consents = response.results;
               expect(consents).toBeDefined();
               expect(consents).toBeInstanceOf(Array);
               expect(consents.length).toBe(0);

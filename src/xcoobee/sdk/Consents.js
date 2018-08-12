@@ -30,12 +30,12 @@ class Consents {
 
   // TODO: Document CampaignId
   // TODO: Document CampaignStruct
-  // * @returns {string} return.response.data.campaign_name
-  // * @returns {?} return.response.data.date_c
-  // * @returns {?} return.response.data.date_e
-  // * @returns {?} return.response.data.status
-  // * @returns {?} return.response.data.xcoobee_targets
-  // * @returns {?} return.response.data.xcoobee_targets.xcoobee_id
+  // * @returns {string} return.response.results.campaign_name
+  // * @returns {?} return.response.results.date_c
+  // * @returns {?} return.response.results.date_e
+  // * @returns {?} return.response.results.status
+  // * @returns {?} return.response.results.xcoobee_targets
+  // * @returns {?} return.response.results.xcoobee_targets.xcoobee_id
 
   // TODO: Document CreateCampaignStruct
   // TODO: Document ConsentId
@@ -53,7 +53,7 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have a `CampaignId` as the data.
    * @returns {Response} return.response
-   * @returns {CampaignId} return.response.data
+   * @returns {CampaignId} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -73,7 +73,7 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have a `CampaignId` as the data.
    * @returns {Response} return.response
-   * @returns {CampaignId} return.response.data
+   * @returns {CampaignId} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -94,7 +94,7 @@ class Consents {
    *   A successful response will have a boolean as the data property indicating
    *   whether the data has been changed.
    * @returns {Response} return.response
-   * @returns {boolean} return.response.data
+   * @returns {boolean} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -115,7 +115,7 @@ class Consents {
    *   A successful response will have a boolean as the data property indicating
    *   whether the data has been deleted/purged.
    * @returns {Response} return.response
-   * @returns {boolean} return.response.data
+   * @returns {boolean} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -138,7 +138,7 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have a `CampaignStruct` as the data.
    * @returns {Response} return.response
-   * @returns {CampaignStruct} return.response.data
+   * @returns {CampaignStruct} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -158,7 +158,7 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have a `ConsentStruct` as the data.
    * @returns {Response} return.response
-   * @returns {ConsentStruct} return.response.data
+   * @returns {ConsentStruct} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -195,7 +195,7 @@ class Consents {
    *   CSV has the following columns: application, usage, and advertising.  The  first
    *   line in the CSV will be the header containing these columns.
    * @returns {Response} return.response
-   * @returns {string} return.response.data
+   * @returns {string} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -214,7 +214,7 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have an array of `CampaignStruct`s as the data.
    * @returns {Response} return.response
-   * @returns {CampaignStruct[]} return.response.data
+   * @returns {CampaignStruct[]} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -281,7 +281,7 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have a `CampaignId` as the data.
    * @returns {Response} return.response
-   * @returns {CampaignId} return.response.data
+   * @returns {CampaignId} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -311,7 +311,7 @@ class Consents {
    *   whether the request was successful.  Note: It does **NOT** indicate whether
    *   the consent was approved or declined.
    * @returns {Response} return.response
-   * @returns {boolean} return.response.data
+   * @returns {boolean} return.response.results
    *
    * @throws XcooBeeError
    */
@@ -340,7 +340,7 @@ class Consents {
    *   A successful response will have a boolean as the data property indicating
    *   whether the message was successfully sent.
    * @returns {Response} return.response
-   * @returns {boolean} return.response.data
+   * @returns {boolean} return.response.results
    *
    * @throws XcooBeeError
    */
