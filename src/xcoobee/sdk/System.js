@@ -76,7 +76,7 @@ class System {
    *
    * @throws XcooBeeError
    */
-  deleteEventSubscription(events, campaignId, config) {
+  async deleteEventSubscription(events, campaignId, config) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);

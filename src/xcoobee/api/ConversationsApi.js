@@ -45,7 +45,7 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
     first,
     targetCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { conversations } = response;
       const { data, page_info } = conversations;
 
@@ -53,7 +53,8 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
       // true, then do more requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -91,7 +92,7 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
     first,
     userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { conversations } = response;
       const { data, page_info } = conversations;
 
@@ -99,7 +100,8 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
       // true, then do more requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -134,11 +136,12 @@ export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor,
       user_cursor: userCursor,
     },
   })
-    .then((response) => {
+    .then(response => {
       const { send_message } = response;
 
       return Promise.resolve(send_message);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

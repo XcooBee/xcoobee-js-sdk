@@ -39,7 +39,7 @@ export function bees(apiUrlRoot, apiAccessToken, searchText) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     searchText,
   })
-    .then((response) => {
+    .then(response => {
       const { bees } = response;
       const { data, page_info } = bees;
 
@@ -47,7 +47,8 @@ export function bees(apiUrlRoot, apiAccessToken, searchText) {
       // true, then do more requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

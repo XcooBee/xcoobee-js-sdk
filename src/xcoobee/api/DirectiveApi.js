@@ -19,11 +19,12 @@ export function addDirective(apiUrlRoot, apiAccessToken, directiveInput) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     directiveInput,
   })
-    .then((response) => {
+    .then(response => {
       const { add_directive } = response;
 
       return Promise.resolve(add_directive);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

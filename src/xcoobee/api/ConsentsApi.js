@@ -36,7 +36,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
     status: ConsentStatuses.ACTIVE,
     userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { consents } = response;
       const { data, page_info } = consents;
 
@@ -73,7 +73,8 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
       });
 
       return Promise.resolve(cookieConsents);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -137,11 +138,12 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     consentCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { consent } = response;
 
       return Promise.resolve(consent);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -217,7 +219,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
     status,
     userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { consents } = response;
       const { data, page_info } = consents;
 
@@ -225,7 +227,8 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
       // true, then do more requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

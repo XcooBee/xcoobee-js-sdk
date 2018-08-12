@@ -46,7 +46,7 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: addSubscriptionsConfig,
   })
-    .then((response) => {
+    .then(response => {
       const { add_event_subscriptions } = response;
       const { data } = add_event_subscriptions;
 
@@ -57,7 +57,8 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
       // requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -94,12 +95,13 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: deleteSubscriptionsConfig,
   })
-    .then((response) => {
+    .then(response => {
       const { delete_event_subscriptions } = response;
       const { deleted_number } = delete_event_subscriptions;
 
       return Promise.resolve(deleted_number);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -132,7 +134,7 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
-    .then((response) => {
+    .then(response => {
       const { event_subscriptions } = response;
       const { data } = event_subscriptions;
 
@@ -141,7 +143,8 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
       // requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

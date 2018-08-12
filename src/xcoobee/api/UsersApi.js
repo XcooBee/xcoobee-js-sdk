@@ -31,12 +31,13 @@ export function getUser(apiUrlRoot, apiAccessToken) {
         }
       `;
       client.request(query)
-        .then((response) => {
+        .then(response => {
           delete getUser._.unfulfilledPromises[key];
           const { user } = response;
 
           resolve(user);
-        }, (err) => {
+        })
+        .catch(err => {
           delete getUser._.unfulfilledPromises[key];
           reject(ApiUtils.transformError(err));
         });

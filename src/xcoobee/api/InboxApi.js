@@ -23,14 +23,15 @@ export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageI
     userCursor,
     messageId
   })
-    .then((response) => {
+    .then(response => {
       const { remove_inbox_item } = response;
       // Note: remove_inbox_item is not defined if nothing is deleted.
       const { trans_id } = remove_inbox_item || { trans_id: null };
 
       const results = { trans_id };
       return Promise.resolve(results);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -81,12 +82,13 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
     messageId,
     userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { inbox_item } = response;
 
       const results = { inbox_item };
       return Promise.resolve(results);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -130,7 +132,7 @@ export function listInbox(apiUrlRoot, apiAccessToken, startId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     startId,
   })
-    .then((response) => {
+    .then(response => {
       const { inbox } = response;
       let { data, page_info } = inbox;
 
@@ -154,7 +156,8 @@ export function listInbox(apiUrlRoot, apiAccessToken, startId) {
         },
       };
       return Promise.resolve(results);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

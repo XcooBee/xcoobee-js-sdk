@@ -26,10 +26,11 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
-    .then((response) => {
+    .then(response => {
       const { campaign } = response;
       return Promise.resolve(campaign);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
@@ -98,7 +99,7 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { campaigns } = response;
       const { data } = campaigns;
 
@@ -107,7 +108,8 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
       // requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

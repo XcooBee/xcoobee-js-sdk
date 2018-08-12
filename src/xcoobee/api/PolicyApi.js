@@ -38,7 +38,7 @@ export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor
   query = query.join('\n')
 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query)
-    .then((response) => {
+    .then(response => {
       const policies = [];
 
       for (let i = 0, iLen = files.length; i < iLen; ++i) {
@@ -52,7 +52,8 @@ export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor
       }
 
       return Promise.resolve(policies);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

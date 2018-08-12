@@ -51,10 +51,10 @@ export function getApiAccessToken(apiCfg) {
           timeout: 30000,
         }
       )
-        .then((response) => {
+        .then(response => {
           delete getApiAccessToken._.unfulfilledPromises[key];
           response.json()
-            .then((body) => {
+            .then(body => {
               let msg = [];
               if (body) {
                 if (response.ok) {
@@ -90,10 +90,12 @@ export function getApiAccessToken(apiCfg) {
                 msg.push(MSG__GENERIC_ERROR);
               }
               reject(new XcooBeeError(msg.join(' ')));
-            }, (err) => {
+            })
+            .catch(err => {
               reject(ApiUtils.transformError(err));
             });
-        }, (err) => {
+        })
+        .catch(err => {
           delete getApiAccessToken._.unfulfilledPromises[key];
           reject(ApiUtils.transformError(err));
         });

@@ -28,7 +28,7 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userId: userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { events } = response;
       const { data } = events;
 
@@ -37,7 +37,8 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
       // requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }

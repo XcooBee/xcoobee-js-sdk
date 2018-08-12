@@ -40,21 +40,22 @@ class UsersCache {
     }
 
     return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret)
-      .then((apiAccessToken) => {
+      .then(apiAccessToken => {
         return UsersApi.getUser(apiUrlRoot, apiAccessToken)
-          .then((user) => {
+          .then(user => {
             this._.internalCache[key] = user;
             return Promise.resolve(user);
-          }, (err) => {
+          })
+          .catch(err_unused => {
             // If unable to fetch the user, then it may be due to an old expired API access
             // token.
             // TODO: Only perform the following if we are sure the `err` here is due to an
             // invalid API access token.
             const fresh = true;
             return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret, fresh)
-              .then((apiAccessToken) => {
+              .then(apiAccessToken => {
                 return UsersApi.getUser(apiUrlRoot, apiAccessToken)
-                  .then((user) => {
+                  .then(user => {
                     this._.internalCache[key] = user;
                     return Promise.resolve(user);
                   });

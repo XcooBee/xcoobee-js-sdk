@@ -23,7 +23,7 @@ export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userId: userCursor,
   })
-    .then((response) => {
+    .then(response => {
       const { outbox_endpoints } = response;
       const { data } = outbox_endpoints;
 
@@ -32,7 +32,8 @@ export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor) {
       // requests need to be made for more data?
 
       return Promise.resolve(data);
-    }, (err) => {
+    })
+    .catch(err => {
       throw ApiUtils.transformError(err);
     });
 }
