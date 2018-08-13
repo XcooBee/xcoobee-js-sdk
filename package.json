@@ -34,10 +34,23 @@
     "type": "git",
     "url": "https://github.com/XcooBee/xcoobee-js-sdk.git"
   },
+  "lint-staged": {
+    "ignore": [
+      "package.json"
+    ],
+    "linters": {
+      "*.{js}": [
+        "eslint --no-ignore --fix",
+        "git add --force"
+      ]
+    }
+  },
   "scripts": {
     "build": "webpack",
     "clean": "",
+    "precommit": "lint-staged",
     "coverage": "jest --coverage",
+    "lint": "eslint --ignore-path .gitignore --ignore-pattern \"!**/.*\" .",
     "start": "",
     "test": "npm run test:unit && npm run test:integration",
     "test:integration": "jest --config=__tests__/integration/jest.config.js",
@@ -53,13 +66,17 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
     "babel-jest": "^23.0.1",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "dotenv": "^6.0.0",
+    "eslint": "^5.3.0",
+    "eslint-plugin-import": "^2.13.0",
     "jest": "^23.1.0",
+    "lint-staged": "^7.2.2",
     "regenerator-runtime": "^0.11.1",
     "webpack": "^4.16.2",
     "webpack-cli": "^3.1.0"

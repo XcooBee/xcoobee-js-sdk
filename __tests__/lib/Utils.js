@@ -1,6 +1,7 @@
+import Path from 'path';
+
 import dotenv from 'dotenv';
 import jwtDecode from 'jwt-decode';
-import Path from 'path';
 
 /**
  * A reference to the Base64 URL encoded regular expression.
@@ -25,17 +26,17 @@ const ISO8601__COMPACT__RE = /\d{4}\d{2}\d{2}T\d{2}\d{2}\d{2}\d{3}Z/;
  *
  * @param {string} value - The value to check.
  */
-export const assertIsCursorLike = (value) => {
+export const assertIsCursorLike = value => {
   expect(value).toMatch(CURSOR__RE);
 };
 
-export const assertIso8601Like = (value) => {
+export const assertIso8601Like = value => {
   expect(value).toMatch(ISO8601__RE);
 };
 
 // TODO: Figure out why we have multiple ISO8601 date formats being returned from
 // the GraphQL API.  Seems we should settle on just one.
-export const assertCompactIso8601Like = (value) => {
+export const assertCompactIso8601Like = value => {
   expect(value).toMatch(ISO8601__COMPACT__RE);
 };
 
@@ -44,7 +45,7 @@ export const assertCompactIso8601Like = (value) => {
  *
  * @param {string} presumedToken - The value presumed to be a JWT.
  */
-export const assertIsJwtToken = (presumedToken) => {
+export const assertIsJwtToken = presumedToken => {
   const presumedTokenParts = presumedToken.split('.');
   expect(presumedTokenParts.length).toBe(3);
 
@@ -67,7 +68,7 @@ export const assertIsJwtToken = (presumedToken) => {
  *
  * @param {string} path - The path to the environment files.
  */
-export const loadEnv = (path) => {
+export const loadEnv = path => {
   let result = dotenv.load({
     path: Path.resolve(path, '.env.local'),
   });
@@ -84,7 +85,7 @@ export const loadEnv = (path) => {
 };
 
 export const sleep = (ms, ...args) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject_unused) => {
     setTimeout(
       () => {
         resolve(...args)

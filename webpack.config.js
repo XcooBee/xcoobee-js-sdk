@@ -61,8 +61,7 @@ const output = {
 };
 
 // https://webpack.js.org/configuration/plugins/
-const plugins = [
-];
+const plugins = [];
 
 // https://webpack.js.org/configuration/resolve/
 const resolve = undefined;

@@ -37,7 +37,7 @@ describe('ApiAccessTokenCache', function () {
             cache.get(apiUrlRoot, apiKey, apiSecret),
             cache.get(apiUrlRoot, apiKey, apiSecret),
           ])
-            .then((apiAccessTokens) => {
+            .then(apiAccessTokens => {
               expect(apiAccessTokens[0]).toBe(apiAccessTokens[1]);
               done();
             });
@@ -57,9 +57,9 @@ describe('ApiAccessTokenCache', function () {
         it('should return the cached API access token', async function (done) {
           let cache = new ApiAccessTokenCache();
           cache.get(apiUrlRoot, apiKey, apiSecret)
-            .then((apiAccessToken1) => {
+            .then(apiAccessToken1 => {
               cache.get(apiUrlRoot, apiKey, apiSecret)
-                .then((apiAccessToken2) => {
+                .then(apiAccessToken2 => {
                   expect(apiAccessToken1).toBe(apiAccessToken2);
                   done();
                 });
@@ -79,11 +79,11 @@ describe('ApiAccessTokenCache', function () {
         it('should return the cached API access token', async function (done) {
           let cache = new ApiAccessTokenCache();
           cache.get(apiUrlRoot, apiKey, apiSecret)
-            .then((apiAccessToken1) => {
+            .then(apiAccessToken1 => {
               sleep(10000)
                 .then(() => {
                   cache.get(apiUrlRoot, apiKey, apiSecret)
-                    .then((apiAccessToken2) => {
+                    .then(apiAccessToken2 => {
                       expect(apiAccessToken1).toBe(apiAccessToken2);
                       done();
                     });
@@ -107,11 +107,11 @@ describe('ApiAccessTokenCache', function () {
           const apiSecret = 'invalid';
 
           (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret)
-            .then((apiAccessToken) => {
+            .then(apiAccessToken_unused => {
               // This should not be called.
               expect(true).toBe(false);
             })
-            .catch((err) => {
+            .catch(err => {
               expect(err).toBeInstanceOf(XcooBeeError);
               expect(err.message).toBe('Unable to get an API access token.');
               done();

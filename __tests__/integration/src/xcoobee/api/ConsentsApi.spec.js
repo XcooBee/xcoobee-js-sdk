@@ -4,7 +4,7 @@ import CookieDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
 import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+// import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -27,7 +27,9 @@ describe('ConsentsApi', function () {
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
         const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-        const cookieConsents = await ConsentsApi.getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId);
+        const cookieConsents = await ConsentsApi.getCookieConsent(
+          apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId
+        );
         expect(cookieConsents).toBeDefined();
         expect(typeof cookieConsents[CookieDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
         expect(typeof cookieConsents[CookieDataTypes.APPLICATION_COOKIE]).toBe('boolean');
@@ -111,7 +113,9 @@ describe('ConsentsApi', function () {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
-            const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, ConsentStatuses.ACTIVE);
+            const consents = await ConsentsApi.listConsents(
+              apiUrlRoot, apiAccessToken, userCursor, ConsentStatuses.ACTIVE
+            );
             // TODO: Find a way to get conversations back.
             expect(consents).toBeInstanceOf(Array);
             expect(consents.length).toBe(0);

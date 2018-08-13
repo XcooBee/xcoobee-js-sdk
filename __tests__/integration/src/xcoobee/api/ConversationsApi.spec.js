@@ -2,7 +2,7 @@ import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCa
 import ConversationsApi from '../../../../../src/xcoobee/api/ConversationsApi';
 import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+// import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
 const apiKey = process.env.XCOOBEE__API_KEY;

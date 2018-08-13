@@ -66,7 +66,7 @@ class ApiAccessTokenCache {
 
       // Assert that token is not expired or is not about to expire.
       const jwtTokenPayload = jwtDecode(apiAccessToken);
-      const exp = jwtTokenPayload.exp;
+      const { exp } = jwtTokenPayload;
       const now = Date.now();
       const expInMs = typeof exp === 'number' && exp === exp ? exp * 1000 : now;
       const msTilExp = expInMs - now;
@@ -81,11 +81,10 @@ class ApiAccessTokenCache {
       apiKey,
       apiSecret,
       apiUrlRoot,
-    })
-      .then((apiAccessToken) => {
-        this._.internalCache[key] = apiAccessToken;
-        return Promise.resolve(apiAccessToken);
-      });
+    }).then(apiAccessToken => {
+      this._.internalCache[key] = apiAccessToken;
+      return Promise.resolve(apiAccessToken);
+    });
   }
 
 }

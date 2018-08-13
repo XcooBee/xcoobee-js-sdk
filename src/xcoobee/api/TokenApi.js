@@ -1,8 +1,8 @@
 import fetch from 'cross-fetch';
 
-import ApiUtils from './ApiUtils';
-
 import XcooBeeError from '../core/XcooBeeError';
+
+import ApiUtils from './ApiUtils';
 
 const MSG__GENERIC_ERROR = 'Unable to get an API access token.';
 

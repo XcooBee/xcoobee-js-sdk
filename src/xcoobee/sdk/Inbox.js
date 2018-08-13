@@ -1,7 +1,5 @@
 import InboxApi from '../../xcoobee/api/InboxApi';
 
-import XcooBeeError from '../../xcoobee/core/XcooBeeError';
-
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';

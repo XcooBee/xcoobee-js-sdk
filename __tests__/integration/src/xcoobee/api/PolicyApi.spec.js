@@ -31,12 +31,12 @@ describe('PolicyApi', function () {
           const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
           const endPointName = 'outbox';
           expect(endPoints).toBeInstanceOf(Array);
-          let candidateEndPoints = endPoints.filter((endPoint) => {
+          let candidateEndPoints = endPoints.filter(endPoint => {
             return endPoint.name === endPointName;
           });
           expect(candidateEndPoints.length).toBeLessThanOrEqual(1);
           if (candidateEndPoints.length === 0) {
-            candidateEndPoints = endPoints.filter((endPoint) => {
+            candidateEndPoints = endPoints.filter(endPoint => {
               return endPoint.name === 'flex';
             });
           }

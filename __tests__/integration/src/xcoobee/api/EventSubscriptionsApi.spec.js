@@ -27,7 +27,9 @@ describe('EventSubscriptionsApi', function () {
               ConsentApproved: 'OnConsentApproved',
             };
             const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-            const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+            const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(
+              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+            );
             expect(eventSubscriptions).toBeInstanceOf(Array);
             expect(eventSubscriptions.length).toBe(1);
             const eventSubscription = eventSubscriptions[0];
@@ -107,7 +109,9 @@ describe('EventSubscriptionsApi', function () {
               ConsentApproved: 'OnConsentApproved',
             };
             const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-            const deleted_number = await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+            const deleted_number = await EventSubscriptionsApi.deleteEventSubscription(
+              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+            );
             expect(typeof deleted_number).toBe('number');
             // TODO: Add more expectations.
 
@@ -125,7 +129,9 @@ describe('EventSubscriptionsApi', function () {
             };
             const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
             try {
-              await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+              await EventSubscriptionsApi.deleteEventSubscription(
+                apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              );
               // This should not be called.
               expect(true).toBe(false);
             } catch (err) {
@@ -177,7 +183,9 @@ describe('EventSubscriptionsApi', function () {
         it('should return with a list of event subscriptions', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-          const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId);
+          const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(
+            apiUrlRoot, apiAccessToken, campaignId
+          );
           expect(eventSubscriptions).toBeInstanceOf(Array);
           expect(eventSubscriptions.length).toBe(0);
           // const eventSubscription = eventSubscriptions[0];

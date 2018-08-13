@@ -38,7 +38,7 @@ describe('UsersCache', function () {
           Promise.all([
             usersCache.get(apiUrlRoot, apiKey, apiSecret),
             usersCache.get(apiUrlRoot, apiKey, apiSecret),
-          ]).then((userInfoList) => {
+          ]).then(userInfoList => {
             expect(userInfoList[0]).toBe(userInfoList[1]);
             done();
           });
@@ -59,9 +59,9 @@ describe('UsersCache', function () {
         it('should return the cached user info', async function (done) {
           let usersCache = new UsersCache(apiAccessTokenCache);
           usersCache.get(apiUrlRoot, apiKey, apiSecret)
-            .then((userInfo1) => {
+            .then(userInfo1 => {
               usersCache.get(apiUrlRoot, apiKey, apiSecret)
-                .then((userInfo2) => {
+                .then(userInfo2 => {
                   expect(userInfo1).toBe(userInfo2);
                   done();
                 });
@@ -81,11 +81,11 @@ describe('UsersCache', function () {
         it('should return the cached user info', async function (done) {
           let usersCache = new UsersCache(apiAccessTokenCache);
           usersCache.get(apiUrlRoot, apiKey, apiSecret)
-            .then((userInfo1) => {
+            .then(userInfo1 => {
               sleep(10000)
                 .then(() => {
                   usersCache.get(apiUrlRoot, apiKey, apiSecret)
-                    .then((userInfo2) => {
+                    .then(userInfo2 => {
                       expect(userInfo1).toBe(userInfo2);
                       done();
                     });

@@ -30,7 +30,7 @@ describe('FileApi', function () {
         const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
         const intent = 'outbox';
         expect(endPoints).toBeInstanceOf(Array);
-        let candidateEndPoints = endPoints.filter((endPoint) => {
+        let candidateEndPoints = endPoints.filter(endPoint => {
           return endPoint.name === intent;
         });
         expect(candidateEndPoints.length).toBe(1);

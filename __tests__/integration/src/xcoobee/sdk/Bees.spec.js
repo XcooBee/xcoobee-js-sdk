@@ -150,7 +150,7 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.uploadFiles(files);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.results;
+            const { results } = response;
             expect(results).toBeInstanceOf(Array);
             expect(results.length).toBe(1);
             const result = results[0];

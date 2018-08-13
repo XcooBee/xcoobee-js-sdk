@@ -42,7 +42,7 @@ describe('Inbox', function () {
                 const messageId = 'unknown';
                 const response = await inboxSdk.deleteInboxItem(messageId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const results = response.results;
+                const { results } = response;
                 expect(results).toBeDefined();
                 expect(results.trans_id).toBeNull();
                 done();
@@ -73,7 +73,7 @@ describe('Inbox', function () {
             const messageId = 'unknown';
             const response = await inboxSdk.deleteInboxItem(messageId, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.results;
+            const { results } = response;
             expect(results).toBeDefined();
             expect(results.trans_id).toBeNull();
             done();
@@ -102,7 +102,7 @@ describe('Inbox', function () {
             const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b';
             const response = await inboxSdk.getInboxItem(messageId);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.results;
+            const { results } = response;
             expect(results).toBeDefined();
             expect(results.inbox_item).toBeDefined();
             const { inbox_item } = results;
@@ -135,7 +135,7 @@ describe('Inbox', function () {
             const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b';
             const response = await inboxSdk.getInboxItem(messageId, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.results;
+            const { results } = response;
             expect(results).toBeDefined();
             expect(results.inbox_item).toBeDefined();
             const { inbox_item } = results;
@@ -192,7 +192,7 @@ describe('Inbox', function () {
             const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await inboxSdk.listInbox();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.results;
+            const { results } = response;
             expect(results).toBeDefined();
             expect(results.inbox).toBeDefined();
             expect(results.inbox.data).toBeInstanceOf(Array);
@@ -232,7 +232,7 @@ describe('Inbox', function () {
             const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await inboxSdk.listInbox(null, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const results = response.results;
+            const { results } = response;
             expect(results).toBeDefined();
             expect(results.inbox).toBeDefined();
             expect(results.inbox.data).toBeInstanceOf(Array);

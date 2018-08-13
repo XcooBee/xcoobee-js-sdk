@@ -169,7 +169,7 @@ describe('System', function () {
 
               let response = await systemSdk.addEventSubscription(eventsMapping);
               expect(response).toBeInstanceOf(ErrorResponse);
-              let errors = response.errors;
+              let { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               let error = errors[0];
@@ -222,7 +222,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.addEventSubscription(eventsMapping);
               expect(response).toBeInstanceOf(ErrorResponse);
-              let errors = response.errors;
+              let { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               let error = errors[0];
@@ -277,7 +277,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
               expect(response).toBeInstanceOf(ErrorResponse);
-              const errors = response.errors;
+              const { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               const error = errors[0];
@@ -313,7 +313,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
               expect(response).toBeInstanceOf(ErrorResponse);
-              let errors = response.errors;
+              let { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               let error = errors[0];
@@ -533,7 +533,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.listEventSubscriptions();
               expect(response).toBeInstanceOf(ErrorResponse);
-              let errors = response.errors;
+              let { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               let error = errors[0];
@@ -585,7 +585,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
               expect(response).toBeInstanceOf(ErrorResponse);
-              const errors = response.errors;
+              const { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               const error = errors[0];
@@ -618,7 +618,7 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.listEventSubscriptions(campaignId);
               expect(response).toBeInstanceOf(ErrorResponse);
-              let errors = response.errors;
+              let { errors } = response;
               expect(errors).toBeInstanceOf(Array);
               expect(errors.length).toBe(1);
               let error = errors[0];
@@ -664,7 +664,7 @@ describe('System', function () {
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await systemSdk.ping();
             expect(response).toBeInstanceOf(ErrorResponse);
-            let errors = response.errors;
+            let { errors } = response;
             expect(errors).toBeInstanceOf(Array);
             expect(errors.length).toBe(1);
             let error = errors[0];

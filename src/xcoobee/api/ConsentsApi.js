@@ -38,7 +38,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
   })
     .then(response => {
       const { consents } = response;
-      const { data, page_info } = consents;
+      const { data } = consents;
 
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?
@@ -53,7 +53,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
         [ConsentDataTypes.USAGE_COOKIE]: false,
       };
 
-      data.forEach((consent) => {
+      data.forEach(consent => {
         if (consent.user_xcoobee_id === xcoobeeId) {
           if ([ConsentTypes.WEB_APPLICATION_TRACKING, ConsentTypes.WEBSITE_TRACKING].includes(consent.consent_type)) {
             if (consent.request_data_types.includes(ConsentDataTypes.ADVERTISING_COOKIE)) {
@@ -221,7 +221,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
   })
     .then(response => {
       const { consents } = response;
-      const { data, page_info } = consents;
+      const { data } = consents;
 
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?

@@ -1,7 +1,8 @@
 import Fs from 'fs';
 import Path from 'path';
-import { toBool } from 'qc-to_bool';
 import readline from 'readline';
+
+import { toBool } from 'qc-to_bool';
 
 import Config from './Config';
 
@@ -34,7 +35,7 @@ export function createConfigFromFile(xcoobPath) {
     try {
       const configReadStream = Fs.createReadStream(cfgFilename);
 
-      configReadStream.on('error', (err) => {
+      configReadStream.on('error', err => {
         reject(err);
       });
 
@@ -42,7 +43,7 @@ export function createConfigFromFile(xcoobPath) {
         input: configReadStream,
       });
 
-      lineReader.on('line', (line) => {
+      lineReader.on('line', line => {
         const line_tr = line.trim();
 
         if (line_tr.length > 0) {

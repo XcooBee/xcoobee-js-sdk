@@ -24,6 +24,7 @@ export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor
       baseName = Path.basename(file);
     }
 
+    /* eslint-disable-next-line max-len */
     query.push(`  policy${idx}: upload_policy(filePath: "${baseName}", intent: ${intent}, identifier: "${endPointCursor}") {`);
     query.push('    credential');
     query.push('    date');

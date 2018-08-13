@@ -40,7 +40,7 @@ class Sdk {
       inbox: new Inbox(cfg, apiAccessTokenCache, usersCache),
       system: new System(cfg, apiAccessTokenCache, usersCache),
       users: new Users(cfg, apiAccessTokenCache, usersCache),
-    }
+    };
   }
 
   get bees() {

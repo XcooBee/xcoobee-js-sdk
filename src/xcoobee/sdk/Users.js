@@ -1,5 +1,4 @@
 import ConversationsApi from '../../xcoobee/api/ConversationsApi';
-import UsersApi from '../../xcoobee/api/UsersApi';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
@@ -47,7 +46,9 @@ class Users {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const conversations = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor, first, after);
+      const conversations = await ConversationsApi.getConversation(
+        apiUrlRoot, apiAccessToken, targetCursor, first, after
+      );
       const response = new SuccessResponse(conversations);
       return Promise.resolve(response);
     } catch (err) {
@@ -77,7 +78,9 @@ class Users {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const conversations = await ConversationsApi.getConversations(apiUrlRoot, apiAccessToken, userCursor, first, after);
+      const conversations = await ConversationsApi.getConversations(
+        apiUrlRoot, apiAccessToken, userCursor, first, after
+      );
       const response = new SuccessResponse(conversations);
       return Promise.resolve(response);
     } catch (err) {
@@ -102,7 +105,7 @@ class Users {
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const userInfo = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const userInfo = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const response = new SuccessResponse(userInfo);
       return Promise.resolve(response);
     } catch (err) {
@@ -133,7 +136,9 @@ class Users {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const note = await ConversationsApi.sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId);
+      const note = await ConversationsApi.sendUserMessage(
+        apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId
+      );
       const response = new SuccessResponse(note);
       return Promise.resolve(response);
     } catch (err) {

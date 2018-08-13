@@ -22,7 +22,7 @@ describe('TokenApi', function () {
           apiSecret,
           apiUrlRoot,
         })
-          .then((apiAccessToken) => {
+          .then(apiAccessToken => {
             expect(apiAccessToken).toBeDefined();
             assertIsJwtToken(apiAccessToken);
             done();
@@ -49,7 +49,7 @@ describe('TokenApi', function () {
           promise1,
           promise2,
         ])
-          .then((apiAccessTokens) => {
+          .then(apiAccessTokens => {
             expect(apiAccessTokens[0]).toBe(apiAccessTokens[1]);
             done();
           });
@@ -65,14 +65,14 @@ describe('TokenApi', function () {
           apiSecret,
           apiUrlRoot,
         });
-        promise1.then((apiAccessToken1) => {
+        promise1.then(apiAccessToken1 => {
           let promise2 = TokenApi.getApiAccessToken({
             apiKey,
             apiSecret,
             apiUrlRoot,
           });
           expect(promise1).not.toBe(promise2);
-          promise2.then((apiAccessToken2) => {
+          promise2.then(apiAccessToken2 => {
             expect(apiAccessToken1).not.toBe(apiAccessToken2);
             done();
           });
@@ -88,11 +88,11 @@ describe('TokenApi', function () {
         const apiSecret = 'invalid';
 
         TokenApi.getApiAccessToken({ apiKey, apiSecret, apiUrlRoot })
-          .then((apiAccessToken_unused) => {
+          .then(apiAccessToken_unused => {
             // This should not be called.
             expect(true).toBe(false);
           })
-          .catch((err) => {
+          .catch(err => {
             expect(err).toBeInstanceOf(XcooBeeError);
             expect(err.message).toBe('Unable to get an API access token.');
             done();

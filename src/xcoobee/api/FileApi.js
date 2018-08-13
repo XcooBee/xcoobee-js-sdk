@@ -1,5 +1,6 @@
-import FormData from 'form-data';
 import Fs from 'fs';
+
+import FormData from 'form-data';
 
 import XcooBeeError from '../core/XcooBeeError';
 
@@ -42,12 +43,12 @@ export function upload_file(file, policy) {
     formData.append('file', Fs.createReadStream(file));
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject_unused) => {
     formData.submit(url, (err, res /*: IncomingMessage */) => {
       if (err) {
         throw ApiUtils.transformError(err);
       }
-      const statusCode = res.statusCode;
+      const { statusCode } = res;
       if (statusCode >= 300) {
         let filePath;
         if (file instanceof File) {

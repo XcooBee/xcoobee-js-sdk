@@ -56,7 +56,7 @@ export function transformError(inputError) {
     return new XcooBeeError('401 Unauthorized.  Please make sure your API access token is fresh.');
   }
   if (inputError.response && inputError.response.errors) {
-    let errors = inputError.response.errors;
+    let { errors } = inputError.response;
     if (!Array.isArray(errors)) {
       errors = [errors];
     }

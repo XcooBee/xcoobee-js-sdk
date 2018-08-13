@@ -26,7 +26,9 @@ class Config {
    */
   constructor(data) {
     // TODO: Validate data.
-    let { apiKey, apiSecret, apiUrlRoot, campaignId, encrypt, pgpPassword, pgpSecret } = data;
+    let {
+      apiKey, apiSecret, apiUrlRoot, campaignId, encrypt, pgpPassword, pgpSecret,
+    } = data;
     campaignId = campaignId === undefined ? null : campaignId;
     encrypt = encrypt === undefined ? false : encrypt;
     pgpPassword = pgpPassword === undefined ? null : pgpPassword;
@@ -44,8 +46,13 @@ class Config {
       throw new TypeError('API URL root is required.');
     }
 
-    if ((campaignId !== null && typeof campaignId !== 'string') || (typeof campaignId === 'string' && campaignId.length === 0)) {
-      throw new TypeError('Default campaign ID must be null or a valid campaign ID.');
+    if (
+      (campaignId !== null && typeof campaignId !== 'string') ||
+      (typeof campaignId === 'string' && campaignId.length === 0)
+    ) {
+      throw new TypeError(
+        'Default campaign ID must be null or a valid campaign ID.'
+      );
     }
 
     if (encrypt) {

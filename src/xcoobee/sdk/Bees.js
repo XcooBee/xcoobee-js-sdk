@@ -6,12 +6,13 @@ import FileApi from '../../xcoobee/api/FileApi';
 import PolicyApi from '../../xcoobee/api/PolicyApi';
 import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
 
+import XcooBeeError from '../core/XcooBeeError';
+
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
-import XcooBeeError from '../core/XcooBeeError';
 
-function _zip(files, policies) {
+function zipTogether(files, policies) {
   const pairs = [];
   // Note: Not expecting the lengths between the two arrays to be different, but
   // it doesn't hurt to be robust.
@@ -53,7 +54,7 @@ class Bees {
    *
    * ```js
    * listBees('social')
-   *   .then((res) => {
+   *   .then(res => {
    *     const { code, results, errors, time } = res;
    *     if (code >= 300 || errors) {
    *       if (errors) {
@@ -62,7 +63,7 @@ class Bees {
    *       return;
    *     }
    *     const bees = results;
-   *     bees.forEach((bee) => {
+   *     bees.forEach(bee => {
    *       const { bee_system_name, description, bee_icon, ...etc } = bee;
    *       // DO something with this data.
    *     });
@@ -127,20 +128,28 @@ class Bees {
       directiveInput.subscriptions = subscriptions;
     }
 
-    if (Array.isArray(options.process.destinations) && options.process.destinations.length > 0) {
-      directiveInput.destinations = options.process.destinations.map(destination => {
-        if (ApiUtils.appearsToBeAnEmailAddress(destination)) {
-          return { email: destination };
+    if (
+      Array.isArray(options.process.destinations) &&
+      options.process.destinations.length > 0
+    ) {
+      directiveInput.destinations = options.process.destinations.map(
+        destination => {
+          if (ApiUtils.appearsToBeAnEmailAddress(destination)) {
+            return { email: destination };
+          }
+          return { xcoobee_id: destination };
         }
-        return { xcoobee_id: destination };
-      });
+      );
     }
 
     directiveInput.bees = [];
     for (let beeName in bees) {
       if (beeName !== 'transfer') {
         let beeParams = bees[beeName];
-        directiveInput.bees.push({ bee_name: beeName, params: JSON.stringify(beeParams) });
+        directiveInput.bees.push({
+          bee_name: beeName,
+          params: JSON.stringify(beeParams),
+        });
       }
     }
 
@@ -187,7 +196,9 @@ class Bees {
       const endPointName = intent || UploadPolicyIntents.OUTBOX;
 
       if (endPointName !== UploadPolicyIntents.OUTBOX) {
-        throw new XcooBeeError(`The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`);
+        throw new XcooBeeError(
+          `The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`
+        );
       }
 
       // Find the endpoint with the name matching the specified intent.
@@ -206,8 +217,10 @@ class Bees {
 
       const uploadPolicyIntent = endPointName;
 
-      const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, uploadPolicyIntent, endPointCursor, files);
-      const policyFilePairs = _zip(files, policies);
+      const policies = await PolicyApi.upload_policy(
+        apiUrlRoot, apiAccessToken, uploadPolicyIntent, endPointCursor, files
+      );
+      const policyFilePairs = zipTogether(files, policies);
       // Note: We don't want to upload one file, wait for the promise to resolve,
       // and then repeat.  Here we are uploading all files back-to-back. ...
       const fileUploadPromises = policyFilePairs.map(pair => {

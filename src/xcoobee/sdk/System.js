@@ -53,7 +53,9 @@ class System {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, events, resolvedCampaignId);
+      const eventSubscriptions = await EventSubscriptionsApi.addEventSubscription(
+        apiUrlRoot, apiAccessToken, events, resolvedCampaignId
+      );
       const response = new SuccessResponse(eventSubscriptions);
       return Promise.resolve(response);
     } catch (err) {
@@ -84,7 +86,9 @@ class System {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const deletedCount = await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, events, resolvedCampaignId);
+      const deletedCount = await EventSubscriptionsApi.deleteEventSubscription(
+        apiUrlRoot, apiAccessToken, events, resolvedCampaignId
+      );
       const response = new SuccessResponse(deletedCount);
       return Promise.resolve(response);
     } catch (err) {
@@ -142,7 +146,9 @@ class System {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, resolvedCampaignId);
+      const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(
+        apiUrlRoot, apiAccessToken, resolvedCampaignId
+      );
       const response = new SuccessResponse(eventSubscriptions);
       return Promise.resolve(response);
     } catch (err) {

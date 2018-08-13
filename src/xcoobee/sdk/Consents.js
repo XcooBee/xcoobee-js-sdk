@@ -57,7 +57,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  activateCampaign(campaignId, config) {
+  activateCampaign(campaignId_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
     throw Error('NotYetImplemented');
@@ -77,7 +77,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  createCampaign(data, config) {
+  createCampaign(data_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
     throw Error('NotYetImplemented');
@@ -98,7 +98,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  confirmConsentChange(consentId, config) {
+  confirmConsentChange(consentId_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
@@ -119,7 +119,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  confirmDataDelete(consentId, config) {
+  confirmDataDelete(consentId_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
@@ -142,7 +142,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  getCampaignInfo(campaignId, config) {
+  getCampaignInfo(campaignId_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
@@ -199,7 +199,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  getCookieConsent(xcooBeeId, campaignId, config) {
+  getCookieConsent(xcooBeeId_unused, campaignId_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
@@ -285,7 +285,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  modifyCampaign(campaignId, data, config) {
+  modifyCampaign(campaignId_unused, data_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
     throw Error('NotYetImplemented');
@@ -315,7 +315,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  requestConsent(xcooBeeId, reqRefId, campaignId, config) {
+  requestConsent(xcooBeeId_unused, reqRefId_unused, campaignId_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');
@@ -344,7 +344,7 @@ class Consents {
    *
    * @throws XcooBeeError
    */
-  setUserDataResponse(message, consentId, requestRef, filename, config) {
+  setUserDataResponse(message_unused, consentId_unused, requestRef_unused, filename_unused, config_unused) {
     this._assertValidState();
     // TODO: To be implemented.
     throw Error('NotYetImplemented');

@@ -47,7 +47,7 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
   })
     .then(response => {
       const { conversations } = response;
-      const { data, page_info } = conversations;
+      const { data } = conversations;
 
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?
@@ -94,7 +94,7 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
   })
     .then(response => {
       const { conversations } = response;
-      const { data, page_info } = conversations;
+      const { data } = conversations;
 
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?

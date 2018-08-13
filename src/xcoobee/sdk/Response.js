@@ -19,7 +19,7 @@ class Response {
     }
     this._ = {
       ...info,
-      time: new Date, // TODO: Format as: Y-m-d H:i:s.
+      time: new Date(), // TODO: Format as: Y-m-d H:i:s.
     };
   }
 
