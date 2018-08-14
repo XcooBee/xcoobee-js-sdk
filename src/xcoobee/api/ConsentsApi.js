@@ -72,7 +72,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
         }
       });
 
-      return Promise.resolve(cookieConsents);
+      return cookieConsents;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -141,7 +141,7 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
     .then(response => {
       const { consent } = response;
 
-      return Promise.resolve(consent);
+      return consent;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -226,7 +226,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

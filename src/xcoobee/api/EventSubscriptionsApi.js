@@ -56,7 +56,7 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
       // with the page_info.  If page_info.has_next_page is true, then do more
       // requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -99,7 +99,7 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
       const { delete_event_subscriptions } = response;
       const { deleted_number } = delete_event_subscriptions;
 
-      return Promise.resolve(deleted_number);
+      return deleted_number;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -142,7 +142,7 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
       // with the page_info.  If page_info.has_next_page is true, then do more
       // requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

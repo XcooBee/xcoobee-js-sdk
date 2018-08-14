@@ -29,7 +29,7 @@ export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageI
       const { trans_id } = remove_inbox_item || { trans_id: null };
 
       const results = { trans_id };
-      return Promise.resolve(results);
+      return results;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -86,7 +86,7 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
       const { inbox_item } = response;
 
       const results = { inbox_item };
-      return Promise.resolve(results);
+      return results;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -155,7 +155,7 @@ export function listInbox(apiUrlRoot, apiAccessToken, startId) {
           page_info,
         },
       };
-      return Promise.resolve(results);
+      return results;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

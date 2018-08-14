@@ -44,7 +44,7 @@ class UsersCache {
         return UsersApi.getUser(apiUrlRoot, apiAccessToken)
           .then(user => {
             this._.internalCache[key] = user;
-            return Promise.resolve(user);
+            return user;
           })
           .catch(err_unused => {
             // If unable to fetch the user, then it may be due to an old expired API access
@@ -57,7 +57,7 @@ class UsersCache {
                 return UsersApi.getUser(apiUrlRoot, apiAccessToken)
                   .then(user => {
                     this._.internalCache[key] = user;
-                    return Promise.resolve(user);
+                    return user;
                   });
               });
           });

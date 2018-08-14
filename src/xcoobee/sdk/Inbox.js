@@ -49,11 +49,11 @@ class Inbox {
       const userCursor = user.cursor;
       const results = await InboxApi.deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
       const response = new SuccessResponse(results);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -80,11 +80,11 @@ class Inbox {
       const userCursor = user.cursor;
       const results = await InboxApi.getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
       const response = new SuccessResponse(results);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -109,11 +109,11 @@ class Inbox {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const results = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, startMessageId);
       const response = new SuccessResponse(results);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 

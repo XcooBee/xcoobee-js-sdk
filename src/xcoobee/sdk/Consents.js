@@ -171,11 +171,11 @@ class Consents {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const consents = await ConsentsApi.getConsentData(apiUrlRoot, apiAccessToken, consentId);
       const response = new SuccessResponse(consents);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -229,11 +229,11 @@ class Consents {
       const userCursor = user.cursor;
       const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
       const response = new SuccessResponse(campaigns);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -260,11 +260,11 @@ class Consents {
       const userCursor = user.cursor;
       const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status);
       const response = new SuccessResponse(consents);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 

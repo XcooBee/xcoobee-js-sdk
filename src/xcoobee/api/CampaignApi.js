@@ -28,7 +28,7 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   })
     .then(response => {
       const { campaign } = response;
-      return Promise.resolve(campaign);
+      return campaign;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -107,7 +107,7 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
       // with the page_info.  If page_info.has_next_page is true, then do more
       // requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

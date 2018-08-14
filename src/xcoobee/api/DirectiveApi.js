@@ -22,7 +22,7 @@ export function addDirective(apiUrlRoot, apiAccessToken, directiveInput) {
     .then(response => {
       const { add_directive } = response;
 
-      return Promise.resolve(add_directive);
+      return add_directive;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

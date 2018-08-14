@@ -52,7 +52,7 @@ export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor
         policies.push(policy);
       }
 
-      return Promise.resolve(policies);
+      return policies;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

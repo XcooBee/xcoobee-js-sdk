@@ -46,7 +46,7 @@ export function bees(apiUrlRoot, apiAccessToken, searchText) {
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

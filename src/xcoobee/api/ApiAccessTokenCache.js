@@ -83,7 +83,7 @@ class ApiAccessTokenCache {
       apiUrlRoot,
     }).then(apiAccessToken => {
       this._.internalCache[key] = apiAccessToken;
-      return Promise.resolve(apiAccessToken);
+      return apiAccessToken;
     });
   }
 

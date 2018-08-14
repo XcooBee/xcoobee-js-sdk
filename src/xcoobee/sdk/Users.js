@@ -50,11 +50,11 @@ class Users {
         apiUrlRoot, apiAccessToken, targetCursor, first, after
       );
       const response = new SuccessResponse(conversations);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -82,11 +82,11 @@ class Users {
         apiUrlRoot, apiAccessToken, userCursor, first, after
       );
       const response = new SuccessResponse(conversations);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -107,11 +107,11 @@ class Users {
     try {
       const userInfo = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const response = new SuccessResponse(userInfo);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -140,11 +140,11 @@ class Users {
         apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId
       );
       const response = new SuccessResponse(note);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 

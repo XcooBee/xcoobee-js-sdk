@@ -57,11 +57,11 @@ class System {
         apiUrlRoot, apiAccessToken, events, resolvedCampaignId
       );
       const response = new SuccessResponse(eventSubscriptions);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -90,11 +90,11 @@ class System {
         apiUrlRoot, apiAccessToken, events, resolvedCampaignId
       );
       const response = new SuccessResponse(deletedCount);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -117,11 +117,11 @@ class System {
       const userCursor = user.cursor;
       const events = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor);
       const response = new SuccessResponse(events);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -150,11 +150,11 @@ class System {
         apiUrlRoot, apiAccessToken, resolvedCampaignId
       );
       const response = new SuccessResponse(eventSubscriptions);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -185,7 +185,7 @@ class System {
         const campaignInfo = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
         if (campaignInfo) {
           const response = new SuccessResponse(true);
-          return Promise.resolve(response);
+          return response;
         }
         err = new XcooBeeError('Campaign not found.');
       }
@@ -194,11 +194,11 @@ class System {
       }
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 

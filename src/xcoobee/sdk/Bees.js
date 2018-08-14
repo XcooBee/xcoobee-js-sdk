@@ -88,11 +88,11 @@ class Bees {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const beesList = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText);
       const response = new SuccessResponse(beesList);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -157,11 +157,11 @@ class Bees {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const directiveResult = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
       const response = new SuccessResponse(directiveResult.ref_id);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 
@@ -237,11 +237,11 @@ class Bees {
         return { file, success: !!fileUploadResult };
       });
       const response = new SuccessResponse(results);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       const code = 400;
       const errors = [err];
-      return Promise.resolve(new ErrorResponse(code, errors));
+      return new ErrorResponse(code, errors);
     }
   }
 

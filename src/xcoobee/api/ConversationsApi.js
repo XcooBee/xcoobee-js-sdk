@@ -52,7 +52,7 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -99,7 +99,7 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?
 
-      return Promise.resolve(data);
+      return data;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
@@ -139,7 +139,7 @@ export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor,
     .then(response => {
       const { send_message } = response;
 
-      return Promise.resolve(send_message);
+      return send_message;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
