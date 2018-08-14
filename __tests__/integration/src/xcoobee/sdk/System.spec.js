@@ -8,7 +8,7 @@ import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import System from '../../../../../src/xcoobee/sdk/System';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -21,6 +21,8 @@ describe('System', function () {
 
   describe('instance', function () {
 
+    // FIXME: TODO: Delete event subscripts before adding.
+    // FIXME: TODO: Get the event subscriptions to a known state, add, list, delete.
     describe('.addEventSubscription', function () {
 
       describe('called with a valid API key/secret pair', function () {
@@ -36,7 +38,7 @@ describe('System', function () {
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'known', // FIXME: TODO: Get a legit campaign cursor.
+                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
                 const eventsMapping = {
                   ConsentApproved: 'OnConsentApproved',
@@ -75,7 +77,7 @@ describe('System', function () {
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'overriding-campaign-id', // FIXME: TODO: Get a legit campaign cursor.
+                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -113,7 +115,7 @@ describe('System', function () {
                   apiUrlRoot,
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const campaignId = 'known'; // FIXME: TODO: Get a legit campaign cursor.
+                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
@@ -163,7 +165,7 @@ describe('System', function () {
               const eventsMapping = {
                 Invalid: 'invalid',
               };
-              const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
+              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
@@ -398,7 +400,7 @@ describe('System', function () {
 
       describe('called with a valid API key/secret pair', function () {
 
-        xdescribe('and known campaign ID', function () {
+        describe('and known campaign ID', function () {
 
           describe('using default config', function () {
 
@@ -407,7 +409,7 @@ describe('System', function () {
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'known', // FIXME: TODO: Get a legit campaign cursor.
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -415,7 +417,7 @@ describe('System', function () {
               expect(response).toBeInstanceOf(SuccessResponse);
               const eventSubscriptions = response.results;
               expect(eventSubscriptions).toBeInstanceOf(Array);
-              expect(eventSubscriptions.length).toBe(0);
+              expect(eventSubscriptions.length).toBe(1);
               // TODO: Add more expectations.
               done();
             });// eo it
@@ -435,7 +437,7 @@ describe('System', function () {
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'overriding-campaign-id', // FIXME: TODO: Get a legit campaign cursor.
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -443,7 +445,7 @@ describe('System', function () {
               expect(response).toBeInstanceOf(SuccessResponse);
               const events = response.results;
               expect(events).toBeInstanceOf(Array);
-              expect(events.length).toBe(0);
+              expect(events.length).toBe(1);
               // TODO: Add more expectations.
               done();
             });// eo it
@@ -465,21 +467,21 @@ describe('System', function () {
                 apiUrlRoot,
                 campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
-              const campaignId = 'known'; // FIXME: TODO: Get a legit campaign cursor.
+              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.listEventSubscriptions(campaignId);
               expect(response).toBeInstanceOf(SuccessResponse);
               let eventSubscriptions = response.results;
               expect(eventSubscriptions).toBeInstanceOf(Array);
-              expect(eventSubscriptions.length).toBe(0);
+              expect(eventSubscriptions.length).toBe(1);
               // TODO: Add more expectations.
 
               response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
               eventSubscriptions = response.results;
               expect(eventSubscriptions).toBeInstanceOf(Array);
-              expect(eventSubscriptions.length).toBe(0);
+              expect(eventSubscriptions.length).toBe(1);
               // TODO: Add more expectations.
 
               done();
@@ -604,7 +606,7 @@ describe('System', function () {
 
       describe('called with a valid API key/secret pair', function () {
 
-        // FIXME: TODO: Update ~SDK_Tester to have a PGP public key.
+        // FIXME: TODO: Update ~SDKTester_Developer to have a PGP public key.
         xdescribe('using default config without a campaign ID', function () {
 
           it('should error out due to not finding a campaign', async function (done) {

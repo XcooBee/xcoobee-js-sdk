@@ -4,7 +4,7 @@ import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 import { assertIso8601Like } from '../../../../lib/Utils';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -47,11 +47,11 @@ describe('InboxApi', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return the inbox item', async function (done) {
+      xit('should fetch and return the inbox item', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
-        const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b';
+        const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b'; // FIXME: TODO: Get a legit message ID.
         const results = await InboxApi.getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
         expect(results).toBeDefined();
         expect(results.inbox_item).toBeDefined();
@@ -69,7 +69,8 @@ describe('InboxApi', function () {
 
   });// eo describe('.getInboxItem')
 
-  describe('.listInbox', function () {
+  // FIXME: TODO: Get Inbox to a known state with at least one item to search for.
+  xdescribe('.listInbox', function () {
 
     describe('called with a valid API access token', function () {
 
@@ -93,7 +94,7 @@ describe('InboxApi', function () {
           expect(inboxItem.fileSize).toBe(2628);
           expect(inboxItem.sender).toBeDefined();
           expect(inboxItem.sender.from).toBe('MBDYlKvqerX4iam4BOi9k+VsRAPB9Bd7n1h+5ehEE+WDZSm+xRtmklTO8bWazyztrkis4w==');
-          expect(inboxItem.sender.from_xcoobee_id).toBe('~SDK_Tester');
+          expect(inboxItem.sender.from_xcoobee_id).toBe('~SDKTester_Developer');
           expect(inboxItem.sender.name).toBe('SDK Tester');
           expect(inboxItem.sender.validation_score).toBe(1);
           assertIso8601Like(inboxItem.receiptDate);

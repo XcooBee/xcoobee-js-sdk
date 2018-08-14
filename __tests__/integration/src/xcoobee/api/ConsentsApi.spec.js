@@ -6,7 +6,7 @@ import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 // import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -23,7 +23,7 @@ describe('ConsentsApi', function () {
 
       it('should fetch and return with consent info', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const xcoobeeId = '~SDK_Tester';
+        const xcoobeeId = '~SDKTester_Developer';
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
         const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
@@ -90,7 +90,7 @@ describe('ConsentsApi', function () {
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
             const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
-            // TODO: Find a way to get conversations back.
+            // TODO: Find a way to get consents back.
             expect(consents).toBeInstanceOf(Array);
             expect(consents.length).toBe(0);
             // let consent = consents[0];
@@ -116,7 +116,7 @@ describe('ConsentsApi', function () {
             const consents = await ConsentsApi.listConsents(
               apiUrlRoot, apiAccessToken, userCursor, ConsentStatuses.ACTIVE
             );
-            // TODO: Find a way to get conversations back.
+            // TODO: Find a way to get consents back.
             expect(consents).toBeInstanceOf(Array);
             expect(consents.length).toBe(0);
             // let consent = consents[0];

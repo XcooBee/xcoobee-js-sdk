@@ -7,7 +7,7 @@ import Consents from '../../../../../src/xcoobee/sdk/Consents';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -122,8 +122,13 @@ describe('Consents', function () {
             const campaigns = response.results;
             expect(campaigns).toBeDefined();
             expect(campaigns).toBeInstanceOf(Array);
-            expect(campaigns.length).toBe(0);
-            // TODO: Add more expectations.
+            expect(campaigns.length).toBe(1);
+            const campaign = campaigns[0];
+            expect(campaign).toBeDefined();
+            expect(campaign.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+            expect(campaign.campaign_name).toBe('xcoobee test campaign');
+            expect(campaign.status).toBe('active');
+
             done();
           });// eo it
 
@@ -150,8 +155,13 @@ describe('Consents', function () {
             const campaigns = response.results;
             expect(campaigns).toBeDefined();
             expect(campaigns).toBeInstanceOf(Array);
-            expect(campaigns.length).toBe(0);
-            // TODO: Add more expectations.
+            expect(campaigns.length).toBe(1);
+            const campaign = campaigns[0];
+            expect(campaign).toBeDefined();
+            expect(campaign.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+            expect(campaign.campaign_name).toBe('xcoobee test campaign');
+            expect(campaign.status).toBe('active');
+
             done();
           });// eo it
 

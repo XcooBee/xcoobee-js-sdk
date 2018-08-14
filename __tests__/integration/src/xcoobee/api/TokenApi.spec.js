@@ -2,9 +2,9 @@ import TokenApi from '../../../../../src/xcoobee/api/TokenApi';
 
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
-import { assertIsJwtToken } from '../../../../lib/Utils';
+import { assertIsJwtToken, sleep } from '../../../../lib/Utils';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
@@ -66,16 +66,19 @@ describe('TokenApi', function () {
           apiUrlRoot,
         });
         promise1.then(apiAccessToken1 => {
-          let promise2 = TokenApi.getApiAccessToken({
-            apiKey,
-            apiSecret,
-            apiUrlRoot,
-          });
-          expect(promise1).not.toBe(promise2);
-          promise2.then(apiAccessToken2 => {
-            expect(apiAccessToken1).not.toBe(apiAccessToken2);
-            done();
-          });
+          sleep(1000)
+            .then(() => {
+              let promise2 = TokenApi.getApiAccessToken({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+              });
+              expect(promise1).not.toBe(promise2);
+              promise2.then(apiAccessToken2 => {
+                expect(apiAccessToken1).not.toBe(apiAccessToken2);
+                done();
+              });
+            });
         });
       });// eo it
 

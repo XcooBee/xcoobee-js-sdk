@@ -13,10 +13,24 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   const query = `
     query getCampaignInfo($campaignId: String!) {
       campaign(campaign_cursor: $campaignId) {
+        campaign_description {
+          text
+        }
         campaign_name
+        campaign_title {
+          text
+        }
         date_c
         date_e
+        email_targets {
+          email
+        }
+        endpoint
         status
+        targets {
+          name
+          recipient
+        }
         xcoobee_targets {
           xcoobee_id
         }
@@ -86,6 +100,7 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
     query getCampaigns($userCursor: String!) {
       campaigns(user_cursor: $userCursor) {
         data {
+          campaign_cursor
           campaign_name
           status
         }

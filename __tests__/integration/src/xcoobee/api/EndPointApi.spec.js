@@ -6,7 +6,7 @@ import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
 import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 

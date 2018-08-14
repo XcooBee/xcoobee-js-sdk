@@ -43,12 +43,13 @@ There is more detailed and extensive API documentation available on our
 ### Integration
 
 Currently, the tests are expecting information from the user with the
-`~SDK_Tester` XID.  The user is expected to be in a particular state.  For
-instance, the user's inbox should only have one item with very specific values.
+`~SDKTester_Developer` XID.  The user is expected to be in a particular state.
+For instance, the user's inbox should only have one item with very specific
+values.
 
-This user exists on the system running at https://api.xcoobee.net/.  The
+This user exists on the system running at https://testapi.xcoobee.net/Test.  The
 following is the user's API key/secret.  Use this in a `.env.local` file at
 `__tests__/integration`.
 
-XCOOBEE__API_KEY=ETrSwpVy1IxDW2Y8fPneN1AtjaBrt9
-XCOOBEE__API_SECRET=R2G3l32sp+EetdIcmK4UWgRkiVEvQK
+XCOOBEE__API_KEY=+El5RkcTfadWPLt739ljugBHLc5UkL
+XCOOBEE__API_SECRET=tgQEfmR+zmruWMvJccbNx9oZUCHUrP

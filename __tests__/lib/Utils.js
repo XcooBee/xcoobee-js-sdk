@@ -60,6 +60,10 @@ export const assertIsJwtToken = presumedToken => {
   expect(decodedPayload.iat).toBeDefined();
 };
 
+export function findBeesBySystemName(bees, bee_system_name) {
+  return bees.filter(bee => bee.bee_system_name === bee_system_name);
+}
+
 /**
  * Loads the environment files from the specified path.
  *
@@ -99,6 +103,7 @@ const Utils = {
   assertIsCursorLike,
   assertIsJwtToken,
   BASE64_URL_ENCODED__RE,
+  findBeesBySystemName,
   loadEnv,
   sleep,
 };

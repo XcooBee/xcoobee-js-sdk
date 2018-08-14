@@ -1,7 +1,7 @@
 import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import DirectiveApi from '../../../../../src/xcoobee/api/DirectiveApi';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 

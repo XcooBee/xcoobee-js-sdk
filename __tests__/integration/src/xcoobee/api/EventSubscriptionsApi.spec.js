@@ -3,7 +3,7 @@ import EventSubscriptionsApi from '../../../../../src/xcoobee/api/EventSubscript
 
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
-const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net';
+const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
 
