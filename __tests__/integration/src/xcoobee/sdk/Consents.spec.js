@@ -94,9 +94,7 @@ describe('Consents', function () {
           expect(response).toBeDefined();
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
-          expect(response.errors).toBeInstanceOf(Array);
-          expect(response.errors.length).toBe(1);
-          expect(response.errors[0].message).toBe('Unable to get an API access token.');
+          expect(response.error.message).toBe('Unable to get an API access token.');
           done();
         });// eo it
 
@@ -175,9 +173,7 @@ describe('Consents', function () {
           expect(response).toBeDefined();
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
-          expect(response.errors).toBeInstanceOf(Array);
-          expect(response.errors.length).toBe(1);
-          expect(response.errors[0].message).toBe('Unable to get an API access token.');
+          expect(response.error.message).toBe('Unable to get an API access token.');
           done();
         });// eo it
 
@@ -346,9 +342,7 @@ describe('Consents', function () {
           expect(response).toBeDefined();
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
-          expect(response.errors).toBeInstanceOf(Array);
-          expect(response.errors.length).toBe(1);
-          expect(response.errors[0].message).toBe('Unable to get an API access token.');
+          expect(response.error.message).toBe('Unable to get an API access token.');
           done();
         });// eo it
 

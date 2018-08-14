@@ -55,10 +55,10 @@ class Bees {
    * ```js
    * listBees('social')
    *   .then(res => {
-   *     const { code, results, errors, time } = res;
-   *     if (code >= 300 || errors) {
-   *       if (errors) {
-   *         console.error(errors);
+   *     const { code, results, error, time } = res;
+   *     if (code >= 300 || error) {
+   *       if (error) {
+   *         console.error(error);
    *       }
    *       return;
    *     }
@@ -90,9 +90,7 @@ class Bees {
       const response = new SuccessResponse(beesList);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -159,9 +157,7 @@ class Bees {
       const response = new SuccessResponse(directiveResult.ref_id);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -239,9 +235,7 @@ class Bees {
       const response = new SuccessResponse(results);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 

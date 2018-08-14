@@ -59,9 +59,7 @@ class System {
       const response = new SuccessResponse(eventSubscriptions);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -92,9 +90,7 @@ class System {
       const response = new SuccessResponse(deletedCount);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -119,9 +115,7 @@ class System {
       const response = new SuccessResponse(events);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -152,9 +146,7 @@ class System {
       const response = new SuccessResponse(eventSubscriptions);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -192,13 +184,9 @@ class System {
       else {
         err = new XcooBeeError('PGP key not found.');
       }
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 

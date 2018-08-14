@@ -52,9 +52,7 @@ class Users {
       const response = new SuccessResponse(conversations);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -84,9 +82,7 @@ class Users {
       const response = new SuccessResponse(conversations);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -109,9 +105,7 @@ class Users {
       const response = new SuccessResponse(userInfo);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -142,9 +136,7 @@ class Users {
       const response = new SuccessResponse(note);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 

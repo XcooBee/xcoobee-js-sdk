@@ -5,7 +5,7 @@ class SuccessResponse extends Response {
   constructor(results) {
     super({
       code: 200,
-      errors: null,
+      error: null,
       results,
     });
   }

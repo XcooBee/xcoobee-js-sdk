@@ -9,7 +9,8 @@ class Response {
    *
    * @param {Object} info
    * @param {number} info.code
-   * @param {?} [info.errors]
+   * @param {Object} [info.error]
+   * @param {string} [info.error.message]
    * @param {mixed} [info.results]
    */
   constructor(info) {
@@ -19,7 +20,7 @@ class Response {
     }
     this._ = {
       ...info,
-      time: new Date(), // TODO: Format as: Y-m-d H:i:s.
+      time: new Date(),
     };
   }
 
@@ -31,8 +32,8 @@ class Response {
     return this._.results;
   }
 
-  get errors() {
-    return this._.errors;
+  get error() {
+    return this._.error;
   }
 
   get time() {

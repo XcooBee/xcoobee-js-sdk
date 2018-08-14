@@ -51,9 +51,7 @@ class Inbox {
       const response = new SuccessResponse(results);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -82,9 +80,7 @@ class Inbox {
       const response = new SuccessResponse(results);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -111,9 +107,7 @@ class Inbox {
       const response = new SuccessResponse(results);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 

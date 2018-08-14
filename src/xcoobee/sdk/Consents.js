@@ -173,9 +173,7 @@ class Consents {
       const response = new SuccessResponse(consents);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -231,9 +229,7 @@ class Consents {
       const response = new SuccessResponse(campaigns);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 
@@ -262,9 +258,7 @@ class Consents {
       const response = new SuccessResponse(consents);
       return response;
     } catch (err) {
-      const code = 400;
-      const errors = [err];
-      return new ErrorResponse(code, errors);
+      return new ErrorResponse(400, err);
     }
   }
 

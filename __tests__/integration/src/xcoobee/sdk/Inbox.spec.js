@@ -166,9 +166,7 @@ describe('Inbox', function () {
           const response = await inboxSdk.getInboxItem(messageId);
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
-          expect(response.errors).toBeInstanceOf(Array);
-          expect(response.errors.length).toBe(1);
-          expect(response.errors[0].message).toBe('Unable to get an API access token.');
+          expect(response.error.message).toBe('Unable to get an API access token.');
           done();
         });// eo it
 
@@ -270,9 +268,7 @@ describe('Inbox', function () {
           const response = await inboxSdk.listInbox();
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
-          expect(response.errors).toBeInstanceOf(Array);
-          expect(response.errors.length).toBe(1);
-          expect(response.errors[0].message).toBe('Unable to get an API access token.');
+          expect(response.error.message).toBe('Unable to get an API access token.');
           done();
         });// eo it
 
