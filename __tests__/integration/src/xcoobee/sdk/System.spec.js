@@ -606,10 +606,9 @@ describe('System', function () {
 
       describe('called with a valid API key/secret pair', function () {
 
-        // FIXME: TODO: Update ~SDKTester_Developer to have a PGP public key.
-        xdescribe('using default config without a campaign ID', function () {
+        describe('using default config without a campaign ID', function () {
 
-          it('should error out due to not finding a campaign', async function (done) {
+          it('should error out due to not resolving a campaign ID', async function (done) {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -621,8 +620,56 @@ describe('System', function () {
             expect(response).toBeInstanceOf(ErrorResponse);
             let { error } = response;
             expect(error).toBeInstanceOf(XcooBeeError);
-            expect(error.message).toBe('Campaign not found.');
+            expect(error.message).toBe('Campaign ID is required');
             expect(error.name).toBe('XcooBeeError');
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+        describe('using default config with a valid campaign ID', function () {
+
+          it('should be successful', async function (done) {
+            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+              campaignId,
+            });
+
+            const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+            const response = await systemSdk.ping();
+            expect(response).toBeInstanceOf(SuccessResponse);
+            let { results } = response;
+            expect(results).toBeDefined();
+            expect(results.ponged).toBe(true);
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+        describe('using default config with an unknown campaign ID', function () {
+
+          it('should error out due to not finding a campaign', async function (done) {
+            const campaignId = 'unknown';
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+              campaignId,
+            });
+
+            const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+            const response = await systemSdk.ping();
+            expect(response).toBeInstanceOf(ErrorResponse);
+            let { error } = response;
+            expect(error).toBeInstanceOf(XcooBeeError);
+            expect(error.message === 'Wrong key at line: 3, column: 7' || error.message === 'Campaign not found.').toBe(true);
+            expect(error.name).toBe('XcooBeeError');
+
             done();
           });// eo it
 

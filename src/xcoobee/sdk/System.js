@@ -174,9 +174,9 @@ class System {
 
       let err = null;
       if (pgpPublicKey) {
-        const campaignInfo = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
-        if (campaignInfo) {
-          const response = new SuccessResponse(true);
+        const results = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
+        if (results && results.campaign) {
+          const response = new SuccessResponse({ ponged: true });
           return response;
         }
         err = new XcooBeeError('Campaign not found.');
