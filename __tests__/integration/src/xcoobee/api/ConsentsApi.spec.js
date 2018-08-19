@@ -1,6 +1,6 @@
 import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import ConsentsApi from '../../../../../src/xcoobee/api/ConsentsApi';
-import CookieDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
+import ConsentDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
 import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
@@ -51,24 +51,27 @@ describe('ConsentsApi', function () {
 
   });// eo describe('.confirmDataDelete')
 
-  xdescribe('.getCookieConsent', function () {
+  describe('.getCookieConsent', function () {
 
     describe('called with a valid API access token', function () {
 
-      it('should fetch and return with consent info', async function (done) {
+      it('should fetch and return with cookie consent info', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const xcoobeeId = '~SDKTester_Developer';
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
-        const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-        const cookieConsents = await ConsentsApi.getCookieConsent(
+        const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+        const results = await ConsentsApi.getCookieConsent(
           apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId
         );
-        expect(cookieConsents).toBeDefined();
-        expect(typeof cookieConsents[CookieDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
-        expect(typeof cookieConsents[CookieDataTypes.APPLICATION_COOKIE]).toBe('boolean');
-        expect(typeof cookieConsents[CookieDataTypes.STATISTICS_COOKIE]).toBe('boolean');
-        expect(typeof cookieConsents[CookieDataTypes.USAGE_COOKIE]).toBe('boolean');
+        expect(results).toBeDefined();
+        expect(results.cookie_consents).toBeDefined();
+        const { cookie_consents } = results;
+        expect(typeof cookie_consents[ConsentDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
+        expect(typeof cookie_consents[ConsentDataTypes.APPLICATION_COOKIE]).toBe('boolean');
+        expect(typeof cookie_consents[ConsentDataTypes.STATISTICS_COOKIE]).toBe('boolean');
+        expect(typeof cookie_consents[ConsentDataTypes.USAGE_COOKIE]).toBe('boolean');
+
         done();
       });// eo it
 

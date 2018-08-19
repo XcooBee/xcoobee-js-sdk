@@ -1,4 +1,5 @@
 import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
+import ConsentDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
 import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
@@ -375,6 +376,97 @@ describe('Consents', function () {
       });// eo describe
 
     });// eo describe('.getConsentData')
+
+    describe('.getCookieConsent', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('using default config', function () {
+
+          it('should fetch and return with cookie consent info', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+            const xcoobeeId = '~SDKTester_Developer';
+            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const response = await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const { results } = response;
+            expect(results).toBeDefined();
+            expect(results.cookie_consents).toBeDefined();
+            const { cookie_consents } = results;
+            expect(typeof cookie_consents[ConsentDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
+            expect(typeof cookie_consents[ConsentDataTypes.APPLICATION_COOKIE]).toBe('boolean');
+            expect(typeof cookie_consents[ConsentDataTypes.STATISTICS_COOKIE]).toBe('boolean');
+            expect(typeof cookie_consents[ConsentDataTypes.USAGE_COOKIE]).toBe('boolean');
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+        describe('using overriding config', function () {
+
+          it('should fetch and return with cookie consent info', async function (done) {
+            const defaultConfig = new Config({
+              apiKey: 'should_be_unused',
+              apiSecret: 'should_be_unused',
+              apiUrlRoot: 'should_be_unused',
+            });
+            const overridingConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+            const xcoobeeId = '~SDKTester_Developer';
+            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const response = await consentsSdk.getCookieConsent(xcoobeeId, campaignId, overridingConfig);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const { results } = response;
+            expect(results).toBeDefined();
+            expect(results.cookie_consents).toBeDefined();
+            const { cookie_consents } = results;
+            expect(typeof cookie_consents[ConsentDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
+            expect(typeof cookie_consents[ConsentDataTypes.APPLICATION_COOKIE]).toBe('boolean');
+            expect(typeof cookie_consents[ConsentDataTypes.STATISTICS_COOKIE]).toBe('boolean');
+            expect(typeof cookie_consents[ConsentDataTypes.USAGE_COOKIE]).toBe('boolean');
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+      describe('called with an invalid API key/secret pair', function () {
+
+        it('should return with an error response', async function (done) {
+          const defaultConfig = new Config({
+            apiKey: 'invalid',
+            apiSecret: 'invalid',
+            apiUrlRoot,
+          });
+
+          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+          const xcoobeeId = 'does not matter';
+          const campaignId = 'does not matter';
+          const response = await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
+          expect(response).toBeDefined();
+          expect(response).toBeInstanceOf(ErrorResponse);
+          expect(response.code).toBe(400);
+          expect(response.error.message).toBe('Unable to get an API access token.');
+          done();
+        });// eo it
+
+      });// eo describe
+
+    });// eo describe('.getCookieConsent')
 
     describe('.listCampaigns', function () {
 
