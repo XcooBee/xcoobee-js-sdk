@@ -297,6 +297,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
 
 export default {
   confirmConsentChange,
+  confirmDataDelete,
   getCookieConsent,
   getConsentData,
   listConsents,
