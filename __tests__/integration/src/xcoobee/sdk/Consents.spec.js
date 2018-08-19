@@ -50,7 +50,7 @@ describe('Consents', function () {
 
           describe('using overriding config', function () {
 
-            it('should fetch and return with the user\'s consents of any status', async function (done) {
+            it('should return flag indicating if the consent change has been confirmed', async function (done) {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -214,7 +214,7 @@ describe('Consents', function () {
 
           describe('using overriding config', function () {
 
-            it('should fetch and return with the user\'s consents of any status', async function (done) {
+            it('should fetch and return with consent info', async function (done) {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -300,7 +300,7 @@ describe('Consents', function () {
 
         describe('using overriding config', function () {
 
-          it('should fetch and return with user events', async function (done) {
+          it('should fetch and return with the user\'s events', async function (done) {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
