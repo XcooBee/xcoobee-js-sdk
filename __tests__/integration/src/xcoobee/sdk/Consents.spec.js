@@ -20,6 +20,88 @@ describe('Consents', function () {
 
   describe('instance', function () {
 
+    describe('.confirmConsentChange', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        xdescribe('and a known consent ID', function () {
+
+          describe('using default config', function () {
+
+            it('should return flag indicating if the consent change has been confirmed', async function (done) {
+              const defaultConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+              });
+
+              const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+              const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
+              const response = await consentsSdk.confirmConsentChange(consentId);
+              expect(response).toBeInstanceOf(SuccessResponse);
+              const { results } = response;
+              expect(results).toBeDefined();
+              expect(typeof results.confirmed).toBe('boolean');
+
+              done();
+            });// eo it
+
+          });// eo describe
+
+          describe('using overriding config', function () {
+
+            it('should fetch and return with the user\'s consents of any status', async function (done) {
+              const defaultConfig = new Config({
+                apiKey: 'should_be_unused',
+                apiSecret: 'should_be_unused',
+                apiUrlRoot: 'should_be_unused',
+              });
+              const overridingConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+              });
+
+              const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+              const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
+              const response = await consentsSdk.confirmConsentChange(consentId, overridingConfig);
+              expect(response).toBeInstanceOf(SuccessResponse);
+              const { results } = response;
+              expect(results).toBeDefined();
+              expect(typeof results.confirmed).toBe('boolean');
+
+              done();
+            });// eo it
+
+          });// eo describe
+
+        });// eo describe
+
+      });// eo describe
+
+      describe('called with an invalid API key/secret pair', function () {
+
+        it('should return with an error response', async function (done) {
+          const defaultConfig = new Config({
+            apiKey: 'invalid',
+            apiSecret: 'invalid',
+            apiUrlRoot,
+          });
+
+          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+          const consentId = 'does not matter';
+          const response = await consentsSdk.confirmConsentChange(consentId);
+          expect(response).toBeDefined();
+          expect(response).toBeInstanceOf(ErrorResponse);
+          expect(response.code).toBe(400);
+          expect(response.error.message).toBe('Unable to get an API access token.');
+          done();
+        });// eo it
+
+      });// eo describe
+
+    });// eo describe('.confirmConsentChange')
+
     describe('.getConsentData', function () {
 
       describe('called with a valid API key/secret pair', function () {

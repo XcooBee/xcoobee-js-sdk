@@ -17,6 +17,23 @@ describe('ConsentsApi', function () {
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
+  xdescribe('.confirmConsentChange', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should return flag indicating if the consent change has been confirmed', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
+        const confirmed = await ConsentsApi.confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor);
+        expect(confirmed).toBe(true);
+
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.confirmConsentChange')
+
   xdescribe('.getCookieConsent', function () {
 
     describe('called with a valid API access token', function () {

@@ -8,6 +8,37 @@ import ConsentTypes from './ConsentTypes';
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} consentCursor
+ *
+ * @returns {Promise<boolean>}
+ */
+export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) {
+  const mutation = `
+    mutation confirmConsentChange($consentCursor: String!) {
+      confirm_consent_change(consent_cursor: $consentCursor) {
+        consent_cursor
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    consentCursor,
+  })
+    .then(response => {
+      const { confirm_consent_change } = response;
+
+      const confirmed = confirm_consent_change.consent_cursor === consentCursor;
+      return confirmed;
+    })
+    .catch(err => {
+      throw ApiUtils.transformError(err);
+    });
+}
+
+/**
+ * TODO: Complete documentation.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} xcoobeeId
  * @param {*} userCursor
  * @param {*} campaignId
@@ -234,6 +265,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
 }
 
 export default {
+  confirmConsentChange,
   getCookieConsent,
   getConsentData,
   listConsents,
