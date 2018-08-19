@@ -34,6 +34,23 @@ describe('ConsentsApi', function () {
 
   });// eo describe('.confirmConsentChange')
 
+  xdescribe('.confirmDataDelete', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should return flag indicating if the data has been deleted/purged', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
+        const confirmed = await ConsentsApi.confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor);
+        expect(confirmed).toBe(true);
+
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.confirmDataDelete')
+
   xdescribe('.getCookieConsent', function () {
 
     describe('called with a valid API access token', function () {

@@ -39,6 +39,37 @@ export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) 
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} consentCursor
+ *
+ * @returns {Promise<boolean>}
+ */
+export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
+  const mutation = `
+    mutation confirmDataDelete($consentCursor: String!) {
+      confirm_consent_deletion(consent_cursor: $consentCursor) {
+        consent_cursor
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    consentCursor,
+  })
+    .then(response => {
+      const { confirm_consent_deletion } = response;
+
+      const confirmed = confirm_consent_deletion.consent_cursor === consentCursor;
+      return confirmed;
+    })
+    .catch(err => {
+      throw ApiUtils.transformError(err);
+    });
+}
+
+/**
+ * TODO: Complete documentation.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} xcoobeeId
  * @param {*} userCursor
  * @param {*} campaignId

@@ -122,17 +122,27 @@ class Consents {
    *   default.
    *
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
-   *   A successful response will have a boolean as the data property indicating
-   *   whether the data has been deleted/purged.
+   *   A successful response will have a boolean as the `confirmed` property in the
+   *   `results` indicating whether the data has been deleted/purged.
    * @returns {Response} return.response
-   * @returns {boolean} return.response.results
+   * @returns {Object} return.response.results
+   * @returns {boolean} return.response.results.confirmed
    *
    * @throws XcooBeeError
    */
-  confirmDataDelete(consentId_unused, config_unused) {
+  async confirmDataDelete(consentId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const confirmed = await ConsentsApi.confirmDataDelete(apiUrlRoot, apiAccessToken, consentId);
+      const response = new SuccessResponse({ confirmed });
+      return response;
+    } catch (err) {
+      return new ErrorResponse(400, err);
+    }
   }
 
   /**
