@@ -18,7 +18,7 @@ npm install
 ## Building
 
 Currently, the build script creates a bundle designed to run in the browser.  A
-development and a production version can be build depending on the `mode`
+development and a production version can be built depending on the `mode`
 option.
 
 ```sh
