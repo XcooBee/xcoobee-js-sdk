@@ -9,14 +9,16 @@ import jwtDecode from 'jwt-decode';
 export const BASE64_URL_ENCODED__RE = /^[-\w]+$/;
 
 // Example cursor: MBDYlKvqdrL826G8Dey9kLltEAPBphR/n1go6b9ER7KOZXTvkUBvkgvK8bWazyztrlis4w==
+// Example cursor: CTZamTgKFUB5KJCpBduR9o6laIv/nZzsI+T01E1ldgQJeU/J18VvLkLbAb4KJDIL1uiaAA==
 /**
  * A reference to the cursor regular expression that can be used to test if a
  * string appears to be a cursor.
  */
-export const CURSOR__RE = /^[\w/=]+$/;
+export const CURSOR__RE = /^[\w/=+]+$/;
 
 // Example ISO 8601 Date: 2018-06-20T16:04:50Z
-const ISO8601__RE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/;
+// Example ISO 8601 Date: 2018-08-19T21:27:43.392Z
+const ISO8601__RE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?Z/;
 
 // Example ISO 8601 Date: 20180620T160450123Z
 const ISO8601__COMPACT__RE = /\d{4}\d{2}\d{2}T\d{2}\d{2}\d{2}\d{3}Z/;

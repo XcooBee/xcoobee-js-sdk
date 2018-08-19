@@ -4,7 +4,7 @@ import ConsentDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
 import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
-// import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -127,18 +127,18 @@ describe('ConsentsApi', function () {
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
             const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
-            // TODO: Find a way to get consents back.
             expect(consents).toBeInstanceOf(Array);
-            expect(consents.length).toBe(0);
-            // let consent = consents[0];
-            // expect('consent_cursor' in consent).toBe(true);
-            // assertIsCursorLike(consent.consent_cursor);
-            // expect('consent_status' in consent).toBe(true);
-            // expect('date_c' in consent).toBe(true);
-            // assertIso8601Like(consent.date_c)
-            // expect('date_e' in consent).toBe(true);
-            // assertIso8601Like(consent.date_e)
-            // expect('user_xcoobee_id' in consent).toBe(true);
+            expect(consents.length).toBeGreaterThan(0);
+            let consent = consents[0];
+            expect('consent_cursor' in consent).toBe(true);
+            assertIsCursorLike(consent.consent_cursor);
+            expect('consent_status' in consent).toBe(true);
+            expect('date_c' in consent).toBe(true);
+            assertIso8601Like(consent.date_c)
+            expect('date_e' in consent).toBe(true);
+            assertIso8601Like(consent.date_e)
+            expect('user_xcoobee_id' in consent).toBe(true);
+
             done();
           });// eo it
 
@@ -176,5 +176,27 @@ describe('ConsentsApi', function () {
     });// eo describe
 
   });// eo describe('.listConsents')
+
+  describe('.requestConsent', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should succeed and return with given reference', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const xcoobeeId = '~SDKTester_Developer';
+        const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+        const referenceId = 'asdfasdf';
+        const results = await ConsentsApi.requestConsent(
+          apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId
+        );
+        expect(results).toBeDefined();
+        expect(results.ref_id).toBe(referenceId);
+
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.requestConsent')
 
 });// eo describe('ConsentsApi')

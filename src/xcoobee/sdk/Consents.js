@@ -348,14 +348,25 @@ class Consents {
    *   whether the request was successful.  Note: It does **NOT** indicate whether
    *   the consent was approved or declined.
    * @returns {Response} return.response
-   * @returns {boolean} return.response.results
+   * @returns {Object} return.response.results
+   * @returns {string} return.response.results.ref_id
    *
    * @throws XcooBeeError
    */
-  requestConsent(xcoobeeId_unused, reqRefId_unused, campaignId_unused, config_unused) {
+  async requestConsent(xcoobeeId, reqRefId, campaignId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const results = await ConsentsApi.requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, resolvedCampaignId, reqRefId);
+      const response = new SuccessResponse(results);
+      return response;
+    } catch (err) {
+      return new ErrorResponse(400, err);
+    }
   }
 
   /**

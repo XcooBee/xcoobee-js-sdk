@@ -301,10 +301,50 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
     });
 }
 
+/**
+ * TODO: Complete documentation.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} xcoobeeId
+ * @param {*} campaignId
+ * @param {*} referenceId
+ *
+ * @returns {Promise<Object>}
+ * @returns {Object} return.results
+ * @returns {string} return.results.ref_id
+ */
+export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId) {
+  const mutation = `
+    mutation requestConsent($config: AdditionalRequestConfig) {
+      send_consent_request(config: $config) {
+        ref_id
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    config: {
+      campaign_cursor: campaignId,
+      reference: referenceId,
+      xcoobee_id: xcoobeeId,
+    },
+  })
+    .then(response => {
+      const { send_consent_request } = response;
+
+      const results = { ref_id: send_consent_request.ref_id };
+      return results;
+    })
+    .catch(err => {
+      throw ApiUtils.transformError(err);
+    });
+}
+
 export default {
   confirmConsentChange,
   confirmDataDelete,
   getCookieConsent,
   getConsentData,
   listConsents,
+  requestConsent,
 };

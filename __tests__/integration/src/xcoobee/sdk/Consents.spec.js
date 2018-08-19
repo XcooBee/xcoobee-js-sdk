@@ -8,6 +8,8 @@ import Consents from '../../../../../src/xcoobee/sdk/Consents';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 
+import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -574,20 +576,20 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents();
-              expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
               const consents = response.results;
               expect(consents).toBeInstanceOf(Array);
-              expect(consents.length).toBe(0);
-              // let consent = consents[0];
-              // expect('consent_cursor' in consent).toBe(true);
-              // assertIsCursorLike(consent.consent_cursor);
-              // expect('consent_status' in consent).toBe(true);
-              // expect('date_c' in consent).toBe(true);
-              // assertIso8601Like(consent.date_c)
-              // expect('date_e' in consent).toBe(true);
-              // assertIso8601Like(consent.date_e)
-              // expect('user_xcoobee_id' in consent).toBe(true);
+              expect(consents.length).toBeGreaterThan(0);
+              let consent = consents[0];
+              expect('consent_cursor' in consent).toBe(true);
+              assertIsCursorLike(consent.consent_cursor);
+              expect('consent_status' in consent).toBe(true);
+              expect('date_c' in consent).toBe(true);
+              assertIso8601Like(consent.date_c)
+              expect('date_e' in consent).toBe(true);
+              assertIso8601Like(consent.date_e)
+              expect('user_xcoobee_id' in consent).toBe(true);
+
               done();
             });// eo it
 
@@ -609,21 +611,20 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents(null, overridingConfig);
-              expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
               const consents = response.results;
-              expect(consents).toBeDefined();
               expect(consents).toBeInstanceOf(Array);
-              expect(consents.length).toBe(0);
-              // let consent = consents[0];
-              // expect('consent_cursor' in consent).toBe(true);
-              // assertIsCursorLike(consent.consent_cursor);
-              // expect('consent_status' in consent).toBe(true);
-              // expect('date_c' in consent).toBe(true);
-              // assertIso8601Like(consent.date_c)
-              // expect('date_e' in consent).toBe(true);
-              // assertIso8601Like(consent.date_e)
-              // expect('user_xcoobee_id' in consent).toBe(true);
+              expect(consents.length).toBeGreaterThan(0);
+              let consent = consents[0];
+              expect('consent_cursor' in consent).toBe(true);
+              assertIsCursorLike(consent.consent_cursor);
+              expect('consent_status' in consent).toBe(true);
+              expect('date_c' in consent).toBe(true);
+              assertIso8601Like(consent.date_c)
+              expect('date_e' in consent).toBe(true);
+              assertIso8601Like(consent.date_e)
+              expect('user_xcoobee_id' in consent).toBe(true);
+
               done();
             });// eo it
 
@@ -644,7 +645,6 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE);
-              expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
               const consents = response.results;
               expect(consents).toBeInstanceOf(Array);
@@ -679,10 +679,8 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, overridingConfig);
-              expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
               const consents = response.results;
-              expect(consents).toBeDefined();
               expect(consents).toBeInstanceOf(Array);
               expect(consents.length).toBe(0);
               // let consent = consents[0];
@@ -725,6 +723,90 @@ describe('Consents', function () {
       });// eo describe
 
     });// eo describe('.listConsents')
+
+    describe('.requestConsent', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('using default config', function () {
+
+          it('should succeed and return with given reference', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+            const xcoobeeId = '~SDKTester_Developer';
+            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const referenceId = 'asdfasdf';
+            const response = await consentsSdk.requestConsent(xcoobeeId, referenceId, campaignId);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const { results } = response;
+            expect(results).toBeDefined();
+            expect(results.ref_id).toBe(referenceId);
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+        describe('using overriding config', function () {
+
+          it('should succeed and return with given reference', async function (done) {
+            const defaultConfig = new Config({
+              apiKey: 'should_be_unused',
+              apiSecret: 'should_be_unused',
+              apiUrlRoot: 'should_be_unused',
+            });
+            const overridingConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+            const xcoobeeId = '~SDKTester_Developer';
+            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const referenceId = 'asdfasdf';
+            const response = await consentsSdk.requestConsent(xcoobeeId, referenceId, campaignId, overridingConfig);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const { results } = response;
+            expect(results).toBeDefined();
+            expect(results.ref_id).toBe(referenceId);
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+      describe('called with an invalid API key/secret pair', function () {
+
+        it('should return with an error response', async function (done) {
+          const defaultConfig = new Config({
+            apiKey: 'invalid',
+            apiSecret: 'invalid',
+            apiUrlRoot,
+          });
+
+          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+          const xcoobeeId = 'does not matter';
+          const campaignId = 'does not matter';
+          const referenceId = 'does not matter';
+          const response = await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
+          expect(response).toBeDefined();
+          expect(response).toBeInstanceOf(ErrorResponse);
+          expect(response.code).toBe(400);
+          expect(response.error.message).toBe('Unable to get an API access token.');
+          done();
+        });// eo it
+
+      });// eo describe
+
+    });// eo describe('.requestConsent')
 
   });// eo describe('instance')
 
