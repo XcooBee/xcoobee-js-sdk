@@ -40,10 +40,6 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
-    .then(response => {
-      const { campaign } = response;
-      return campaign;
-    })
     .catch(err => {
       throw ApiUtils.transformError(err);
     });

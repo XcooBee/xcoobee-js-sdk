@@ -24,21 +24,24 @@ describe('CampaignApi', function () {
         it('should return with expected campaign info', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignCursor = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-          const consentCampaign = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
-          expect(consentCampaign).toBeDefined();
-          expect(consentCampaign.campaign_description.text).toBe(undefined);
-          expect(consentCampaign.campaign_name).toBe('xcoobee test campaign');
-          expect(consentCampaign.campaign_title.text).toBe(undefined);
-          expect(consentCampaign.date_c).toBeDefined();
-          expect(consentCampaign.date_e).toBeDefined();
-          expect(consentCampaign.email_targets).toBeInstanceOf(Array);
-          expect(consentCampaign.email_targets.length).toBe(0);
-          expect(consentCampaign.endpoint).toBe(null);
-          expect(consentCampaign.status).toBe('active');
-          expect(consentCampaign.targets).toBeInstanceOf(Array);
-          expect(consentCampaign.targets.length).toBe(0);
-          expect(consentCampaign.xcoobee_targets).toBeInstanceOf(Array);
-          expect(consentCampaign.xcoobee_targets.length).toBe(0);
+          const results = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
+          expect(results).toBeDefined();
+          expect(results.campaign).toBeDefined();
+          const { campaign } = results;
+          expect(campaign).toBeDefined();
+          expect(campaign.campaign_description.text).toBe(undefined);
+          expect(campaign.campaign_name).toBe('xcoobee test campaign');
+          expect(campaign.campaign_title.text).toBe(undefined);
+          expect(campaign.date_c).toBeDefined();
+          expect(campaign.date_e).toBeDefined();
+          expect(campaign.email_targets).toBeInstanceOf(Array);
+          expect(campaign.email_targets.length).toBe(0);
+          expect(campaign.endpoint).toBe(null);
+          expect(campaign.status).toBe('active');
+          expect(campaign.targets).toBeInstanceOf(Array);
+          expect(campaign.targets.length).toBe(0);
+          expect(campaign.xcoobee_targets).toBeInstanceOf(Array);
+          expect(campaign.xcoobee_targets.length).toBe(0);
 
           done();
         });// eo it

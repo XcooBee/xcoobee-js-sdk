@@ -158,14 +158,25 @@ class Consents {
    * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
    *   A successful response will have a `CampaignStruct` as the data.
    * @returns {Response} return.response
-   * @returns {CampaignStruct} return.response.results
+   * @returns {Object} return.response.results
+   * @returns {CampaignStruct} return.response.results.campaign
    *
    * @throws XcooBeeError
    */
-  getCampaignInfo(campaignId_unused, config_unused) {
+  async getCampaignInfo(campaignId, config) {
     this._assertValidState();
-    // TODO: To be implemented.
-    throw Error('NotYetImplemented');
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const results = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
+      const response = new SuccessResponse(results);
+      return response;
+    } catch (err) {
+      return new ErrorResponse(400, err);
+    }
   }
 
   /**
