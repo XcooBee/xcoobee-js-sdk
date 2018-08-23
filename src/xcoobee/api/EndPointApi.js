@@ -10,18 +10,22 @@ import ApiUtils from './ApiUtils';
  */
 export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor) {
   const query = `
-    query getOutboxEndpoints($userId: String!) {
-      outbox_endpoints(user_cursor: $userId) {
+    query getOutboxEndpoints($userCursor: String!) {
+      outbox_endpoints(user_cursor: $userCursor) {
         data {
           cursor
           date_c
           name
         }
+        page_info {
+          end_cursor
+          has_next_page
+        }
       }
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
-    userId: userCursor,
+    userCursor,
   })
     .then(response => {
       const { outbox_endpoints } = response;

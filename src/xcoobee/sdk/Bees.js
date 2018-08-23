@@ -1,29 +1,14 @@
 import ApiUtils from '../../xcoobee/api/ApiUtils';
 import BeesApi from '../../xcoobee/api/BeesApi';
 import DirectiveApi from '../../xcoobee/api/DirectiveApi';
-import EndPointApi from '../../xcoobee/api/EndPointApi';
-import FileApi from '../../xcoobee/api/FileApi';
-import PolicyApi from '../../xcoobee/api/PolicyApi';
 import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
 
 import XcooBeeError from '../core/XcooBeeError';
 
 import ErrorResponse from './ErrorResponse';
+import FileUtils from './FileUtils';
 import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
-
-function zipTogether(files, policies) {
-  const pairs = [];
-  // Note: Not expecting the lengths between the two arrays to be different, but
-  // it doesn't hurt to be robust.
-  const maxLen = Math.max(files.length, policies.length);
-  for (let i = 0; i < maxLen; ++i) {
-    const file = files[i] || null;
-    const policy = policies[i] || null;
-    pairs.push({ file, policy });
-  }
-  return pairs;
-}
 
 /**
  * The Bees service.
@@ -153,8 +138,8 @@ class Bees {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const directiveResult = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
-      const response = new SuccessResponse(directiveResult.ref_id);
+      const ref_id = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
+      const response = new SuccessResponse({ ref_id });
       return response;
     } catch (err) {
       return new ErrorResponse(400, err);
@@ -181,6 +166,12 @@ class Bees {
    */
   async uploadFiles(files, intent, config) {
     this._assertValidState();
+    const endPointName = intent || UploadPolicyIntents.OUTBOX;
+    if (endPointName !== UploadPolicyIntents.OUTBOX) {
+      throw new XcooBeeError(
+        `The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`
+      );
+    }
     let apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
@@ -188,50 +179,7 @@ class Bees {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
-      const endPointName = intent || UploadPolicyIntents.OUTBOX;
-
-      if (endPointName !== UploadPolicyIntents.OUTBOX) {
-        throw new XcooBeeError(
-          `The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`
-        );
-      }
-
-      // Find the endpoint with the name matching the specified intent.
-      let candidateEndPoints = endPoints.filter(endPoint => endPoint.name === endPointName);
-      // If not found, then fallback to the flex end point.
-      if (candidateEndPoints.length === 0) {
-        candidateEndPoints = endPoints.filter(endPoint => endPoint.name === 'flex');
-      }
-
-      if (candidateEndPoints.length !== 1) {
-        throw new XcooBeeError(`Unable to find an endpoint named ${endPointName} or the fallback end point.`);
-      }
-
-      const endPoint = candidateEndPoints[0];
-      const endPointCursor = endPoint.cursor;
-
-      const uploadPolicyIntent = endPointName;
-
-      const policies = await PolicyApi.upload_policy(
-        apiUrlRoot, apiAccessToken, uploadPolicyIntent, endPointCursor, files
-      );
-      const policyFilePairs = zipTogether(files, policies);
-      // Note: We don't want to upload one file, wait for the promise to resolve,
-      // and then repeat.  Here we are uploading all files back-to-back. ...
-      const fileUploadPromises = policyFilePairs.map(pair => {
-        const { file, policy } = pair;
-
-        return FileApi.upload_file(file, policy);
-      });
-
-      // ... Then here we resolve each promise.
-      const fileUploadResults = await Promise.all(fileUploadPromises);
-      const results = policyFilePairs.map((pair, idx) => {
-        const { file } = pair;
-        const fileUploadResult = fileUploadResults[idx];
-        return { file, success: !!fileUploadResult };
-      });
+      const results = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
       const response = new SuccessResponse(results);
       return response;
     } catch (err) {

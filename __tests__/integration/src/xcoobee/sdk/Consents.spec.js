@@ -1,3 +1,5 @@
+import Path from 'path';
+
 import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
 import ConsentDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
 import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
@@ -807,6 +809,109 @@ describe('Consents', function () {
       });// eo describe
 
     });// eo describe('.requestConsent')
+
+    describe('.setUserDataResponse', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('using default config', function () {
+
+          it('should succeed and return progress report', async function (done) {
+            const defaultConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+            const message = 'Here are the files you requested.';
+            const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
+            const referenceId = 'someUniqueReferenceId';
+            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt');
+            const files = [file];
+            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const { results } = response;
+            expect(results).toBeDefined();
+            expect(results.errors).toBeInstanceOf(Array);
+            expect(results.errors.length).toBe(0);
+            expect(results.progress).toBeInstanceOf(Array);
+            expect(results.progress.length).toBe(3);
+            expect(results.progress[0]).toBe('successfully sent message');
+            expect(results.progress[1]).toMatch(/successfully uploaded .*test\.txt/);
+            expect(results.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(results.ref_id).toBeDefined();
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+        describe('using overriding config', function () {
+
+          it('should succeed and return progress report', async function (done) {
+            const defaultConfig = new Config({
+              apiKey: 'should_be_unused',
+              apiSecret: 'should_be_unused',
+              apiUrlRoot: 'should_be_unused',
+            });
+            const overridingConfig = new Config({
+              apiKey,
+              apiSecret,
+              apiUrlRoot,
+            });
+
+            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+            const message = 'Here are the files you requested.';
+            const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
+            const referenceId = 'someUniqueReferenceId';
+            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'info.dat');
+            const files = [file];
+            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files, overridingConfig);
+            expect(response).toBeInstanceOf(SuccessResponse);
+            const { results } = response;
+            expect(results).toBeDefined();
+            expect(results.errors).toBeInstanceOf(Array);
+            expect(results.errors.length).toBe(0);
+            expect(results.progress).toBeInstanceOf(Array);
+            expect(results.progress.length).toBe(3);
+            expect(results.progress[0]).toBe('successfully sent message');
+            expect(results.progress[1]).toMatch(/successfully uploaded .*info\.dat/);
+            expect(results.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(results.ref_id).toBeDefined();
+
+            done();
+          });// eo it
+
+        });// eo describe
+
+      });// eo describe
+
+      describe('called with an invalid API key/secret pair', function () {
+
+        it('should return with an error response', async function (done) {
+          const defaultConfig = new Config({
+            apiKey: 'invalid',
+            apiSecret: 'invalid',
+            apiUrlRoot,
+          });
+
+          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+          const message = 'does not matter';
+          const consentId = 'does not matter';
+          const referenceId = 'does not matter';
+          const files = [];
+          const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
+          expect(response).toBeDefined();
+          expect(response).toBeInstanceOf(ErrorResponse);
+          expect(response.code).toBe(400);
+          expect(response.error.message).toBe('Unable to get an API access token.');
+          done();
+        });// eo it
+
+      });// eo describe
+
+    });// eo describe('.setUserDataResponse')
 
   });// eo describe('instance')
 

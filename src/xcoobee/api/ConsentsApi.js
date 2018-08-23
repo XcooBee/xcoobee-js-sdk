@@ -340,11 +340,43 @@ export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId
     });
 }
 
+
+/**
+ * TODO: Complete documentation.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} consentCursor
+ *
+ * @returns {Promise<string>}
+ */
+export function resolveXcoobeeId(apiUrlRoot, apiAccessToken, consentCursor) {
+  const query = `
+    query resolveXcoobeeId($consentCursor: String!) {
+      consent(consent_cursor: $consentCursor) {
+        user_xcoobee_id
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    consentCursor,
+  })
+    .then(response => {
+      const { consent } = response;
+
+      return consent.user_xcoobee_id;
+    })
+    .catch(err => {
+      throw ApiUtils.transformError(err);
+    });
+}
+
 export default {
   confirmConsentChange,
   confirmDataDelete,
   getCookieConsent,
   getConsentData,
   listConsents,
+  resolveXcoobeeId,
   requestConsent,
 };

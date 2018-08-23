@@ -22,9 +22,9 @@ describe('DirectiveApi', function () {
           const directiveInput = {
             filenames: [],
           };
-          const result = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
-          expect(result).toBeDefined();
-          expect(result.ref_id).toBeDefined();
+          const refId = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
+          expect(refId).toBeDefined();
+
           done();
 
           // TODO: Test with a variety of directive inputs.

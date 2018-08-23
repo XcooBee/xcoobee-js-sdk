@@ -199,4 +199,23 @@ describe('ConsentsApi', function () {
 
   });// eo describe('.requestConsent')
 
+  describe('.resolveXcoobeeId', function () {
+
+    describe('called with a valid API access token', function () {
+
+      it('should succeed and return with given reference', async function (done) {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        const consentCursor = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
+        const xcoobeeId = await ConsentsApi.resolveXcoobeeId(
+          apiUrlRoot, apiAccessToken, consentCursor
+        );
+        expect(xcoobeeId).toBe('~SDKTester_Developer');
+
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.resolveXcoobeeId')
+
 });// eo describe('ConsentsApi')

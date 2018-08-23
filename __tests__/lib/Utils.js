@@ -27,13 +27,26 @@ const ISO8601__COMPACT__RE = /\d{4}\d{2}\d{2}T\d{2}\d{2}\d{2}\d{3}Z/;
  * Asserts that the specified value appears to be a cursor.
  *
  * @param {string} value - The value to check.
+ * @param {boolean} [optional] - Flag indicating whether the value is optional.
+ *   Defaults to `false`.
  */
-export const assertIsCursorLike = value => {
-  expect(value).toMatch(CURSOR__RE);
+export const assertIsCursorLike = (value, optional = false) => {
+  if (!optional || value) {
+    expect(value).toMatch(CURSOR__RE);
+  }
 };
 
-export const assertIso8601Like = value => {
-  expect(value).toMatch(ISO8601__RE);
+/**
+ * Asserts that the specified value is ISO 8601-like.
+ *
+ * @param {string} value - The value to check.
+ * @param {boolean} [optional] - Flag indicating whether the value is optional.
+ *   Defaults to `false`.
+ */
+export const assertIso8601Like = (value, optional = false) => {
+  if (!optional || value) {
+    expect(value).toMatch(ISO8601__RE);
+  }
 };
 
 // TODO: Figure out why we have multiple ISO8601 date formats being returned from

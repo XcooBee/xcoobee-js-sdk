@@ -2,7 +2,7 @@ import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCa
 import ConversationsApi from '../../../../../src/xcoobee/api/ConversationsApi';
 import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
-// import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -15,25 +15,35 @@ describe('ConversationsApi', function () {
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  xdescribe('.getConversation', function () {
+  describe('.getConversation', function () {
 
     describe('called with a valid API access token', function () {
 
       it('should fetch and return with conversations', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const targetCursor = 'known'; // FIXME: TODO: Get a legit target cursor.
+        const targetCursor = 'CTZamTgKRkN8LMb/AtKR8d72P4v/k5bkI7ynikFlf1QFL0ybh8ZvKR6MAb4KJDIL1v6aAA==';
         const conversations = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor);
-        // TODO: Find a way to get conversations back.
         expect(conversations).toBeInstanceOf(Array);
-        expect(conversations.length).toBe(0);
-        // let conversation = conversations[0];
-        // expect('date_c' in conversation).toBe(true);
-        // assertIso8601Like(conversation.date_c)
-        // expect('display_name' in conversation).toBe(true);
-        // expect('note_text' in conversation).toBe(true);
-        // expect('note_type' in conversation).toBe(true);
-        // expect('target_cursor' in conversation).toBe(true);
-        // assertIsCursorLike(conversation.target_cursor);
+        expect(conversations.length).toBeGreaterThan(1);
+        let conversation = conversations[0];
+        expect('breach_cursor' in conversation).toBe(true);
+        assertIsCursorLike(conversation.breach_cursor, true);
+        expect('consent_cursor' in conversation).toBe(true);
+        assertIsCursorLike(conversation.consent_cursor);
+        expect('date_c' in conversation).toBe(true);
+        assertIso8601Like(conversation.date_c)
+        expect('date_e' in conversation).toBe(true);
+        assertIso8601Like(conversation.date_e, true)
+        expect('display_city' in conversation).toBe(true);
+        expect('display_country' in conversation).toBe(true);
+        expect('display_name' in conversation).toBe(true);
+        expect('display_province' in conversation).toBe(true);
+        expect('is_outbound' in conversation).toBe(true);
+        expect('note_text' in conversation).toBe(true);
+        expect(conversation.note_type).toBe('consent');
+        expect('photo_url' in conversation).toBe(true);
+        expect('xcoobee_id' in conversation).toBe(true);
+
         done();
       });// eo it
 
@@ -50,29 +60,16 @@ describe('ConversationsApi', function () {
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
         const conversations = await ConversationsApi.getConversations(apiUrlRoot, apiAccessToken, userCursor);
-        // TODO: Find a way to get conversations back.
         expect(conversations).toBeInstanceOf(Array);
-        expect(conversations.length).toBe(0);
-        // let conversation = conversations[0];
-        // expect('breach_cursor' in conversation).toBe(true);
-        // assertIsCursorLike(conversation.breach_cursor);
-        // expect('consent_cursor' in conversation).toBe(true);
-        // assertIsCursorLike(conversation.consent_cursor);
-        // expect('date_c' in conversation).toBe(true);
-        // assertIso8601Like(conversation.date_c)
-        // expect('date_e' in conversation).toBe(true);
-        // assertIso8601Like(conversation.date_e)
-        // expect('display_city' in conversation).toBe(true);
-        // expect('display_country' in conversation).toBe(true);
-        // expect('display_name' in conversation).toBe(true);
-        // expect('display_province' in conversation).toBe(true);
-        // expect('is_outbound' in conversation).toBe(true);
-        // expect('note_text' in conversation).toBe(true);
-        // expect('note_type' in conversation).toBe(true);
-        // expect('photo_url' in conversation).toBe(true);
-        // expect('target_cursor' in conversation).toBe(true);
-        // assertIsCursorLike(conversation.target_cursor);
-        // expect('xcoobee_id' in conversation).toBe(true);
+        expect(conversations.length).toBe(1);
+        let conversation = conversations[0];
+        expect('date_c' in conversation).toBe(true);
+        assertIso8601Like(conversation.date_c)
+        expect(conversation.display_name).toBe('SDKTester Developer');
+        expect(conversation.note_type).toBe('consent');
+        expect('target_cursor' in conversation).toBe(true);
+        assertIsCursorLike(conversation.target_cursor);
+
         done();
       });// eo it
 

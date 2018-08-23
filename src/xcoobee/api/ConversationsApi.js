@@ -30,7 +30,6 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
           note_text
           note_type
           photo_url
-          target_cursor
           xcoobee_id
         }
         page_info {
@@ -46,8 +45,8 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
     targetCursor,
   })
     .then(response => {
-      const { conversations } = response;
-      const { data } = conversations;
+      const { conversation } = response;
+      const { data } = conversation;
 
       // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
       // true, then do more requests need to be made for more data?

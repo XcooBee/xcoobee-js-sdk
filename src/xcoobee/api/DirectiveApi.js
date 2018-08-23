@@ -6,7 +6,9 @@ import ApiUtils from './ApiUtils';
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {DirectiveInput} directiveInput - The directive input.
  *
- * @returns {Promise<String>}
+ * @returns {Promise<Object>} return
+ * @returns {Object} return.results
+ * @returns {string} return.results.ref_id
  */
 export function addDirective(apiUrlRoot, apiAccessToken, directiveInput) {
   const query = `
@@ -22,7 +24,7 @@ export function addDirective(apiUrlRoot, apiAccessToken, directiveInput) {
     .then(response => {
       const { add_directive } = response;
 
-      return add_directive;
+      return add_directive.ref_id;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
