@@ -3,6 +3,25 @@ import XcooBeeError from '../core/XcooBeeError';
 import ApiUtils from './ApiUtils';
 
 /**
+ * An event subscription type.
+ *
+ * @name EventSubscriptionType
+ * @enum {string}
+ */
+
+/**
+ * A summary of an event subscription.
+ *
+ * @typedef {Object} EventSubscription
+ * @property {string} campaign_cursor
+ * @property {string} date_c - The creation date in ISO 8601 format.
+ * @property {EventSubscriptionType} event_type - The type of the event subscription.
+ * @property {string} handler - The name of the method to call when the event is
+ *   fired.
+ * @property {string} owner_cursor
+ */
+
+/**
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
@@ -107,12 +126,22 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
 }
 
 /**
+ * Fetches a page of event subscriptions for the given campaign cursor.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
- * @returns {Promise<EventSubscription[]>}
+ * @returns {Promise<Object>}
+ * @property {EventSubscription[]} data - A page of event subscriptions for the
+ *   given campaign cursor.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
@@ -120,9 +149,11 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
     query listEventSubscriptions($campaignId: String!) {
       event_subscriptions(campaign_cursor: $campaignId) {
         data {
+          campaign_cursor
           date_c
           event_type
           handler
+          owner_cursor
         }
         page_info {
           end_cursor
@@ -136,13 +167,8 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
   })
     .then(response => {
       const { event_subscriptions } = response;
-      const { data } = event_subscriptions;
 
-      // TODO: Should we be requesting page_info for this query? Find out what to do
-      // with the page_info.  If page_info.has_next_page is true, then do more
-      // requests need to be made for more data?
-
-      return data;
+      return event_subscriptions;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

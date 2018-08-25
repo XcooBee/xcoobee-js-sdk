@@ -8,6 +8,8 @@ import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import System from '../../../../../src/xcoobee/sdk/System';
 
+import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -415,10 +417,18 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const eventSubscriptions = response.results;
-              expect(eventSubscriptions).toBeInstanceOf(Array);
-              expect(eventSubscriptions.length).toBe(1);
-              // TODO: Add more expectations.
+              const eventSubscriptionsPage = response.result;
+              expect(eventSubscriptionsPage).toBeDefined();
+              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
+              expect(eventSubscriptionsPage.data.length).toBe(1);
+              const eventSubscription = eventSubscriptionsPage.data[0];
+              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              assertIso8601Like(eventSubscription.date_c);
+              expect(eventSubscription.event_type).toBe('consent_approved');
+              expect(eventSubscription.handler).toBe('OnConsentApproved');
+              assertIsCursorLike(eventSubscription.owner_cursor);
+              expect(eventSubscriptionsPage.page_info).toBe(null);
+
               done();
             });// eo it
 
@@ -443,10 +453,18 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
-              const events = response.results;
-              expect(events).toBeInstanceOf(Array);
-              expect(events.length).toBe(1);
-              // TODO: Add more expectations.
+              const eventSubscriptionsPage = response.result;
+              expect(eventSubscriptionsPage).toBeDefined();
+              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
+              expect(eventSubscriptionsPage.data.length).toBe(1);
+              const eventSubscription = eventSubscriptionsPage.data[0];
+              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              assertIso8601Like(eventSubscription.date_c);
+              expect(eventSubscription.event_type).toBe('consent_approved');
+              expect(eventSubscription.handler).toBe('OnConsentApproved');
+              assertIsCursorLike(eventSubscription.owner_cursor);
+              expect(eventSubscriptionsPage.page_info).toBe(null);
+
               done();
             });// eo it
 
@@ -472,17 +490,31 @@ describe('System', function () {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.listEventSubscriptions(campaignId);
               expect(response).toBeInstanceOf(SuccessResponse);
-              let eventSubscriptions = response.results;
-              expect(eventSubscriptions).toBeInstanceOf(Array);
-              expect(eventSubscriptions.length).toBe(1);
-              // TODO: Add more expectations.
+              let eventSubscriptionsPage = response.result;
+              expect(eventSubscriptionsPage).toBeDefined();
+              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
+              expect(eventSubscriptionsPage.data.length).toBe(1);
+              let eventSubscription = eventSubscriptionsPage.data[0];
+              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              assertIso8601Like(eventSubscription.date_c);
+              expect(eventSubscription.event_type).toBe('consent_approved');
+              expect(eventSubscription.handler).toBe('OnConsentApproved');
+              assertIsCursorLike(eventSubscription.owner_cursor);
+              expect(eventSubscriptionsPage.page_info).toBe(null);
 
               response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
-              eventSubscriptions = response.results;
-              expect(eventSubscriptions).toBeInstanceOf(Array);
-              expect(eventSubscriptions.length).toBe(1);
-              // TODO: Add more expectations.
+              eventSubscriptionsPage = response.result;
+              expect(eventSubscriptionsPage).toBeDefined();
+              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
+              expect(eventSubscriptionsPage.data.length).toBe(1);
+              eventSubscription = eventSubscriptionsPage.data[0];
+              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              assertIso8601Like(eventSubscription.date_c);
+              expect(eventSubscription.event_type).toBe('consent_approved');
+              expect(eventSubscription.handler).toBe('OnConsentApproved');
+              assertIsCursorLike(eventSubscription.owner_cursor);
+              expect(eventSubscriptionsPage.page_info).toBe(null);
 
               done();
             });// eo it
@@ -537,7 +569,7 @@ describe('System', function () {
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
                 apiUrlRoot: 'should_be_unused',
-                campaignId: 'known', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
               const overridingConfig = new Config({
                 apiKey,
@@ -566,13 +598,13 @@ describe('System', function () {
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
               const campaignId = 'unknown';
 

@@ -3,6 +3,8 @@ import EventSubscriptionsApi from '../../../../../src/xcoobee/api/EventSubscript
 
 import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
+import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
 const apiSecret = process.env.XCOOBEE__API_SECRET;
@@ -178,21 +180,25 @@ describe('EventSubscriptionsApi', function () {
 
     describe('called with a valid API access token', function () {
 
-      xdescribe('and called with a known campaign ID', function () {
+      describe('and called with a known campaign ID', function () {
 
         it('should return with a list of event subscriptions', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const campaignId = 'known'; // FIXME: TODO: Get a legit campaign ID.
-          const eventSubscriptions = await EventSubscriptionsApi.listEventSubscriptions(
+          const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+          const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
             apiUrlRoot, apiAccessToken, campaignId
           );
-          expect(eventSubscriptions).toBeInstanceOf(Array);
-          expect(eventSubscriptions.length).toBe(0);
-          // const eventSubscription = eventSubscriptions[0];
-          // expect(eventSubscription.date_c).toBe('');
-          // expect(eventSubscription.handler).toBe('');
-          // expect(eventSubscription.event_type).toBe('');
-          // TODO: Add more expectations.
+          expect(eventSubscriptionsPage).toBeDefined();
+          expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
+          expect(eventSubscriptionsPage.data.length).toBe(1);
+          const eventSubscription = eventSubscriptionsPage.data[0];
+          expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+          assertIso8601Like(eventSubscription.date_c);
+          expect(eventSubscription.event_type).toBe('consent_approved');
+          expect(eventSubscription.handler).toBe('OnConsentApproved');
+          assertIsCursorLike(eventSubscription.owner_cursor);
+          expect(eventSubscriptionsPage.page_info).toBe(null);
+
           done();
         });// eo it
 

@@ -28,6 +28,11 @@ class Response {
     return this._.code;
   }
 
+  get result() {
+    return this._.results;
+  }
+
+  // TODO: Remove this getter.
   get results() {
     return this._.results;
   }
