@@ -95,7 +95,10 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
  *   handler.  The handler is not important here.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
- * @returns {Promise<number>}
+ * @returns {Promise<Object>}
+ * @property {number} deleted_number - The number of event subscriptions deleted.
+ *
+ * @throws {XcooBeeError}
  */
 export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
