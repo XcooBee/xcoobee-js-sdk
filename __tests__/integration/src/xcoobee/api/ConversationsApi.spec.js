@@ -49,7 +49,7 @@ describe('ConversationsApi', function () {
 
     });// eo describe
 
-  });// eo describe('.getConversations')
+  });// eo describe('.getConversation')
 
   describe('.getConversations', function () {
 
@@ -59,10 +59,11 @@ describe('ConversationsApi', function () {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
-        const conversations = await ConversationsApi.getConversations(apiUrlRoot, apiAccessToken, userCursor);
-        expect(conversations).toBeInstanceOf(Array);
-        expect(conversations.length).toBe(1);
-        let conversation = conversations[0];
+        const conversationsPage = await ConversationsApi.getConversations(apiUrlRoot, apiAccessToken, userCursor);
+        expect(conversationsPage).toBeDefined();
+        expect(conversationsPage.data).toBeInstanceOf(Array);
+        expect(conversationsPage.data.length).toBe(1);
+        let conversation = conversationsPage.data[0];
         expect('date_c' in conversation).toBe(true);
         assertIso8601Like(conversation.date_c)
         expect(conversation.display_name).toBe('SDKTester Developer');

@@ -87,10 +87,11 @@ describe('Users', function () {
             const response = await usersSdk.getConversations();
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const conversations = response.results;
-            expect(conversations).toBeInstanceOf(Array);
-            expect(conversations.length).toBe(1);
-            let conversation = conversations[0];
+            const conversationsPage = response.results;
+            expect(conversationsPage).toBeDefined();
+            expect(conversationsPage.data).toBeInstanceOf(Array);
+            expect(conversationsPage.data.length).toBe(1);
+            let conversation = conversationsPage.data[0];
             expect('date_c' in conversation).toBe(true);
             assertIso8601Like(conversation.date_c)
             expect(conversation.display_name).toBe('SDKTester Developer');

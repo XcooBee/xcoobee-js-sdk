@@ -59,15 +59,22 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
 }
 
 /**
- * TODO: Complete documentation.
+ * Fetches a page of the user's conversations.
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {*} userCursor
- * @param {*} first
- * @param {*} after
+ * @param {string} userCursor
+ * @param {number} [first]
+ * @param {string} [after]
  *
- * @returns {Promise<Note>}
+ * @returns {Promise<Object>}
+ * @property {Note[]} data - A page of conversations (aka notes).
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first = null, after = null) {
   const query = `
@@ -93,12 +100,8 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
   })
     .then(response => {
       const { conversations } = response;
-      const { data } = conversations;
 
-      // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
-      // true, then do more requests need to be made for more data?
-
-      return data;
+      return conversations;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
