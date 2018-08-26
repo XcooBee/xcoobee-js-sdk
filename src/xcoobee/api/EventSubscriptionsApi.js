@@ -29,7 +29,15 @@ import ApiUtils from './ApiUtils';
  *   handler.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
- * @returns {Promise<EventSubscription[]>}
+ * @returns {Promise<Object>}
+ * @property {EventSubscription[]} data - A page of the newly added event
+ *   subscriptions.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
@@ -51,9 +59,11 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
     mutation addEventSubscription($config: AddSubscriptionsConfig!) {
       add_event_subscriptions(config: $config) {
         data {
+          campaign_cursor
           date_c
           event_type
           handler
+          owner_cursor
         }
         page_info {
           end_cursor
@@ -67,15 +77,10 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
   })
     .then(response => {
       const { add_event_subscriptions } = response;
-      const { data } = add_event_subscriptions;
 
       // TODO: What is page_info doing on the above mutation?
 
-      // TODO: Should we be requesting page_info for this query? Find out what to do
-      // with the page_info.  If page_info.has_next_page is true, then do more
-      // requests need to be made for more data?
-
-      return data;
+      return add_event_subscriptions;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
