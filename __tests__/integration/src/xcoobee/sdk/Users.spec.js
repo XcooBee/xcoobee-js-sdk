@@ -122,9 +122,8 @@ describe('Users', function () {
 
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await usersSdk.getUser();
-            expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const userInfo = response.results;
+            const userInfo = response.result.data;
             expect('cursor' in userInfo).toBe(true);
             assertIsCursorLike(userInfo.cursor);
             expect('pgp_public_key' in userInfo).toBe(true);
@@ -150,9 +149,8 @@ describe('Users', function () {
 
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await usersSdk.getUser(overridingConfig);
-            expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const userInfo = response.results;
+            const userInfo = response.result.data;
             expect('cursor' in userInfo).toBe(true);
             assertIsCursorLike(userInfo.cursor);
             expect('pgp_public_key' in userInfo).toBe(true);
@@ -175,7 +173,6 @@ describe('Users', function () {
 
           const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
           const response = await usersSdk.getUser();
-          expect(response).toBeDefined();
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
           expect(response.error.message).toBe('Unable to get an API access token.');
