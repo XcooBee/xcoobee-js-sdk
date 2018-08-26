@@ -37,12 +37,12 @@ describe('Users', function () {
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const targetCursor = 'CTZamTgKRkN8LMb/AtKR8d72P4v/k5bkI7ynikFlf1QFL0ybh8ZvKR6MAb4KJDIL1v6aAA==';
             const response = await usersSdk.getConversation(targetCursor);
-            expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const conversations = response.results;
-            expect(conversations).toBeInstanceOf(Array);
-            expect(conversations.length).toBeGreaterThan(1);
-            let conversation = conversations[0];
+            const conversationsPage = response.result;
+            expect(conversationsPage).toBeDefined();
+            expect(conversationsPage.data).toBeInstanceOf(Array);
+            expect(conversationsPage.data.length).toBeGreaterThan(1);
+            let conversation = conversationsPage.data[0];
             expect('breach_cursor' in conversation).toBe(true);
             assertIsCursorLike(conversation.breach_cursor, true);
             expect('consent_cursor' in conversation).toBe(true);
@@ -85,9 +85,8 @@ describe('Users', function () {
 
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await usersSdk.getConversations();
-            expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const conversationsPage = response.results;
+            const conversationsPage = response.result;
             expect(conversationsPage).toBeDefined();
             expect(conversationsPage.data).toBeInstanceOf(Array);
             expect(conversationsPage.data.length).toBe(1);

@@ -2,18 +2,24 @@ import ApiUtils from './ApiUtils';
 import NoteTypes from './NoteTypes';
 
 /**
- * TODO: Complete documentation.
+ * Fetches a page of conversations with the given target cursor.
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {*} targetCursor
- * @param {*} first
- * @param {*} after
+ * @param {string} targetCursor
+ * @param {number} [first]
+ * @param {string} [after]
  *
- * @returns {Promise<Note>}
+ * @returns {Promise<Object>}
+ * @property {Note[]} data - A page of conversations (aka notes).
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first = null, after = null) {
-  // TODO: Decide what data should be returned.
   const query = `
     query getConversation($targetCursor: String!, $first: Int, $after: String) {
       conversation(target_cursor: $targetCursor, first: $first, after: $after) {
@@ -46,12 +52,8 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
   })
     .then(response => {
       const { conversation } = response;
-      const { data } = conversation;
 
-      // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
-      // true, then do more requests need to be made for more data?
-
-      return data;
+      return conversation;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

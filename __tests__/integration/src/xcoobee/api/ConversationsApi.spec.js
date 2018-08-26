@@ -22,10 +22,11 @@ describe('ConversationsApi', function () {
       it('should fetch and return with conversations', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const targetCursor = 'CTZamTgKRkN8LMb/AtKR8d72P4v/k5bkI7ynikFlf1QFL0ybh8ZvKR6MAb4KJDIL1v6aAA==';
-        const conversations = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor);
-        expect(conversations).toBeInstanceOf(Array);
-        expect(conversations.length).toBeGreaterThan(1);
-        let conversation = conversations[0];
+        const conversationsPage = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor);
+        expect(conversationsPage).toBeDefined();
+        expect(conversationsPage.data).toBeInstanceOf(Array);
+        expect(conversationsPage.data.length).toBeGreaterThan(1);
+        let conversation = conversationsPage.data[0];
         expect('breach_cursor' in conversation).toBe(true);
         assertIsCursorLike(conversation.breach_cursor, true);
         expect('consent_cursor' in conversation).toBe(true);
