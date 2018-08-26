@@ -27,10 +27,15 @@ describe('EventsApi', function () {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
-          const events = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor);
-          expect(events).toBeInstanceOf(Array);
+          const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor);
+          expect(eventsPage).toBeDefined();
+          expect(eventsPage.data).toBeInstanceOf(Array);
           // Not yet sure if this will always be the case, but it is right now.
-          expect(events.length).toBe(0);
+          expect(eventsPage.data.length).toBe(0);
+          expect(eventsPage.page_info).toBeDefined();
+          expect(eventsPage.page_info.end_cursor).toBe(null);
+          expect(eventsPage.page_info.has_next_page).toBe(null);
+
           done();
         });// eo it
 

@@ -854,13 +854,15 @@ describe('System', function () {
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await systemSdk.getEvents();
-            expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const events = response.results;
-            expect(events).toBeDefined();
-            expect(events).toBeInstanceOf(Array);
-            expect(events.length).toBe(0);
-            // TODO: Add more expectations.
+            const eventsPage = response.results;
+            expect(eventsPage).toBeDefined();
+            expect(eventsPage.data).toBeInstanceOf(Array);
+            expect(eventsPage.data.length).toBe(0);
+            expect(eventsPage.page_info).toBeDefined();
+            expect(eventsPage.page_info.end_cursor).toBe(null);
+            expect(eventsPage.page_info.has_next_page).toBe(null);
+
             done();
           });// eo it
 
@@ -882,13 +884,15 @@ describe('System', function () {
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await systemSdk.getEvents(overridingConfig);
-            expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const events = response.results;
-            expect(events).toBeDefined();
-            expect(events).toBeInstanceOf(Array);
-            expect(events.length).toBe(0);
-            // TODO: Add more expectations.
+            const eventsPage = response.results;
+            expect(eventsPage).toBeDefined();
+            expect(eventsPage.data).toBeInstanceOf(Array);
+            expect(eventsPage.data.length).toBe(0);
+            expect(eventsPage.page_info).toBeDefined();
+            expect(eventsPage.page_info.end_cursor).toBe(null);
+            expect(eventsPage.page_info.has_next_page).toBe(null);
+
             done();
           });// eo it
 

@@ -6,21 +6,32 @@ import ApiUtils from './ApiUtils';
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
  *
- * @returns {Promise<Event[]>}
+ * @returns {Promise<Object>}
+ * @property {Event[]} data - A page of events.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
   const query = `
     query getEvents($userId: String!) {
       events(user_cursor: $userId) {
         data {
+          date_c
           event_id
+          event_type
+          hmac
+          owner_cursor
+          payload
           reference_cursor
           reference_type
-          owner_cursor
-          event_type
-          payload
-          hmac
-          date_c
+        }
+        page_info {
+          end_cursor
+          has_next_page
         }
       }
     }
@@ -30,13 +41,8 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
   })
     .then(response => {
       const { events } = response;
-      const { data } = events;
 
-      // TODO: Should we be requesting page_info for this query? Find out what to do
-      // with the page_info.  If page_info.has_next_page is true, then do more
-      // requests need to be made for more data?
-
-      return data;
+      return events;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
