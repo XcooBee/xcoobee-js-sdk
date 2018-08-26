@@ -109,12 +109,12 @@ describe('System', function () {
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
+                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
                 const eventsMapping = {
                   ConsentApproved: 'OnConsentApproved',
                 };
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
@@ -146,9 +146,6 @@ describe('System', function () {
                   apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
                 const overridingConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -156,6 +153,9 @@ describe('System', function () {
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                };
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
@@ -187,16 +187,16 @@ describe('System', function () {
                   apiUrlRoot: 'should_be_unused',
                   campaignId: 'default-campaign-id',
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
                 const overridingConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
+                const eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                  DataDeclined: 'OnDataDeclined',
+                };
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
@@ -244,7 +244,7 @@ describe('System', function () {
 
           describe('and an invalid events mapping', function () {
 
-            it('should return an error response', async function (done) {
+            it('should resolve with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -296,7 +296,7 @@ describe('System', function () {
 
           describe('using default config', function () {
 
-            it('should return an error response', async function (done) {
+            it('should resolve with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -336,7 +336,7 @@ describe('System', function () {
 
           describe('using overriding config', function () {
 
-            it('should return an error response', async function (done) {
+            it('should resolve with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -368,7 +368,7 @@ describe('System', function () {
 
           describe('using campaign ID', function () {
 
-            it('should return an error response', async function (done) {
+            it('should resolve with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -411,6 +411,433 @@ describe('System', function () {
       });// eo describe
 
     });// eo describe('.addEventSubscription')
+
+    describe('.deleteEventSubscription', function () {
+
+      describe('called with a valid API key/secret pair', function () {
+
+        describe('and a known campaign ID', function () {
+
+          describe('and a valid events mapping', function () {
+
+            beforeEach(async function (done) {
+              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+              await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
+
+              done();
+            });
+
+            describe('using default config', function () {
+
+              it('should delete both of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                });
+                const eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                  DataDeclined: 'OnDataDeclined',
+                };
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                const response = await systemSdk.deleteEventSubscription(eventsMapping);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                const deleted_number = response.results;
+                expect(deleted_number).toBe(2);
+
+                done();
+              });// eo it
+
+              it('should delete each of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                });
+                let eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                };
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                let response = await systemSdk.deleteEventSubscription(eventsMapping);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                let deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                eventsMapping = {
+                  DataDeclined: 'OnDataDeclined',
+                };
+                response = await systemSdk.deleteEventSubscription(eventsMapping);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                done();
+              });// eo it
+
+            });// eo describe
+
+            describe('using campaign ID', function () {
+
+              it('should delete both of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                });
+                const eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                  DataDeclined: 'OnDataDeclined',
+                };
+                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                const deleted_number = response.results;
+                expect(deleted_number).toBe(2);
+
+                done();
+              });// eo it
+
+              it('should delete each of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                });
+                let eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                };
+                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                let deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                eventsMapping = {
+                  DataDeclined: 'OnDataDeclined',
+                };
+                response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                done();
+              });// eo it
+
+            });// eo describe
+
+            describe('using campaign ID and overriding config', function () {
+
+              it('should delete both of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                });
+                const overridingConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                });
+                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                  DataDeclined: 'OnDataDeclined',
+                };
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                const deleted_number = response.results;
+                expect(deleted_number).toBe(2);
+
+                done();
+              });// eo it
+
+              it('should delete each of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                });
+                const overridingConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
+                });
+                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                let eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                };
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                let deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                eventsMapping = {
+                  DataDeclined: 'OnDataDeclined',
+                };
+                response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                done();
+              });// eo it
+
+            });// eo describe
+
+            describe('using overriding config', function () {
+
+              it('should delete both of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey: 'should_be_unused',
+                  apiSecret: 'should_be_unused',
+                  apiUrlRoot: 'should_be_unused',
+                  campaignId: 'default-campaign-id',
+                });
+                const overridingConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                });
+                const eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                  DataDeclined: 'OnDataDeclined',
+                };
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                const deleted_number = response.results;
+                expect(deleted_number).toBe(2);
+
+                done();
+              });// eo it
+
+              it('should delete each of the event subscriptions', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey: 'should_be_unused',
+                  apiSecret: 'should_be_unused',
+                  apiUrlRoot: 'should_be_unused',
+                  campaignId: 'default-campaign-id',
+                });
+                const overridingConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                });
+                let eventsMapping = {
+                  ConsentApproved: 'OnConsentApproved',
+                };
+
+                const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+                let response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                let deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                eventsMapping = {
+                  DataDeclined: 'OnDataDeclined',
+                };
+                response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                expect(response).toBeInstanceOf(SuccessResponse);
+                deleted_number = response.results;
+                expect(deleted_number).toBe(1);
+
+                done();
+              });// eo it
+
+            });// eo describe
+
+          });// eo describe
+
+          describe('and an invalid events mapping', function () {
+
+            it('should resolve with an error response', async function (done) {
+              const defaultConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+              });
+              const overridingConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+              });
+              const eventsMapping = {
+                Invalid: 'invalid',
+              };
+              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+
+              const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+
+              let response = await systemSdk.deleteEventSubscription(eventsMapping);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              let { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Invalid event type provided: "Invalid".');
+              expect(error.name).toBe('XcooBeeError');
+
+              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              error = response.error;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Invalid event type provided: "Invalid".');
+              expect(error.name).toBe('XcooBeeError');
+
+              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              error = response.error;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Invalid event type provided: "Invalid".');
+              expect(error.name).toBe('XcooBeeError');
+
+              done();
+            });// eo it
+
+          });// eo describe
+
+        });// eo describe
+
+        describe('and an unknown campaign ID', async function () {
+
+          describe('using default config', function () {
+
+            it('should resolve with an error response', async function (done) {
+              const defaultConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+                campaignId: 'unknown',
+              });
+              const eventsMapping = {
+                ConsentApproved: 'OnConsentApproved',
+              };
+
+              const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+              let response = await systemSdk.deleteEventSubscription(eventsMapping);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              let { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Wrong key at line: 3, column: 7');
+              expect(error.name).toBe('XcooBeeError');
+
+              response = await systemSdk.deleteEventSubscription(eventsMapping, null);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              error = response.error;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Wrong key at line: 3, column: 7');
+              expect(error.name).toBe('XcooBeeError');
+
+              response = await systemSdk.deleteEventSubscription(eventsMapping, null, { apiKey, apiSecret });
+              expect(response).toBeInstanceOf(ErrorResponse);
+              error = response.error;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Wrong key at line: 3, column: 7');
+              expect(error.name).toBe('XcooBeeError');
+
+              done();
+            });
+
+          });// eo describe
+
+          describe('using overriding config', function () {
+
+            it('should resolve with an error response', async function (done) {
+              const defaultConfig = new Config({
+                apiKey: 'should_be_unused',
+                apiSecret: 'should_be_unused',
+                apiUrlRoot: 'should_be_unused',
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+              });
+              const overridingConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+                campaignId: 'unknown',
+              });
+              const eventsMapping = {
+                ConsentApproved: 'OnConsentApproved',
+              };
+
+              const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+              const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              const { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Wrong key at line: 3, column: 7');
+              expect(error.name).toBe('XcooBeeError');
+
+              done();
+            });// eo it
+
+          });// eo describe
+
+          describe('using campaign ID', function () {
+
+            it('should resolve with an error response', async function (done) {
+              const defaultConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+              });
+              const overridingConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+              });
+              const campaignId = 'unknown';
+              const eventsMapping = {
+                ConsentApproved: 'OnConsentApproved',
+              };
+
+              const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
+              let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              let { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Wrong key at line: 3, column: 7');
+              expect(error.name).toBe('XcooBeeError');
+
+              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+              expect(response).toBeInstanceOf(ErrorResponse);
+              error = response.error;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Wrong key at line: 3, column: 7');
+              expect(error.name).toBe('XcooBeeError');
+
+              done();
+            });// eo it
+
+          });// eo describe
+
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe('.deleteEventSubscription')
 
     describe('.getEvents', function () {
 
