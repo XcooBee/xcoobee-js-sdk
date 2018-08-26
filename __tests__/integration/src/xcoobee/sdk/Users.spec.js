@@ -204,9 +204,12 @@ describe('Users', function () {
             const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
             const response = await usersSdk.sendUserMessage(message, consentId);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const note = response.results;
+            const note = response.result.data;
             expect(note).toBeDefined();
-            expect('note_text' in note).toBe(true);
+            expect(note.note_text).toBe('Testing. 1, 2, 3!');
+            assertIsCursorLike(note.target_cursor);
+            expect(note.xcoobee_id).toBe('');
+
             done();
           });// eo it
 

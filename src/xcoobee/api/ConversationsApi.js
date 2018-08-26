@@ -106,7 +106,7 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
 }
 
 /**
- * TODO: Complete documentation.
+ * Sends a message to a consent destination or a breach destination.
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
@@ -116,12 +116,18 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first =
  * @param {*} [breachId]
  *
  * @returns {Promise<Note>}
+ *
+ * @throws {XcooBeeError}
  */
 export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId) {
   const mutation = `
     mutation sendUserMessage($config: SendMessageConfig) {
       send_message(config: $config) {
+        date_c
+        date_e
         note_text
+        target_cursor
+        xcoobee_id
       }
     }
   `;
