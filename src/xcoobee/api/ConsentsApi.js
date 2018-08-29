@@ -234,15 +234,22 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
 }
 
 /**
- * TODO: Complete documentation.
+ * Fetches a page of consents with the given status.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} userCursor
  * @param {ConsentStatus} status
  *
- * @returns {Promise<Consent[]>}
- * @throws TypeError
+ * @returns {Promise<Object>} - A page of the inbox.
+ * @property {Consent[]} data - Consents for this page.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
   if (typeof status === 'string') {
@@ -306,12 +313,8 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
   })
     .then(response => {
       const { consents } = response;
-      const { data } = consents;
 
-      // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
-      // true, then do more requests need to be made for more data?
-
-      return data;
+      return consents;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

@@ -130,7 +130,13 @@ describe('ConsentsApi', function () {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
-            const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+            const result = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+            expect(result).toBeDefined();
+            expect(result.data).toBeInstanceOf(Array);
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXhLtGlgWL3mfZw7DvGY6+UkKSNSLCg+ATVIT3iaOmj+eJ13SkFPOZlm9zjOaFeADKhGYZ8OloFX');
+            expect(result.page_info.has_next_page).toBeNull();
+            const consents = result.data;
             expect(consents).toBeInstanceOf(Array);
             expect(consents.length).toBeGreaterThan(0);
             let consent = consents[0];
@@ -154,10 +160,16 @@ describe('ConsentsApi', function () {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
-            const consents = await ConsentsApi.listConsents(
+            const result = await ConsentsApi.listConsents(
               apiUrlRoot, apiAccessToken, userCursor, ConsentStatuses.ACTIVE
             );
             // TODO: Find a way to get consents back.
+            expect(result).toBeDefined();
+            expect(result.data).toBeInstanceOf(Array);
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe(null);
+            expect(result.page_info.has_next_page).toBe(null);
+            const consents = result.data;
             expect(consents).toBeInstanceOf(Array);
             expect(consents.length).toBe(0);
             // let consent = consents[0];
