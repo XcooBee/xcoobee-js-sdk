@@ -55,6 +55,23 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
     });
 }
 
+/**
+ * Fetch a page of campaigns.
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} userCursor
+ *
+ * @returns {Promise<Object>} - A page of campaigns.
+ * @property {Campaign[]} data - Campaigns for this page.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
+ */
 export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
   /*
   Available Campaign Data:
@@ -122,13 +139,8 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
   })
     .then(response => {
       const { campaigns } = response;
-      const { data } = campaigns;
 
-      // TODO: Should we be requesting page_info for this query? Find out what to do
-      // with the page_info.  If page_info.has_next_page is true, then do more
-      // requests need to be made for more data?
-
-      return data;
+      return campaigns
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

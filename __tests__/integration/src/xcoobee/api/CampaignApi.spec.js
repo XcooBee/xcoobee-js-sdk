@@ -80,8 +80,13 @@ describe('CampaignApi', function () {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
-        const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
-        expect(campaigns).toBeInstanceOf(Array);
+        const result = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
+        expect(result).toBeDefined();
+        expect(result.data).toBeInstanceOf(Array);
+        expect(result.page_info).toBeDefined();
+        expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+        expect(result.page_info.has_next_page).toBeNull();
+        const campaigns = result.data;
         expect(campaigns.length).toBe(1);
         const campaign = campaigns[0];
         expect(campaign).toBeDefined();

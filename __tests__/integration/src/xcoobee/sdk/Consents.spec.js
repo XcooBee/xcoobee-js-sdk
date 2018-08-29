@@ -491,8 +491,9 @@ describe('Consents', function () {
             const response = await consentsSdk.listCampaigns();
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const campaigns = response.results;
-            expect(campaigns).toBeDefined();
+            const { result } = response;
+            expect(result).toBeDefined();
+            const campaigns = result.data;
             expect(campaigns).toBeInstanceOf(Array);
             expect(campaigns.length).toBe(1);
             const campaign = campaigns[0];
@@ -524,8 +525,9 @@ describe('Consents', function () {
             const response = await consentsSdk.listCampaigns(overridingConfig);
             expect(response).toBeDefined();
             expect(response).toBeInstanceOf(SuccessResponse);
-            const campaigns = response.results;
-            expect(campaigns).toBeDefined();
+            const { result } = response;
+            expect(result).toBeDefined();
+            const campaigns = result.data;
             expect(campaigns).toBeInstanceOf(Array);
             expect(campaigns.length).toBe(1);
             const campaign = campaigns[0];
