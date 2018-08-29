@@ -3,13 +3,16 @@ import ApiUtils from './ApiUtils';
 /**
  * Deletes an item from the inbox with the specified message ID.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
  * @param {string} messageId - The ID of the inbox item.
  *
- * @returns {Promise<Object>} - The results.
- * @returns {string} return.trans_id - The transaction ID.
+ * @returns {Promise<Object>} - The result.
+ * @property {string} trans_id - The transaction ID.
+ *
+ * @throws {XcooBeeError}
  */
 export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) {
   const query = `
@@ -28,8 +31,8 @@ export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageI
       // Note: remove_inbox_item is not defined if nothing is deleted.
       const { trans_id } = remove_inbox_item || { trans_id: null };
 
-      const results = { trans_id };
-      return results;
+      const result = { trans_id };
+      return result;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

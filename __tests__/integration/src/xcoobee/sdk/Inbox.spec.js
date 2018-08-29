@@ -42,9 +42,9 @@ describe('Inbox', function () {
                 const messageId = 'unknown';
                 const response = await inboxSdk.deleteInboxItem(messageId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const { results } = response;
-                expect(results).toBeDefined();
-                expect(results.trans_id).toBeNull();
+                const { result } = response;
+                expect(result).toBeDefined();
+                expect(result.trans_id).toBeNull();
                 done();
               });// eo it
 
