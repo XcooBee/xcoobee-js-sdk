@@ -45,51 +45,8 @@ class Consents {
   // * @returns {?} return.response.results.xcoobee_targets
   // * @returns {?} return.response.results.xcoobee_targets.xcoobee_id
 
-  // TODO: Document CreateCampaignStruct
   // TODO: Document ConsentId
   // TODO: Document RequestRefId
-
-  /**
-   * Activates the campaign with the specified ID.
-   *
-   * @param {CampaignId} [campaignId] - The ID of the campaign to activate.  If not
-   *   specified or is `undefined`, then the default campaign ID is used if set.  If a
-   *   campaign ID cannot be resolved, then a `XcooBeeError` will be thrown.
-   * @param {Config} [config] - If specified, the configuration to use instead of the
-   *   default.
-   *
-   * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
-   *   A successful response will have a `CampaignId` as the data.
-   * @returns {Response} return.response
-   * @returns {CampaignId} return.response.results
-   *
-   * @throws XcooBeeError
-   */
-  activateCampaign(campaignId_unused, config_unused) {
-    this._assertValidState();
-    // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
-    throw Error('NotYetImplemented');
-  }
-
-  /**
-   * Creates a new campaign.
-   *
-   * @param {CreateCampaignStruct} data - The data of the campaign to be created.
-   * @param {Config} [config] - If specified, the configuration to use instead of the
-   *   default.
-   *
-   * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
-   *   A successful response will have a `CampaignId` as the data.
-   * @returns {Response} return.response
-   * @returns {CampaignId} return.response.results
-   *
-   * @throws XcooBeeError
-   */
-  createCampaign(data_unused, config_unused) {
-    this._assertValidState();
-    // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
-    throw Error('NotYetImplemented');
-  }
 
   /**
    * Determines whether data has been changed according to changes requested.
@@ -311,29 +268,6 @@ class Consents {
     } catch (err) {
       return new ErrorResponse(400, err);
     }
-  }
-
-  /**
-   * Modifies the campaign with the specified ID.
-   *
-   * @param {CampaignId} [campaignId] - The ID of the campaign to modify.  If not
-   *   specified or is `undefined`, then the default campaign ID is used if set.  If a
-   *   campaign ID cannot be resolved, then a `XcooBeeError` will be thrown.
-   * @param {Object} data - The campaign data to be modified.  TODO: Document the structure.
-   * @param {Config} [config] - If specified, the configuration to use instead of the
-   *   default.
-   *
-   * @returns {Promise<Response>} A promise that resolves to a `Response` instance.
-   *   A successful response will have a `CampaignId` as the data.
-   * @returns {Response} return.response
-   * @returns {CampaignId} return.response.results
-   *
-   * @throws XcooBeeError
-   */
-  modifyCampaign(campaignId_unused, data_unused, config_unused) {
-    this._assertValidState();
-    // TODO: To be implemented. (Maybe not. Not in PHP SDK.)
-    throw Error('NotYetImplemented');
   }
 
   /**
