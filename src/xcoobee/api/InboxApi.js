@@ -102,14 +102,19 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
 /**
  * Fetch a page of items from the inbox.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} [startId] The starting message ID.
  *
- * @returns {Promise<Object>} - The results.
- * @returns {Object} return.inbox - A page of the inbox.
- * @returns {InboxItem[]} return.inbox.data - Inbox items for this page.
- * @returns {PageInfo} return.inbox.page_info - The page info.
+ * @returns {Promise<Object>} - A page of the inbox.
+ * @property {InboxItem[]} data - Inbox items for this page.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function listInbox(apiUrlRoot, apiAccessToken, startId) {
   const query = `
@@ -155,13 +160,11 @@ export function listInbox(apiUrlRoot, apiAccessToken, startId) {
           expirationDate: item.date,
         };
       });
-      const results = {
-        inbox: {
-          data,
-          page_info,
-        },
+      const result = {
+        data,
+        page_info,
       };
-      return results;
+      return result;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

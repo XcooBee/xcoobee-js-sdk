@@ -78,14 +78,13 @@ describe('InboxApi', function () {
 
         it('should fetch and return with a list of inbox items', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const results = await InboxApi.listInbox(apiUrlRoot, apiAccessToken);
-          expect(results).toBeDefined();
-          expect(results.inbox).toBeDefined();
-          expect(results.inbox.data).toBeInstanceOf(Array);
-          expect(results.inbox.page_info).toBeDefined();
-          expect(results.inbox.page_info.end_cursor).toBe('tJnf+3ZKrQCKYIMpUKUt236I1xDa2E91la7vYPr8qwL+GwitmaI++y/6SxDeXFLiq2segVucQxy51tdENjtf7d0BRFnjB5tyNXE5yMPPVaY=');
-          expect(results.inbox.page_info.has_next_page).toBeNull();
-          const inboxItems = results.inbox.data;
+          const result = await InboxApi.listInbox(apiUrlRoot, apiAccessToken);
+          expect(result).toBeDefined();
+          expect(result.data).toBeInstanceOf(Array);
+          expect(result.page_info).toBeDefined();
+          expect(result.page_info.end_cursor).toBe('tJnf+3ZKrQCKYIMpUKUt236I1xDa2E91la7vYPr8qwL+GwitmaI++y/6SxDeXFLiq2segVucQxy51tdENjtf7d0BRFnjB5tyNXE5yMPPVaY=');
+          expect(result.page_info.has_next_page).toBeNull();
+          const inboxItems = result.data;
           // Not yet sure if this will always be the case, but it is right now.
           expect(inboxItems.length).toBe(1);
           const inboxItem = inboxItems[0];
@@ -110,14 +109,13 @@ describe('InboxApi', function () {
         it('should fetch and return with a list of inbox items', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const startId = 'tJnf+3ZKrQCKYIMpUKUt236I1xDa2E91la7vYPr8qwL+GwitmaI++y/6SxDeXFLiq2segVucQxy51tdENjtf7d0BRFnjB5tyNXE5yMPPVaY=';
-          const results = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, startId);
-          expect(results).toBeDefined();
-          expect(results.inbox).toBeDefined();
-          expect(results.inbox.data).toBeInstanceOf(Array);
-          expect(results.inbox.page_info).toBeDefined();
-          expect(results.inbox.page_info.end_cursor).toBeNull();
-          expect(results.inbox.page_info.has_next_page).toBeNull();
-          const inboxItems = results.inbox.data;
+          const result = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, startId);
+          expect(result).toBeDefined();
+          expect(result.data).toBeInstanceOf(Array);
+          expect(result.page_info).toBeDefined();
+          expect(result.page_info.end_cursor).toBeNull();
+          expect(result.page_info.has_next_page).toBeNull();
+          const inboxItems = result.data;
           expect(inboxItems.length).toBe(0);
           done();
         });// eo it
