@@ -444,7 +444,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.deleteEventSubscription(eventsMapping);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const deleted_number = response.results;
+                const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
 
                 done();
@@ -464,7 +464,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.deleteEventSubscription(eventsMapping);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                let deleted_number = response.results;
+                let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
                 eventsMapping = {
@@ -472,7 +472,7 @@ describe('System', function () {
                 };
                 response = await systemSdk.deleteEventSubscription(eventsMapping);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                deleted_number = response.results;
+                deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
 
                 done();
@@ -498,7 +498,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const deleted_number = response.results;
+                const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
 
                 done();
@@ -519,7 +519,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                let deleted_number = response.results;
+                let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
                 eventsMapping = {
@@ -527,7 +527,7 @@ describe('System', function () {
                 };
                 response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                deleted_number = response.results;
+                deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
 
                 done();
@@ -559,7 +559,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const deleted_number = response.results;
+                const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
 
                 done();
@@ -586,7 +586,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                let deleted_number = response.results;
+                let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
                 eventsMapping = {
@@ -594,7 +594,7 @@ describe('System', function () {
                 };
                 response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                deleted_number = response.results;
+                deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
 
                 done();
@@ -625,7 +625,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const deleted_number = response.results;
+                const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
 
                 done();
@@ -651,7 +651,7 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                let deleted_number = response.results;
+                let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
                 eventsMapping = {
@@ -659,7 +659,7 @@ describe('System', function () {
                 };
                 response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                deleted_number = response.results;
+                deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
 
                 done();

@@ -124,9 +124,8 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
   })
     .then(response => {
       const { delete_event_subscriptions } = response;
-      const { deleted_number } = delete_event_subscriptions;
 
-      return deleted_number;
+      return delete_event_subscriptions;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

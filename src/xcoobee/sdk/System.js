@@ -104,10 +104,10 @@ class System {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const deletedCount = await EventSubscriptionsApi.deleteEventSubscription(
+      const results = await EventSubscriptionsApi.deleteEventSubscription(
         apiUrlRoot, apiAccessToken, events, resolvedCampaignId
       );
-      const response = new SuccessResponse(deletedCount);
+      const response = new SuccessResponse(results);
       return response;
     } catch (err) {
       return new ErrorResponse(400, err);
