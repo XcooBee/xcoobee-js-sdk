@@ -6,7 +6,7 @@ import ConsentStatuses from './ConsentStatuses';
 import ConsentTypes from './ConsentTypes';
 
 /**
- * Allows as company to confirm consent data modification.
+ * Allows a company to confirm consent data modification.
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
@@ -41,13 +41,18 @@ export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) 
 }
 
 /**
- * TODO: Complete documentation.
+ * Allows a company to confirm consent data deletion.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} consentCursor
  *
- * @returns {Promise<boolean>}
+ * @returns {Promise<Object>} - The result.
+ * @property {boolean} confirmed - Flag indicating whether the consent data was
+ *   deleted.
+ *
+ * @throws {XcooBeeError}
  */
 export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
   const mutation = `
@@ -64,7 +69,7 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
       const { confirm_consent_deletion } = response;
 
       const confirmed = confirm_consent_deletion.consent_cursor === consentCursor;
-      return confirmed;
+      return { confirmed };
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

@@ -26,8 +26,7 @@ describe('ConsentsApi', function () {
         const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
         const result = await ConsentsApi.confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor);
         expect(result).toBeDefined();
-        const { confirmed } = result;
-        expect(confirmed).toBe(true);
+        expect(result.confirmed).toBe(true);
 
         done();
       });// eo it
@@ -43,8 +42,9 @@ describe('ConsentsApi', function () {
       it('should return flag indicating if the data has been deleted/purged', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
-        const confirmed = await ConsentsApi.confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor);
-        expect(confirmed).toBe(true);
+        const result = await ConsentsApi.confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor);
+        expect(result).toBeDefined();
+        expect(result.confirmed).toBe(true);
 
         done();
       });// eo it

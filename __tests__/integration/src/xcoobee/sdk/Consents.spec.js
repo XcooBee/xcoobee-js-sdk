@@ -126,9 +126,9 @@ describe('Consents', function () {
               const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
               const response = await consentsSdk.confirmDataDelete(consentId);
               expect(response).toBeInstanceOf(SuccessResponse);
-              const { results } = response;
-              expect(results).toBeDefined();
-              expect(typeof results.confirmed).toBe('boolean');
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(typeof result.confirmed).toBe('boolean');
 
               done();
             });// eo it
@@ -153,9 +153,9 @@ describe('Consents', function () {
               const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
               const response = await consentsSdk.confirmDataDelete(consentId, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
-              const { results } = response;
-              expect(results).toBeDefined();
-              expect(typeof results.confirmed).toBe('boolean');
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(typeof result.confirmed).toBe('boolean');
 
               done();
             });// eo it
