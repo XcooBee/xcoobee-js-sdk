@@ -1,12 +1,17 @@
 import ApiUtils from './ApiUtils';
 
 /**
+ * Fetches the campaign information for the given campaign ID.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign ID.
  *
- * @returns {Promise<CampaignInfo>}
+ * @returns {Promise<Object>} - The result.
+ * @property {CampaignInfo} campaign - The campaign information.
+ *
+ * @throws {XcooBeeError}
  */
 export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
@@ -40,6 +45,11 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
+    .then(response => {
+      const { campaign } = response;
+
+      return { campaign };
+    })
     .catch(err => {
       throw ApiUtils.transformError(err);
     });

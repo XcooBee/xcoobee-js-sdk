@@ -24,10 +24,10 @@ describe('CampaignApi', function () {
         it('should return with expected campaign info', async function (done) {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignCursor = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-          const results = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
-          expect(results).toBeDefined();
-          expect(results.campaign).toBeDefined();
-          const { campaign } = results;
+          const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
+          expect(result).toBeDefined();
+          expect(result.campaign).toBeDefined();
+          const { campaign } = result;
           expect(campaign).toBeDefined();
           expect(campaign.campaign_description.text).toBe(undefined);
           expect(campaign.campaign_name).toBe('xcoobee test campaign');

@@ -229,8 +229,8 @@ class System {
 
       let err = null;
       if (pgpPublicKey) {
-        const results = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
-        if (results && results.campaign) {
+        const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
+        if (result && result.campaign) {
           const response = new SuccessResponse({ ponged: true });
           return response;
         }
