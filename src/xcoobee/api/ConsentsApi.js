@@ -77,7 +77,7 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
 }
 
 /**
- * TODO: Complete documentation.
+ * Fetches an existing user's cookie consent information.
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
@@ -85,7 +85,11 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
  * @param {*} userCursor
  * @param {*} campaignId
  *
- * @returns {Promise<Object<ConsentDataType, boolean>>}
+ * @returns {Promise<Object>} - The result.
+ * @property {Object<ConsentDataType, boolean>} cookie_consents - The cookie consent
+ *   information.
+ *
+ * @throws {XcooBeeError}
  */
 export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
@@ -148,8 +152,8 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
         }
       });
 
-      const results = { cookie_consents };
-      return results;
+      const result = { cookie_consents };
+      return result;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

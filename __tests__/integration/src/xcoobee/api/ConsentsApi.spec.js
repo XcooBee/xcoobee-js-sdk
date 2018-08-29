@@ -63,12 +63,12 @@ describe('ConsentsApi', function () {
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
         const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-        const results = await ConsentsApi.getCookieConsent(
+        const result = await ConsentsApi.getCookieConsent(
           apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId
         );
-        expect(results).toBeDefined();
-        expect(results.cookie_consents).toBeDefined();
-        const { cookie_consents } = results;
+        expect(result).toBeDefined();
+        expect(result.cookie_consents).toBeDefined();
+        const { cookie_consents } = result;
         expect(typeof cookie_consents[ConsentDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
         expect(typeof cookie_consents[ConsentDataTypes.APPLICATION_COOKIE]).toBe('boolean');
         expect(typeof cookie_consents[ConsentDataTypes.STATISTICS_COOKIE]).toBe('boolean');
