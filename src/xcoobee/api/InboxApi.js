@@ -42,15 +42,18 @@ export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageI
 /**
  * Fetches an item from the inbox with the specified message ID.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
  * @param {string} messageId - The ID of the inbox item.
  *
- * @returns {Promise<Object>} - The results.
- * @returns {InboxItemDetails} return.inbox_item - The inbox item details.
- * @returns {string} return.inbox_item.download_link - The inbox item download link.
- * @returns {InboxItem} return.inbox_item.info - The inbox item info.
+ * @returns {Promise<Object>} - The result.
+ * @property {InboxItemDetails} inbox_item - The inbox item details.
+ * @property {string} inbox_item.download_link - The inbox item download link.
+ * @property {InboxItem} inbox_item.info - The inbox item info.
+ *
+ * @throws {XcooBeeError}
  */
 export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) {
   const query = `
@@ -88,8 +91,8 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
     .then(response => {
       const { inbox_item } = response;
 
-      const results = { inbox_item };
-      return results;
+      const result = { inbox_item };
+      return result;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

@@ -102,10 +102,10 @@ describe('Inbox', function () {
             const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b'; // FIXME: TODO: Get a legit message ID.
             const response = await inboxSdk.getInboxItem(messageId);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeDefined();
-            expect(results.inbox_item).toBeDefined();
-            const { inbox_item } = results;
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.inbox_item).toBeDefined();
+            const { inbox_item } = result;
             expect(inbox_item.download_link).toMatch('ico-lock-64x64.png');
             expect(inbox_item.info).toBeDefined();
             expect(inbox_item.info.file_tags).toEqual([]);
@@ -135,10 +135,10 @@ describe('Inbox', function () {
             const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b'; // FIXME: TODO: Get a legit message ID.
             const response = await inboxSdk.getInboxItem(messageId, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeDefined();
-            expect(results.inbox_item).toBeDefined();
-            const { inbox_item } = results;
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.inbox_item).toBeDefined();
+            const { inbox_item } = result;
             expect(inbox_item.download_link).toMatch('ico-lock-64x64.png');
             expect(inbox_item.info).toBeDefined();
             expect(inbox_item.info.file_tags).toEqual([]);
