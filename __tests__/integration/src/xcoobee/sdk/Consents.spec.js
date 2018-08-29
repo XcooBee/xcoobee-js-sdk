@@ -319,8 +319,9 @@ describe('Consents', function () {
               const response = await consentsSdk.getConsentData(consentId);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consent = response.results;
-              expect(consent).toBeDefined();
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(result.consent).toBeDefined();
               // TODO: Add more expectations.
               done();
             });// eo it
@@ -346,8 +347,9 @@ describe('Consents', function () {
               const response = await consentsSdk.getConsentData(consentId, overridingConfig);
               expect(response).toBeDefined();
               expect(response).toBeInstanceOf(SuccessResponse);
-              const consent = response.results;
-              expect(consent).toBeDefined();
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(result.consent).toBeDefined();
               // TODO: Add more expectations.
               done();
             });// eo it

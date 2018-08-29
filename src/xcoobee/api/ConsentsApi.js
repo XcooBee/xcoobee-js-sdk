@@ -157,13 +157,17 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
 }
 
 /**
- * TODO: Complete documentation.
+ * Fetches the consent data with the specified ID.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} consentCursor
  *
- * @returns {Promise<Consent>}
+ * @returns {Promise<Object>} - The result.
+ * @property {Consent} consent - The consent data.
+ *
+ * @throws {XcooBeeError}
  */
 export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
   // TODO: Decide what data should be returned.
@@ -218,7 +222,7 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
     .then(response => {
       const { consent } = response;
 
-      return consent;
+      return { consent };
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

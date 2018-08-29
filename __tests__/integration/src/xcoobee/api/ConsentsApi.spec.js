@@ -88,7 +88,9 @@ describe('ConsentsApi', function () {
       it('should fetch and return with consent info', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
-        const consent = await ConsentsApi.getConsentData(apiUrlRoot, apiAccessToken, consentCursor);
+        const result = await ConsentsApi.getConsentData(apiUrlRoot, apiAccessToken, consentCursor);
+        expect(result).toBeDefined();
+        const { consent } = result;
         expect(consent).toBeDefined();
         // expect('consent_description' in consent).toBe(true);
         // expect('consent_details' in consent).toBe(true);
