@@ -44,8 +44,8 @@ describe('Consents', function () {
               const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
               const response = await consentsSdk.confirmConsentChange(consentId);
               expect(response).toBeInstanceOf(SuccessResponse);
-              const { results } = response;
-              expect(results).toBeDefined();
+              const { result } = response;
+              expect(result).toBeDefined();
               expect(typeof results.confirmed).toBe('boolean');
 
               done();
@@ -71,9 +71,9 @@ describe('Consents', function () {
               const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
               const response = await consentsSdk.confirmConsentChange(consentId, overridingConfig);
               expect(response).toBeInstanceOf(SuccessResponse);
-              const { results } = response;
-              expect(results).toBeDefined();
-              expect(typeof results.confirmed).toBe('boolean');
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(typeof result.confirmed).toBe('boolean');
 
               done();
             });// eo it

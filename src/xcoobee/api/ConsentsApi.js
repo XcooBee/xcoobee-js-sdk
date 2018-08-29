@@ -6,13 +6,17 @@ import ConsentStatuses from './ConsentStatuses';
 import ConsentTypes from './ConsentTypes';
 
 /**
- * TODO: Complete documentation.
+ * Allows as company to confirm consent data modification.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} consentCursor
  *
- * @returns {Promise<boolean>}
+ * @returns {Promise<Object>} - The result.
+ * @property {boolean} confirmed - Flag indicating whether the change is confirmed.
+ *
+ * @throws {XcooBeeError}
  */
 export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) {
   const mutation = `
@@ -29,7 +33,7 @@ export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) 
       const { confirm_consent_change } = response;
 
       const confirmed = confirm_consent_change.consent_cursor === consentCursor;
-      return confirmed;
+      return { confirmed };
     })
     .catch(err => {
       throw ApiUtils.transformError(err);

@@ -24,7 +24,9 @@ describe('ConsentsApi', function () {
       it('should return flag indicating if the consent change has been confirmed', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
-        const confirmed = await ConsentsApi.confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor);
+        const result = await ConsentsApi.confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor);
+        expect(result).toBeDefined();
+        const { confirmed } = result;
         expect(confirmed).toBe(true);
 
         done();
