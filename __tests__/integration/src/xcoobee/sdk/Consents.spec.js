@@ -769,9 +769,9 @@ describe('Consents', function () {
             const referenceId = 'asdfasdf';
             const response = await consentsSdk.requestConsent(xcoobeeId, referenceId, campaignId);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeDefined();
-            expect(results.ref_id).toBe(referenceId);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.ref_id).toBe(referenceId);
 
             done();
           });// eo it
@@ -798,9 +798,9 @@ describe('Consents', function () {
             const referenceId = 'asdfasdf';
             const response = await consentsSdk.requestConsent(xcoobeeId, referenceId, campaignId, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeDefined();
-            expect(results.ref_id).toBe(referenceId);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.ref_id).toBe(referenceId);
 
             done();
           });// eo it
@@ -823,7 +823,6 @@ describe('Consents', function () {
           const campaignId = 'does not matter';
           const referenceId = 'does not matter';
           const response = await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
-          expect(response).toBeDefined();
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
           expect(response.error.message).toBe('Unable to get an API access token.');

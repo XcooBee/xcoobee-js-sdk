@@ -202,11 +202,11 @@ describe('ConsentsApi', function () {
         const xcoobeeId = '~SDKTester_Developer';
         const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
         const referenceId = 'asdfasdf';
-        const results = await ConsentsApi.requestConsent(
+        const result = await ConsentsApi.requestConsent(
           apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId
         );
-        expect(results).toBeDefined();
-        expect(results.ref_id).toBe(referenceId);
+        expect(result).toBeDefined();
+        expect(result.ref_id).toBe(referenceId);
 
         done();
       });// eo it

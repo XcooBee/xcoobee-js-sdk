@@ -322,17 +322,19 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
 }
 
 /**
- * TODO: Complete documentation.
+ * Requests consent from the specified user.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {*} xcoobeeId
+ * @param {*} xcoobeeId - The XcooBee ID from which consent is being requested.
  * @param {*} campaignId
  * @param {*} referenceId
  *
- * @returns {Promise<Object>}
- * @returns {Object} return.results
- * @returns {string} return.results.ref_id
+ * @returns {Promise<Object>} - The result.
+ * @property {string} ref_id
+ *
+ * @throws {XcooBeeError}
  */
 export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId) {
   const mutation = `
@@ -352,8 +354,8 @@ export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId
     .then(response => {
       const { send_consent_request } = response;
 
-      const results = { ref_id: send_consent_request.ref_id };
-      return results;
+      const result = { ref_id: send_consent_request.ref_id };
+      return result;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
