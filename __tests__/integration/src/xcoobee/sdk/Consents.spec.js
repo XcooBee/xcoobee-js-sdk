@@ -46,7 +46,7 @@ describe('Consents', function () {
               expect(response).toBeInstanceOf(SuccessResponse);
               const { result } = response;
               expect(result).toBeDefined();
-              expect(typeof results.confirmed).toBe('boolean');
+              expect(typeof result.confirmed).toBe('boolean');
 
               done();
             });// eo it
@@ -854,16 +854,14 @@ describe('Consents', function () {
             const files = [file];
             const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeDefined();
-            expect(results.errors).toBeInstanceOf(Array);
-            expect(results.errors.length).toBe(0);
-            expect(results.progress).toBeInstanceOf(Array);
-            expect(results.progress.length).toBe(3);
-            expect(results.progress[0]).toBe('successfully sent message');
-            expect(results.progress[1]).toMatch(/successfully uploaded .*test\.txt/);
-            expect(results.progress[2]).toBe('successfully sent successfully uploaded files to destination');
-            expect(results.ref_id).toBeDefined();
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.progress).toBeInstanceOf(Array);
+            expect(result.progress.length).toBe(3);
+            expect(result.progress[0]).toBe('successfully sent message');
+            expect(result.progress[1]).toMatch(/successfully uploaded .*test\.txt/);
+            expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(result.ref_id).toBeDefined();
 
             done();
           });// eo it
@@ -892,16 +890,14 @@ describe('Consents', function () {
             const files = [file];
             const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeDefined();
-            expect(results.errors).toBeInstanceOf(Array);
-            expect(results.errors.length).toBe(0);
-            expect(results.progress).toBeInstanceOf(Array);
-            expect(results.progress.length).toBe(3);
-            expect(results.progress[0]).toBe('successfully sent message');
-            expect(results.progress[1]).toMatch(/successfully uploaded .*info\.dat/);
-            expect(results.progress[2]).toBe('successfully sent successfully uploaded files to destination');
-            expect(results.ref_id).toBeDefined();
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.progress).toBeInstanceOf(Array);
+            expect(result.progress.length).toBe(3);
+            expect(result.progress[0]).toBe('successfully sent message');
+            expect(result.progress[1]).toMatch(/successfully uploaded .*info\.dat/);
+            expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(result.ref_id).toBeDefined();
 
             done();
           });// eo it

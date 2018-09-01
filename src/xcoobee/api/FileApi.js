@@ -22,7 +22,8 @@ import ApiUtils from './ApiUtils';
  * @param {String} policy.upload_url
  *
  * @returns {Promise<IncomingMessage>}
- * @throws XcooBeeError
+ *
+ * @throws {XcooBeeError}
  */
 export function upload_file(file, policy) {
   const url = policy.upload_url;

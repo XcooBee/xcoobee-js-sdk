@@ -16,7 +16,7 @@ import Config from './Config';
  *
  * @return {Promise<Config>}
  *
- * @throws XcooBeeError
+ * @throws {XcooBeeError}
  */
 export function createConfigFromFile(xcoobPath) {
   // Home Environment Variable:
