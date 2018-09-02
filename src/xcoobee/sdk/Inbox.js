@@ -2,6 +2,7 @@ import InboxApi from '../../xcoobee/api/InboxApi';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
+import PagingResponse from './PagingResponse';
 import SuccessResponse from './SuccessResponse';
 
 /**
@@ -108,7 +109,7 @@ class Inbox {
    * @param {string} [startMessageId]
    * @param {Config} [config]
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>} - The response.
+   * @returns {Promise<PagingResponse|ErrorResponse, undefined>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -126,12 +127,19 @@ class Inbox {
   async listInbox(startMessageId, config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first } = params;
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const inboxPage = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, after, first);
+      return inboxPage;
+    };
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const result = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, startMessageId);
-      const response = new SuccessResponse(result);
+      const params = {};
+      const firstPage = await fetchPage(apiCfg, { ...params, after: null, first: null });
+      const response = new PagingResponse(fetchPage, firstPage, apiCfg, params);
       return response;
     } catch (err) {
       return new ErrorResponse(400, err);

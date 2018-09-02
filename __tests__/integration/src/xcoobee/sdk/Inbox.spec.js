@@ -4,6 +4,7 @@ import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 import Config from '../../../../../src/xcoobee/sdk/Config';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
 import Inbox from '../../../../../src/xcoobee/sdk/Inbox';
+import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 
 import { assertIso8601Like } from '../../../../lib/Utils';
@@ -190,12 +191,12 @@ describe('Inbox', function () {
 
             const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await inboxSdk.listInbox();
-            expect(response).toBeInstanceOf(SuccessResponse);
+            expect(response).toBeInstanceOf(PagingResponse);
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.data).toBeInstanceOf(Array);
             const inboxItems = result.data;
-            expect(inboxItems.length).toBe(1);
+            expect(inboxItems.length).toBeGreaterThan(0);
             const inboxItem = inboxItems[0];
             expect(inboxItem.fileName).toBe('ico-lock-64x64.png');
             expect(inboxItem.messageId).toBe('ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b');
@@ -208,6 +209,11 @@ describe('Inbox', function () {
             assertIso8601Like(inboxItem.receiptDate);
             assertIso8601Like(inboxItem.downloadDate);
             assertIso8601Like(inboxItem.expirationDate);
+
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
+
             done();
           });// eo it
 
@@ -229,12 +235,12 @@ describe('Inbox', function () {
 
             const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await inboxSdk.listInbox(null, overridingConfig);
-            expect(response).toBeInstanceOf(SuccessResponse);
+            expect(response).toBeInstanceOf(PagingResponse);
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.data).toBeInstanceOf(Array);
             const inboxItems = result.data;
-            expect(inboxItems.length).toBe(1);
+            expect(inboxItems.length).toBeGreaterThan(0);
             const inboxItem = inboxItems[0];
             expect(inboxItem.fileName).toBe('ico-lock-64x64.png');
             expect(inboxItem.messageId).toBe('ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b');
@@ -247,6 +253,11 @@ describe('Inbox', function () {
             assertIso8601Like(inboxItem.receiptDate);
             assertIso8601Like(inboxItem.downloadDate);
             assertIso8601Like(inboxItem.expirationDate);
+
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
+
             done();
           });// eo it
 
