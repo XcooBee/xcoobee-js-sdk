@@ -241,6 +241,8 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} userCursor
  * @param {ConsentStatus} status
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>} - A page of the inbox.
  * @property {Consent[]} data - Consents for this page.
@@ -251,7 +253,7 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
  *
  * @throws {XcooBeeError}
  */
-export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
+export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status, after = null, first = null) {
   if (typeof status === 'string') {
     if (!ConsentStatuses.values.includes(status)) {
       throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
@@ -291,8 +293,8 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
   // - user_display_name
   // - valid_length
   const query = `
-    query listConsents($userCursor: String!, $status: ConsentStatus) {
-      consents(campaign_owner_cursor: $userCursor, status : $status) {
+    query listConsents($userCursor: String!, $status: ConsentStatus, $after: String, $first: Int) {
+      consents(campaign_owner_cursor: $userCursor, status : $status, after: $after, first: $first) {
         data {
           consent_cursor,
           consent_status,
@@ -308,6 +310,8 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status) {
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    after,
+    first,
     status,
     userCursor,
   })

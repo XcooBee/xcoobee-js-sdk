@@ -7,6 +7,8 @@ import ApiUtils from './ApiUtils';
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} [searchText=''] - The search text.
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>} - A page of bees.
  * @property {Bee[]} data - Bees for this page.
@@ -17,10 +19,10 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function bees(apiUrlRoot, apiAccessToken, searchText) {
+export function bees(apiUrlRoot, apiAccessToken, searchText, after = null, first = null) {
   const query = `
-    query getBees($searchText: String) {
-      bees(search: $searchText) {
+    query getBees($searchText: String, $after: String, $first: Int) {
+      bees(search: $searchText, after: $after, first: $first) {
         data {
           bee_icon
           bee_system_name
@@ -46,6 +48,8 @@ export function bees(apiUrlRoot, apiAccessToken, searchText) {
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    after,
+    first,
     searchText,
   })
     .then(response => {

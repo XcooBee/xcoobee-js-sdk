@@ -31,8 +31,8 @@ class Users {
    * Fetches a page of conversations with the given target cursor.
    *
    * @param {string} targetCursor
-   * @param {number} [first]
    * @param {string} [after]
+   * @param {number} [first]
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
@@ -50,7 +50,7 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async getConversation(targetCursor, first, after, config) {
+  async getConversation(targetCursor, after, first, config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -58,7 +58,7 @@ class Users {
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const conversationsPage = await ConversationsApi.getConversation(
-        apiUrlRoot, apiAccessToken, targetCursor, first, after
+        apiUrlRoot, apiAccessToken, targetCursor, after, first
       );
       const response = new SuccessResponse(conversationsPage);
       return response;
@@ -70,8 +70,8 @@ class Users {
   /**
    * Fetches a page of the user's conversations.
    *
-   * @param {number} [first]
    * @param {string} [after]
+   * @param {number} [first]
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
@@ -89,7 +89,7 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async getConversations(first, after, config) {
+  async getConversations(after, first, config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -99,7 +99,7 @@ class Users {
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
       const conversationsPage = await ConversationsApi.getConversations(
-        apiUrlRoot, apiAccessToken, userCursor, first, after
+        apiUrlRoot, apiAccessToken, userCursor, after, first
       );
       const response = new SuccessResponse(conversationsPage);
       return response;

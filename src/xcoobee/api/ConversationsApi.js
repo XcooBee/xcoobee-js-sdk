@@ -7,8 +7,8 @@ import NoteTypes from './NoteTypes';
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} targetCursor
- * @param {number} [first]
- * @param {string} [after]
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>}
  * @property {Note[]} data - A page of conversations (aka notes).
@@ -19,10 +19,10 @@ import NoteTypes from './NoteTypes';
  *
  * @throws {XcooBeeError}
  */
-export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first = null, after = null) {
+export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, after = null, first = null) {
   const query = `
-    query getConversation($targetCursor: String!, $first: Int, $after: String) {
-      conversation(target_cursor: $targetCursor, first: $first, after: $after) {
+    query getConversation($targetCursor: String!, $after: String, $first: Int) {
+      conversation(target_cursor: $targetCursor, after: $after, first: $first) {
         data {
           breach_cursor
           consent_cursor
@@ -66,8 +66,8 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor
- * @param {number} [first]
- * @param {string} [after]
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>}
  * @property {Note[]} data - A page of conversations (aka notes).
@@ -78,10 +78,10 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, first 
  *
  * @throws {XcooBeeError}
  */
-export function getConversations(apiUrlRoot, apiAccessToken, userCursor, first = null, after = null) {
+export function getConversations(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
   const query = `
-    query getConversations($userCursor: String!, $first: Int, $after: String) {
-      conversations(user_cursor: $userCursor, first: $first, after: $after) {
+    query getConversations($userCursor: String!, $after: String, $first: Int) {
+      conversations(user_cursor: $userCursor, after: $after, first: $first) {
         data {
           date_c
           display_name

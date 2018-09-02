@@ -5,6 +5,8 @@ import ApiUtils from './ApiUtils';
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>}
  * @property {Event[]} data - A page of events.
@@ -15,10 +17,10 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
+export function getEvents(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
   const query = `
-    query getEvents($userId: String!) {
-      events(user_cursor: $userId) {
+    query getEvents($userCursor: String!, $after: String, $first: Int) {
+      events(user_cursor: $userCursor, after: $after, first: $first) {
         data {
           date_c
           event_id
@@ -37,7 +39,9 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor) {
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
-    userId: userCursor,
+    after,
+    first,
+    userCursor,
   })
     .then(response => {
       const { events } = response;

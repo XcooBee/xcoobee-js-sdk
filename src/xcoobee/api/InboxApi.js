@@ -105,7 +105,8 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {string} [startId] The starting message ID.
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>} - A page of the inbox.
  * @property {InboxItem[]} data - Inbox items for this page.
@@ -116,10 +117,10 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
  *
  * @throws {XcooBeeError}
  */
-export function listInbox(apiUrlRoot, apiAccessToken, startId) {
+export function listInbox(apiUrlRoot, apiAccessToken, after = null, first = null) {
   const query = `
-    query listInbox($startId: String) {
-      inbox(after: $startId) {
+    query listInbox($after: String, $first: Int) {
+      inbox(after: $after, first: $first) {
         data {
           date
           downloaded
@@ -141,7 +142,8 @@ export function listInbox(apiUrlRoot, apiAccessToken, startId) {
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
-    startId,
+    after,
+    first,
   })
     .then(response => {
       const { inbox } = response;

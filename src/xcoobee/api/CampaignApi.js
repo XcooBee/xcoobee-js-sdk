@@ -62,6 +62,8 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} userCursor
+ * @param {string} [after] - Fetch data after this cursor.
+ * @param {number} [first] - The maximum count to fetch.
  *
  * @returns {Promise<Object>} - A page of campaigns.
  * @property {Campaign[]} data - Campaigns for this page.
@@ -72,7 +74,7 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
  *
  * @throws {XcooBeeError}
  */
-export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
+export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
   /*
   Available Campaign Data:
     campaign_cursor
@@ -120,8 +122,8 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
     }
   */
   const query = `
-    query getCampaigns($userCursor: String!) {
-      campaigns(user_cursor: $userCursor) {
+    query getCampaigns($userCursor: String!, $after: String, $first: Int) {
+      campaigns(user_cursor: $userCursor, after: $after, first: $first) {
         data {
           campaign_cursor
           campaign_name
@@ -135,6 +137,8 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor) {
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    after,
+    first,
     userCursor,
   })
     .then(response => {

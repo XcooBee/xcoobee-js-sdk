@@ -27,7 +27,14 @@ describe('EndPointApi', function () {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
-          const endPoints = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
+          const result = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
+          expect(result).toBeDefined();
+          const { data, page_info } = result;
+          expect(page_info).toBe(null);
+          // expect(page_info.end_cursor).toBeDefined();
+          // expect(page_info.has_next_page).toBe(false);
+          expect(data).toBeDefined();
+          const endPoints = data;
           expect(endPoints).toBeInstanceOf(Array);
           // Not yet sure if this will always be the case, but it is right now.
           expect(endPoints.length).toBe(1);
