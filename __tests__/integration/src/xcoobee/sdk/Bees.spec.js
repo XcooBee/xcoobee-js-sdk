@@ -175,14 +175,15 @@ describe('Bees', function () {
             const options = {
               process: {
                 fileNames: [],
+                userReference: 'asdf',
               },
             };
             const response = await beesSdk.takeOff(bees, options);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const refId = response.results;
-            expect(refId).toBeDefined();
-
-            // TODO: Test with a variety of arguments.
+            const { result } = response;
+            expect(result).toBeDefined();
+            const { ref_id } = result;
+            expect(ref_id).toBeDefined();
 
             done();
           });// eo it
