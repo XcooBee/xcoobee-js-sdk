@@ -207,7 +207,7 @@ describe('Bees', function () {
               apiUrlRoot,
             });
 
-            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt');
+            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'bees-upload-files-test.txt');
             const files = [file];
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.uploadFiles(files);

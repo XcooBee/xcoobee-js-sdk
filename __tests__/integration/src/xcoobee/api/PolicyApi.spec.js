@@ -47,7 +47,7 @@ describe('PolicyApi', function () {
           const intent = endPointName;
 
           const files = [
-            Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt'),
+            Path.resolve(__dirname, '..', '..', '..', 'assets', 'upload-policy-test.txt'),
           ];
           const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor, files);
           expect(policies).toBeInstanceOf(Array);

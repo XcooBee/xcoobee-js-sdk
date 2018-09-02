@@ -38,7 +38,7 @@ describe('FileApi', function () {
         assertIsCursorLike(endPoint.cursor);
 
         const files = [
-          Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt'),
+          Path.resolve(__dirname, '..', '..', '..', 'assets', 'upload-file-test.txt'),
         ];
         const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files)
         expect(policies).toBeInstanceOf(Array);

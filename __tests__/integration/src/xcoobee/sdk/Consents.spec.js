@@ -850,7 +850,7 @@ describe('Consents', function () {
             const message = 'Here are the files you requested.';
             const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
             const referenceId = 'someUniqueReferenceId';
-            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'test.txt');
+            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.txt');
             const files = [file];
             const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
             expect(response).toBeInstanceOf(SuccessResponse);
@@ -859,7 +859,7 @@ describe('Consents', function () {
             expect(result.progress).toBeInstanceOf(Array);
             expect(result.progress.length).toBe(3);
             expect(result.progress[0]).toBe('successfully sent message');
-            expect(result.progress[1]).toMatch(/successfully uploaded .*test\.txt/);
+            expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.txt/);
             expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
             expect(result.ref_id).toBeDefined();
 
@@ -886,7 +886,7 @@ describe('Consents', function () {
             const message = 'Here are the files you requested.';
             const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
             const referenceId = 'someUniqueReferenceId';
-            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'info.dat');
+            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.dat');
             const files = [file];
             const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
@@ -895,7 +895,7 @@ describe('Consents', function () {
             expect(result.progress).toBeInstanceOf(Array);
             expect(result.progress.length).toBe(3);
             expect(result.progress[0]).toBe('successfully sent message');
-            expect(result.progress[1]).toMatch(/successfully uploaded .*info\.dat/);
+            expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.dat/);
             expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
             expect(result.ref_id).toBeDefined();
 
