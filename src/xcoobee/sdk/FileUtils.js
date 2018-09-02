@@ -52,7 +52,7 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
     resolve(fileUploadResults);
   });
 
-  const results = policyFilePairs.map((pair, idx) => {
+  const result = policyFilePairs.map((pair, idx) => {
     const { file } = pair;
     const fileUploadResult = fileUploadResults[idx];
     if (fileUploadResult instanceof Error) {
@@ -61,7 +61,7 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
     return { success: true, file };
   });
 
-  return results;
+  return result;
 }
 
 export default {
