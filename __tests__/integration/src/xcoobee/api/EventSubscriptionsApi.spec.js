@@ -301,6 +301,7 @@ describe('EventSubscriptionsApi', function () {
             apiUrlRoot, apiAccessToken, campaignId
           );
           expect(eventSubscriptionsPage).toBeDefined();
+          expect(eventSubscriptionsPage.page_info).toBeDefined();
           expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
           expect(eventSubscriptionsPage.data.length).toBe(2);
           let eventSubscription = eventSubscriptionsPage.data[0];
@@ -315,7 +316,6 @@ describe('EventSubscriptionsApi', function () {
             expect(true).toBe(false);
           }
           assertIsCursorLike(eventSubscription.owner_cursor);
-          expect(eventSubscriptionsPage.page_info).toBe(null);
 
           eventSubscription = eventSubscriptionsPage.data[1];
           expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
@@ -329,7 +329,6 @@ describe('EventSubscriptionsApi', function () {
             expect(true).toBe(false);
           }
           assertIsCursorLike(eventSubscription.owner_cursor);
-          expect(eventSubscriptionsPage.page_info).toBe(null);
 
           done();
         });// eo it

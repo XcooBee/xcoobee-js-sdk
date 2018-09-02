@@ -175,6 +175,10 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
     .then(response => {
       const { event_subscriptions } = response;
 
+      // TODO: Remove the following once `event_subscriptions` returns a valid `page_info`
+      // property or no longer does cursor-based pagination.
+      event_subscriptions.page_info = event_subscriptions.page_info || { end_cursor: null, has_next_page: false };
+
       return event_subscriptions;
     })
     .catch(err => {

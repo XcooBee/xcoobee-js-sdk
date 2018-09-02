@@ -256,19 +256,20 @@ class Consents {
    */
   async listCampaigns(config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
-    try {
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const result = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
-      const response = new SuccessResponse(result);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+      const campaignsPage = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after, first);
+      return campaignsPage;
+    };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = {};
+
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**
@@ -296,19 +297,20 @@ class Consents {
    */
   async listConsents(status, config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
-    try {
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first, status } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const result = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status);
-      const response = new SuccessResponse(result);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+      const consentsPage = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status, after, first);
+      return consentsPage;
+    };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = { status };
+
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**

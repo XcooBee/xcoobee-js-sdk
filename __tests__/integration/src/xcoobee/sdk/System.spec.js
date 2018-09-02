@@ -5,6 +5,7 @@ import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
 
 import Config from '../../../../../src/xcoobee/sdk/Config';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
+import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import System from '../../../../../src/xcoobee/sdk/System';
 
@@ -854,14 +855,18 @@ describe('System', function () {
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await systemSdk.getEvents();
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const eventsPage = response.results;
-            expect(eventsPage).toBeDefined();
-            expect(eventsPage.data).toBeInstanceOf(Array);
-            expect(eventsPage.data.length).toBe(0);
-            expect(eventsPage.page_info).toBeDefined();
-            expect(eventsPage.page_info.end_cursor).toBe(null);
-            expect(eventsPage.page_info.has_next_page).toBe(null);
+            expect(response).toBeInstanceOf(PagingResponse);
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe(null);
+            expect(result.page_info.has_next_page).toBe(null);
+            const events = result.data;
+            expect(events).toBeInstanceOf(Array);
+            expect(events.length).toBe(0);
 
             done();
           });// eo it
@@ -884,14 +889,18 @@ describe('System', function () {
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await systemSdk.getEvents(overridingConfig);
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const eventsPage = response.results;
-            expect(eventsPage).toBeDefined();
-            expect(eventsPage.data).toBeInstanceOf(Array);
-            expect(eventsPage.data.length).toBe(0);
-            expect(eventsPage.page_info).toBeDefined();
-            expect(eventsPage.page_info.end_cursor).toBe(null);
-            expect(eventsPage.page_info.has_next_page).toBe(null);
+            expect(response).toBeInstanceOf(PagingResponse);
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe(null);
+            expect(result.page_info.has_next_page).toBe(null);
+            const events = result.data;
+            expect(events).toBeInstanceOf(Array);
+            expect(events.length).toBe(0);
 
             done();
           });// eo it
@@ -954,12 +963,19 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions();
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const eventSubscriptionsPage = response.result;
-              expect(eventSubscriptionsPage).toBeDefined();
-              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
-              expect(eventSubscriptionsPage.data.length).toBe(2);
-              let eventSubscription = eventSubscriptionsPage.data[0];
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(result.page_info).toBeDefined();
+              expect(result.page_info.end_cursor).toBe(null);
+              expect(result.page_info.has_next_page).toBe(false);
+              const eventSubscriptions = result.data;
+              expect(eventSubscriptions).toBeInstanceOf(Array);
+              expect(eventSubscriptions.length).toBe(2);
+              let eventSubscription = eventSubscriptions[0];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -971,9 +987,8 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
-              eventSubscription = eventSubscriptionsPage.data[1];
+              eventSubscription = eventSubscriptions[1];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -985,7 +1000,6 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
               done();
             });// eo it
@@ -1005,12 +1019,19 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               let response = await systemSdk.listEventSubscriptions(campaignId);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const eventSubscriptionsPage = response.result;
-              expect(eventSubscriptionsPage).toBeDefined();
-              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
-              expect(eventSubscriptionsPage.data.length).toBe(2);
-              let eventSubscription = eventSubscriptionsPage.data[0];
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(result.page_info).toBeDefined();
+              expect(result.page_info.end_cursor).toBe(null);
+              expect(result.page_info.has_next_page).toBe(false);
+              const eventSubscriptions = result.data;
+              expect(eventSubscriptions).toBeInstanceOf(Array);
+              expect(eventSubscriptions.length).toBe(2);
+              let eventSubscription = eventSubscriptions[0];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -1022,9 +1043,8 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
-              eventSubscription = eventSubscriptionsPage.data[1];
+              eventSubscription = eventSubscriptions[1];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -1036,7 +1056,7 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
+
               done();
             });// eo it
 
@@ -1060,12 +1080,19 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const eventSubscriptionsPage = response.result;
-              expect(eventSubscriptionsPage).toBeDefined();
-              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
-              expect(eventSubscriptionsPage.data.length).toBe(2);
-              let eventSubscription = eventSubscriptionsPage.data[0];
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(result.page_info).toBeDefined();
+              expect(result.page_info.end_cursor).toBe(null);
+              expect(result.page_info.has_next_page).toBe(false);
+              const eventSubscriptions = result.data;
+              expect(eventSubscriptions).toBeInstanceOf(Array);
+              expect(eventSubscriptions.length).toBe(2);
+              let eventSubscription = eventSubscriptions[0];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -1077,9 +1104,8 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
-              eventSubscription = eventSubscriptionsPage.data[1];
+              eventSubscription = eventSubscriptions[1];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -1091,7 +1117,6 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
               done();
             });// eo it
@@ -1117,12 +1142,19 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const eventSubscriptionsPage = response.result;
-              expect(eventSubscriptionsPage).toBeDefined();
-              expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
-              expect(eventSubscriptionsPage.data.length).toBe(2);
-              let eventSubscription = eventSubscriptionsPage.data[0];
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
+              const { result } = response;
+              expect(result).toBeDefined();
+              expect(result.page_info).toBeDefined();
+              expect(result.page_info.end_cursor).toBe(null);
+              expect(result.page_info.has_next_page).toBe(false);
+              const eventSubscriptions = result.data;
+              expect(eventSubscriptions).toBeInstanceOf(Array);
+              expect(eventSubscriptions.length).toBe(2);
+              let eventSubscription = eventSubscriptions[0];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -1134,9 +1166,8 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
-              eventSubscription = eventSubscriptionsPage.data[1];
+              eventSubscription = eventSubscriptions[1];
               expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
@@ -1148,7 +1179,6 @@ describe('System', function () {
                 expect(true).toBe(false);
               }
               assertIsCursorLike(eventSubscription.owner_cursor);
-              expect(eventSubscriptionsPage.page_info).toBe(null);
 
               done();
             });// eo it

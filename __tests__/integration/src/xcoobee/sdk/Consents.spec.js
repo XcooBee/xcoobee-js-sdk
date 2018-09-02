@@ -8,6 +8,7 @@ import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 import Config from '../../../../../src/xcoobee/sdk/Config';
 import Consents from '../../../../../src/xcoobee/sdk/Consents';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
+import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 
 import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
@@ -489,10 +490,15 @@ describe('Consents', function () {
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await consentsSdk.listCampaigns();
-            expect(response).toBeDefined();
-            expect(response).toBeInstanceOf(SuccessResponse);
+            expect(response).toBeInstanceOf(PagingResponse);
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
             const { result } = response;
             expect(result).toBeDefined();
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            expect(result.page_info.has_next_page).toBeNull();
             const campaigns = result.data;
             expect(campaigns).toBeInstanceOf(Array);
             expect(campaigns.length).toBe(1);
@@ -523,10 +529,15 @@ describe('Consents', function () {
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await consentsSdk.listCampaigns(overridingConfig);
-            expect(response).toBeDefined();
-            expect(response).toBeInstanceOf(SuccessResponse);
+            expect(response).toBeInstanceOf(PagingResponse);
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
             const { result } = response;
             expect(result).toBeDefined();
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            expect(result.page_info.has_next_page).toBeNull();
             const campaigns = result.data;
             expect(campaigns).toBeInstanceOf(Array);
             expect(campaigns.length).toBe(1);
@@ -558,6 +569,7 @@ describe('Consents', function () {
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
           expect(response.error.message).toBe('Unable to get an API access token.');
+
           done();
         });// eo it
 
@@ -582,7 +594,10 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents();
-              expect(response).toBeInstanceOf(SuccessResponse);
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
@@ -622,7 +637,10 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents(null, overridingConfig);
-              expect(response).toBeInstanceOf(SuccessResponse);
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
@@ -661,7 +679,10 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE);
-              expect(response).toBeInstanceOf(SuccessResponse);
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
@@ -679,6 +700,7 @@ describe('Consents', function () {
               // expect('date_e' in consent).toBe(true);
               // assertIso8601Like(consent.date_e)
               // expect('user_xcoobee_id' in consent).toBe(true);
+
               done();
             });// eo it
 
@@ -700,7 +722,10 @@ describe('Consents', function () {
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, overridingConfig);
-              expect(response).toBeInstanceOf(SuccessResponse);
+              expect(response).toBeInstanceOf(PagingResponse);
+              expect(response.hasNextPage()).toBe(false);
+              const nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBe(null);
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
@@ -718,6 +743,7 @@ describe('Consents', function () {
               // expect('date_e' in consent).toBe(true);
               // assertIso8601Like(consent.date_e)
               // expect('user_xcoobee_id' in consent).toBe(true);
+
               done();
             });// eo it
 
@@ -743,6 +769,7 @@ describe('Consents', function () {
           expect(response).toBeInstanceOf(ErrorResponse);
           expect(response.code).toBe(400);
           expect(response.error.message).toBe('Unable to get an API access token.');
+
           done();
         });// eo it
 

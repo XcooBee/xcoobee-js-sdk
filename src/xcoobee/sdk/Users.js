@@ -52,19 +52,20 @@ class Users {
    */
   async getConversation(targetCursor, after, first, config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
-    try {
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first, targetCursor } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const conversationsPage = await ConversationsApi.getConversation(
         apiUrlRoot, apiAccessToken, targetCursor, after, first
       );
-      const response = new SuccessResponse(conversationsPage);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+      return conversationsPage;
+    };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = { targetCursor };
+
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**
@@ -91,21 +92,22 @@ class Users {
    */
   async getConversations(after, first, config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
-    try {
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
       const conversationsPage = await ConversationsApi.getConversations(
         apiUrlRoot, apiAccessToken, userCursor, after, first
       );
-      const response = new SuccessResponse(conversationsPage);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+      return conversationsPage;
+    };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = {};
+
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**

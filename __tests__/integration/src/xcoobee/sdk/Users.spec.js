@@ -3,6 +3,7 @@ import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 
 import Config from '../../../../../src/xcoobee/sdk/Config';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
+import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 import Users from '../../../../../src/xcoobee/sdk/Users';
 
@@ -37,12 +38,19 @@ describe('Users', function () {
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const targetCursor = 'CTZamTgKRkN8LMb/AtKR8d72P4v/k5bkI7ynikFlf1QFL0ybh8ZvKR6MAb4KJDIL1v6aAA==';
             const response = await usersSdk.getConversation(targetCursor);
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const conversationsPage = response.result;
-            expect(conversationsPage).toBeDefined();
-            expect(conversationsPage.data).toBeInstanceOf(Array);
-            expect(conversationsPage.data.length).toBeGreaterThan(1);
-            let conversation = conversationsPage.data[0];
+            expect(response).toBeInstanceOf(PagingResponse);
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRtNXlAtGpmWLzjfZ0wep2MoZ1UKSpSOigCASNIf3iMOlj+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            expect(result.page_info.has_next_page).toBeNull();
+            const conversations = result.data;
+            expect(conversations).toBeInstanceOf(Array);
+            expect(conversations.length).toBeGreaterThan(0);
+            let conversation = conversations[0];
             expect('breach_cursor' in conversation).toBe(true);
             assertIsCursorLike(conversation.breach_cursor, true);
             expect('consent_cursor' in conversation).toBe(true);
@@ -85,12 +93,19 @@ describe('Users', function () {
 
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await usersSdk.getConversations();
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const conversationsPage = response.result;
-            expect(conversationsPage).toBeDefined();
-            expect(conversationsPage.data).toBeInstanceOf(Array);
-            expect(conversationsPage.data.length).toBe(1);
-            let conversation = conversationsPage.data[0];
+            expect(response).toBeInstanceOf(PagingResponse);
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.page_info).toBeDefined();
+            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRtNXlAtGpmWLzjfZ0wep2MoZ1UKSpSOigCASNIf3iMOk7+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            expect(result.page_info.has_next_page).toBeNull();
+            const conversations = result.data;
+            expect(conversations).toBeInstanceOf(Array);
+            expect(conversations.length).toBe(1);
+            let conversation = conversations[0];
             expect('date_c' in conversation).toBe(true);
             assertIso8601Like(conversation.date_c)
             expect(conversation.display_name).toBe('SDKTester Developer');

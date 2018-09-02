@@ -137,19 +137,20 @@ class System {
    */
   async getEvents(config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
-    try {
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor);
-      const response = new SuccessResponse(eventsPage);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, after, first);
+      return eventsPage;
+    };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = {};
+
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**
@@ -181,19 +182,20 @@ class System {
   async listEventSubscriptions(campaignId, config) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
-    try {
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first, resolvedCampaignId } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
-        apiUrlRoot, apiAccessToken, resolvedCampaignId
+        apiUrlRoot, apiAccessToken, resolvedCampaignId, after, first
       );
-      const response = new SuccessResponse(eventSubscriptionsPage);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+      return eventSubscriptionsPage;
+    };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = { resolvedCampaignId };
+
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**
