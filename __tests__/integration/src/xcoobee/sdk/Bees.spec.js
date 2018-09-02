@@ -39,7 +39,9 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.listBees('');
             expect(response).toBeInstanceOf(SuccessResponse);
-            const bees = response.results;
+            const { result } = response;
+            expect(result).toBeDefined();
+            const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
             expect(bees.length).toBe(7);
 
@@ -93,7 +95,9 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.listBees('', overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const bees = response.results;
+            const { result } = response;
+            expect(result).toBeDefined();
+            const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
             expect(bees.length).toBe(7);
 

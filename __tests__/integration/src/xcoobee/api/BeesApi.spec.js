@@ -19,7 +19,13 @@ describe('BeesApi', function () {
 
       it('should fetch and return with a list of bees', async function (done) {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const bees = await BeesApi.bees(apiUrlRoot, apiAccessToken, '');
+        const result = await BeesApi.bees(apiUrlRoot, apiAccessToken, '');
+        expect(result).toBeDefined();
+        expect(result.data).toBeInstanceOf(Array);
+        expect(result.page_info).toBeDefined();
+        expect(result.page_info.end_cursor).toBe('VchqLdBEQW9JSGYvLy8vLy8vLy84L0JXTm1PVGxtTW1SaUxUZzFNRFl0TkRFNE1DMDVOV000TFRFd01qWTBZV0prTUdZMVpBPT0H');
+        expect(result.page_info.has_next_page).toBe(false);
+        const bees = result.data;
         expect(bees).toBeInstanceOf(Array);
         expect(bees.length).toBe(7);
 

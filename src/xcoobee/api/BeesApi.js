@@ -1,12 +1,21 @@
 import ApiUtils from './ApiUtils';
 
 /**
+ * Fetch a page of bees.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} [searchText=''] - The search text.
  *
- * @returns {Promise<Bees[]>}
+ * @returns {Promise<Object>} - A page of bees.
+ * @property {Bee[]} data - Bees for this page.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
  */
 export function bees(apiUrlRoot, apiAccessToken, searchText) {
   const query = `
@@ -41,12 +50,8 @@ export function bees(apiUrlRoot, apiAccessToken, searchText) {
   })
     .then(response => {
       const { bees } = response;
-      const { data } = bees;
 
-      // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
-      // true, then do more requests need to be made for more data?
-
-      return data;
+      return bees;
     })
     .catch(err => {
       throw ApiUtils.transformError(err);
