@@ -45,6 +45,14 @@ class Response {
     return this._.time;
   }
 
+  async getNextPage() {
+    return null;
+  }
+
+  hasNextPage() {
+    return !!this._.hasNextPage;
+  };
+
 }
 
 export default Response;

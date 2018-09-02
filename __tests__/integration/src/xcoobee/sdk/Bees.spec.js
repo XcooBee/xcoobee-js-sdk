@@ -6,6 +6,7 @@ import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
 import Bees from '../../../../../src/xcoobee/sdk/Bees';
 import Config from '../../../../../src/xcoobee/sdk/Config';
 import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
+import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
 import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
 
 import { findBeesBySystemName } from '../../../../lib/Utils';
@@ -38,7 +39,7 @@ describe('Bees', function () {
 
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.listBees('');
-            expect(response).toBeInstanceOf(SuccessResponse);
+            expect(response).toBeInstanceOf(PagingResponse);
             const { result } = response;
             expect(result).toBeDefined();
             const bees = result.data;
@@ -72,6 +73,10 @@ describe('Bees', function () {
             filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
 
             done();
           });// eo it
@@ -94,7 +99,7 @@ describe('Bees', function () {
 
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.listBees('', overridingConfig);
-            expect(response).toBeInstanceOf(SuccessResponse);
+            expect(response).toBeInstanceOf(PagingResponse);
             const { result } = response;
             expect(result).toBeDefined();
             const bees = result.data;
@@ -128,6 +133,10 @@ describe('Bees', function () {
             filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+
+            expect(response.hasNextPage()).toBe(false);
+            const nextPageResponse = await response.getNextPage();
+            expect(nextPageResponse).toBe(null);
 
             done();
           });// eo it

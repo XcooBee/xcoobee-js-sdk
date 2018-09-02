@@ -7,6 +7,7 @@ import XcooBeeError from '../core/XcooBeeError';
 
 import ErrorResponse from './ErrorResponse';
 import FileUtils from './FileUtils';
+import PagingResponse from './PagingResponse';
 import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
 
@@ -61,7 +62,7 @@ class Bees {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>} - The response.
+   * @returns {Promise<PagingResponse|ErrorResponse, undefined>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -79,12 +80,19 @@ class Bees {
   async listBees(searchText, config) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    const fetchPage = async (apiCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+      const { after, first, searchText } = params;
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, first);
+      return beesPage;
+    };
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const result = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText);
-      const response = new SuccessResponse(result);
+      const params = { searchText };
+      const firstBeesPage = await fetchPage(apiCfg, { ...params, after: null, first: null });
+      const response = new PagingResponse(fetchPage, firstBeesPage, apiCfg, params);
       return response;
     } catch (err) {
       return new ErrorResponse(400, err);
