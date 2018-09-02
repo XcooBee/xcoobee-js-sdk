@@ -2,7 +2,6 @@ import InboxApi from '../../xcoobee/api/InboxApi';
 
 import ErrorResponse from './ErrorResponse';
 import SdkUtils from './SdkUtils';
-import PagingResponse from './PagingResponse';
 import SuccessResponse from './SuccessResponse';
 
 /**
@@ -126,7 +125,6 @@ class Inbox {
    */
   async listInbox(startMessageId, config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -135,15 +133,10 @@ class Inbox {
       const inboxPage = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, after, first);
       return inboxPage;
     };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = {};
 
-    try {
-      const params = {};
-      const firstPage = await fetchPage(apiCfg, { ...params, after: null, first: null });
-      const response = new PagingResponse(fetchPage, firstPage, apiCfg, params);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
 }// eo class Inbox

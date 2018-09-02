@@ -7,7 +7,6 @@ import XcooBeeError from '../core/XcooBeeError';
 
 import ErrorResponse from './ErrorResponse';
 import FileUtils from './FileUtils';
-import PagingResponse from './PagingResponse';
 import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
 
@@ -79,7 +78,6 @@ class Bees {
    */
   async listBees(searchText, config) {
     this._assertValidState();
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -88,15 +86,10 @@ class Bees {
       const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, first);
       return beesPage;
     };
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const params = { searchText };
 
-    try {
-      const params = { searchText };
-      const firstBeesPage = await fetchPage(apiCfg, { ...params, after: null, first: null });
-      const response = new PagingResponse(fetchPage, firstBeesPage, apiCfg, params);
-      return response;
-    } catch (err) {
-      return new ErrorResponse(400, err);
-    }
+    return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
 
   /**

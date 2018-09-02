@@ -1,3 +1,6 @@
+import ErrorResponse from './ErrorResponse';
+import PagingResponse from './PagingResponse';
+
 /**
  *
  * @param {Config} overridingConfig
@@ -50,7 +53,18 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
   return null;
 }
 
+async function startPaging(fetchPage, apiCfg, params) {
+  try {
+    const firstPage = await fetchPage(apiCfg, { ...params, after: null, first: null });
+    const response = new PagingResponse(fetchPage, firstPage, apiCfg, params);
+    return response;
+  } catch (err) {
+    return new ErrorResponse(400, err);
+  }
+}
+
 export default {
   resolveApiCfg,
   resolveCampaignId,
+  startPaging,
 };
