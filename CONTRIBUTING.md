@@ -48,10 +48,37 @@ test the code that doesn't have dependencies on a running API.
 
 **Running**
 
+Because the use of some shared resources during the running of some integration
+tests, the integration tests have been separated into two groups. One group, the
+ones using shared resources, will run the tests sequentially, one after the
+other. The other group will run the tests in parallel since the resources being
+used don't have any known conflicts.
+
+The safest thing to do is to run all integration tests sequentially but doing
+that makes the tests take a lot longer.
+
+**All Integration Tests**
+
 ```sh
 npm run test:integration
 # or
 npm run test:integration -- --watch
+```
+
+**Parallel Tests Only**
+
+```sh
+npm run test:integration:parallel
+# or
+npm run test:integration:parallel -- --watch
+```
+
+**Sequential Tests Only**
+
+```sh
+npm run test:integration:sequential
+# or
+npm run test:integration:sequential -- --watch
 ```
 
 ### Unit Testing
