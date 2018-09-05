@@ -44,7 +44,7 @@ describe('Bees', function () {
             expect(result).toBeDefined();
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
-            expect(bees.length).toBe(7);
+            expect(bees.length).toBe(8);
 
             let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
@@ -58,13 +58,13 @@ describe('Bees', function () {
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
 
+            filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
+            expect(filteredBees.length).toBe(1);
+            expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
+
             filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
 
             filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
             expect(filteredBees.length).toBe(1);
@@ -73,6 +73,10 @@ describe('Bees', function () {
             filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+
+            filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
+            expect(filteredBees.length).toBe(1);
+            expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
 
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -104,7 +108,7 @@ describe('Bees', function () {
             expect(result).toBeDefined();
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
-            expect(bees.length).toBe(7);
+            expect(bees.length).toBe(8);
 
             let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
@@ -118,13 +122,13 @@ describe('Bees', function () {
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
 
+            filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
+            expect(filteredBees.length).toBe(1);
+            expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
+
             filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
 
             filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
             expect(filteredBees.length).toBe(1);
@@ -133,6 +137,10 @@ describe('Bees', function () {
             filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+
+            filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
+            expect(filteredBees.length).toBe(1);
+            expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
 
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
