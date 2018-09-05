@@ -45,7 +45,7 @@ describe('Users', function () {
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.page_info).toBeDefined();
-            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRtNXlAtGpmWLzjfZ0wep2MoZ1UKSpSOigCASNIf3iMOlj+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            assertIsCursorLike(result.page_info.end_cursor);
             expect(result.page_info.has_next_page).toBeNull();
             const conversations = result.data;
             expect(conversations).toBeInstanceOf(Array);
@@ -100,7 +100,7 @@ describe('Users', function () {
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.page_info).toBeDefined();
-            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRtNXlAtGpmWLzjfZ0wep2MoZ1UKSpSOigCASNIf3iMOk7+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            assertIsCursorLike(result.page_info.end_cursor);
             expect(result.page_info.has_next_page).toBeNull();
             const conversations = result.data;
             expect(conversations).toBeInstanceOf(Array);
