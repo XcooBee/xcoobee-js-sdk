@@ -35,16 +35,19 @@ test the code that doesn't have dependencies on a running API.
 
 ### Integration Testing
 
+The test system running at https://testapi.xcoobee.net/Test has a `developer`
+account with an XID of `~SDKTester_Developer` already setup.  The tests are
+designed to work with this account.
+
+
 **Setup**
 
-- In `__tests__/integration/`, create a file named `.env.local`.
-  + Add an `XCOOBEE__API_KEY` variable using an API key from a `developer` account
-    on the test system.
-  + Add an `XCOOBEE__API_SECRET` variable using an API secret from the same
-    `developer` account.
-  + Optionally, add a `XCOOBEE__API_URL_ROOT` variable set to a URI pointing to
-    the root of the API URL you want to test.  Be sure to update the
-    `XCOOBEE__API_KEY` and `XCOOBEE__API_SECRET` accordingly.
+In order for the tests to work with the preconfigured developer account, a few
+environment variables need to be configured. The appropriate values are
+pre-configured in `__tests__/integration/.env`. If you want to run the
+integration tests against another system and/or different account, you may add
+a `.env.local` file along side `.env` and override the default values.
+
 
 **Running**
 

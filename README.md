@@ -24,32 +24,3 @@ connecting you to your regional endpoint automatically.
 
 There is more detailed and extensive API documentation available on our
 [documentation site](https://www.xcoobee.com/docs).
-
-## Install
-
-## Use
-
-# Section 1
-
-## methods
-
-# Section 2
-
-## methods
-
-
-## Testing
-
-### Integration
-
-Currently, the tests are expecting information from the user with the
-`~SDKTester_Developer` XID.  The user is expected to be in a particular state.
-For instance, the user's inbox should only have one item with very specific
-values.
-
-This user exists on the system running at https://testapi.xcoobee.net/Test.  The
-following is the user's API key/secret.  Use this in a `.env.local` file at
-`__tests__/integration`.
-
-XCOOBEE__API_KEY=+El5RkcTfadWPLt739ljugBHLc5UkL
-XCOOBEE__API_SECRET=tgQEfmR+zmruWMvJccbNx9oZUCHUrP
