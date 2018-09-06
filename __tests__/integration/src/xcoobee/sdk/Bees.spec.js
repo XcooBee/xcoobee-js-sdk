@@ -102,7 +102,7 @@ describe('Bees', function () {
             });
 
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await beesSdk.listBees('', overridingConfig);
+            const response = await beesSdk.listBees('', null, null, overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             const { result } = response;
             expect(result).toBeDefined();
@@ -148,6 +148,166 @@ describe('Bees', function () {
 
             done();
           });// eo it
+
+        });// eo describe
+
+        describe('and called with a limit that is not divisible by the total bees', function () {
+
+          describe('using default config', function () {
+
+            it('should fetch and return with the bees available to the user', async function (done) {
+              const defaultConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+              });
+
+              const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
+              // Note: We are expecting there to be a total of 8 bees.
+              const response = await beesSdk.listBees('', null, 3);
+              expect(response).toBeInstanceOf(PagingResponse);
+              let { result } = response;
+              expect(result).toBeDefined();
+              let bees = result.data;
+              expect(bees).toBeInstanceOf(Array);
+              expect(bees.length).toBe(3);
+
+              let filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_dropbox_uploader');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_google_drive_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
+
+              expect(response.hasNextPage()).toBe(true);
+              let nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+              result = nextPageResponse.result;
+              expect(result).toBeDefined();
+              bees = result.data;
+              expect(bees).toBeInstanceOf(Array);
+              expect(bees.length).toBe(3);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+
+              expect(nextPageResponse.hasNextPage()).toBe(true);
+              nextPageResponse = await nextPageResponse.getNextPage();
+              expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+              result = nextPageResponse.result;
+              expect(result).toBeDefined();
+              bees = result.data;
+              expect(bees).toBeInstanceOf(Array);
+              expect(bees.length).toBe(2);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact_card');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
+
+              expect(nextPageResponse.hasNextPage()).toBe(false);
+
+              done();
+            });// eo it
+
+          });// eo describe
+
+        });// eo describe
+
+        describe('and called with a limit that is divisible by the total bees', function () {
+
+          describe('using default config', function () {
+
+            xit('should fetch and return with the bees available to the user', async function (done) {
+              const defaultConfig = new Config({
+                apiKey,
+                apiSecret,
+                apiUrlRoot,
+              });
+
+              const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
+              // Note: We are expecting there to be a total of 8 bees.
+              const response = await beesSdk.listBees('', null, 4);
+              expect(response).toBeInstanceOf(PagingResponse);
+              let { result } = response;
+              expect(result).toBeDefined();
+              let bees = result.data;
+              expect(bees).toBeInstanceOf(Array);
+              expect(bees.length).toBe(4);
+
+              let filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_dropbox_uploader');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_google_drive_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
+
+              expect(response.hasNextPage()).toBe(true);
+              let nextPageResponse = await response.getNextPage();
+              expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+              result = nextPageResponse.result;
+              expect(result).toBeDefined();
+              bees = result.data;
+              expect(bees).toBeInstanceOf(Array);
+              expect(bees.length).toBe(4);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact_card');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
+
+              // TODO: The following should be expected but the backend thinks there is another page.
+              expect(nextPageResponse.hasNextPage()).toBe(false);
+              // expect(nextPageResponse.hasNextPage()).toBe(true);
+              // nextPageResponse = await nextPageResponse.getNextPage();
+              // expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+              // result = nextPageResponse.result;
+              // expect(result).toBeDefined();
+              // bees = result.data;
+              // expect(bees).toBeInstanceOf(Array);
+              // expect(bees.length).toBe(0);
+
+              done();
+            });// eo it
+
+          });// eo describe
 
         });// eo describe
 

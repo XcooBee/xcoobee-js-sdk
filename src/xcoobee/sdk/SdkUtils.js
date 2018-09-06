@@ -61,7 +61,7 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
  * Starts the paging process.
  *
  * @param {Function} fetchPage - A function that fetches a page of information based
- *   on the API config and the given parameters plus the current `after` and `first`
+ *   on the API config and the given parameters plus the current `after` and `limit`
  *   parameters.
  * @param {ApiCfg} apiCfg - The API config.
  * @param {Object} params - The static parameters expected by the fetch page
@@ -71,7 +71,7 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
  */
 async function startPaging(fetchPage, apiCfg, params) {
   try {
-    const firstPage = await fetchPage(apiCfg, { ...params, after: null, first: null });
+    const firstPage = await fetchPage(apiCfg, { ...params, after: null });
     const response = new PagingResponse(fetchPage, firstPage, apiCfg, params);
     return response;
   } catch (err) {

@@ -64,7 +64,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async confirmConsentChange(consentId, config) {
+  async confirmConsentChange(consentId, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -99,7 +99,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async confirmDataDelete(consentId, config) {
+  async confirmDataDelete(consentId, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -136,7 +136,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async getCampaignInfo(campaignId, config) {
+  async getCampaignInfo(campaignId, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -171,7 +171,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async getConsentData(consentId, config) {
+  async getConsentData(consentId, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -210,7 +210,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async getCookieConsent(xcoobeeId, campaignId, config) {
+  async getCookieConsent(xcoobeeId, campaignId, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -232,6 +232,8 @@ class Consents {
    * Fetches a page of campaigns.
    *
    * @async
+   * @param {string} [after] - Fetch data after this cursor.
+   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -250,20 +252,20 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async listCampaigns(config) {
+  async listCampaigns(after = null, limit = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, first } = params;
+      const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const campaignsPage = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after, first);
+      const campaignsPage = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after, limit);
       return campaignsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = {};
+    const params = { after, limit };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -273,6 +275,8 @@ class Consents {
    *
    * @async
    * @param {ConsentStatus} status
+   * @param {string} [after] - Fetch data after this cursor.
+   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -291,20 +295,20 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async listConsents(status, config) {
+  async listConsents(status, after = null, limit = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, first, status } = params;
+      const { after, limit, status } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const consentsPage = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status, after, first);
+      const consentsPage = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status, after, limit);
       return consentsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { status };
+    const params = { after, limit, status };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -336,7 +340,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async requestConsent(xcoobeeId, reqRefId, campaignId, config) {
+  async requestConsent(xcoobeeId, reqRefId, campaignId, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -382,7 +386,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async setUserDataResponse(message, consentId, reqRefId, files, config) {
+  async setUserDataResponse(message, consentId, reqRefId, files, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;

@@ -234,7 +234,7 @@ describe('Inbox', function () {
             });
 
             const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await inboxSdk.listInbox(null, overridingConfig);
+            const response = await inboxSdk.listInbox(null, null, overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             const { result } = response;
             expect(result).toBeDefined();

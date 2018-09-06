@@ -22,10 +22,9 @@ class PagingResponse extends Response {
       const nextParams = {
         ...params,
         after: currentPage.page_info.end_cursor,
-        first: null,
       };
       try {
-        const nextPage = this._.fetcher(apiCfg, nextParams);
+        const nextPage = await this._.fetcher(apiCfg, nextParams);
         return new PagingResponse(fetcher, nextPage, apiCfg, params);
       }
       catch (err) {

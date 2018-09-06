@@ -46,7 +46,7 @@ class Inbox {
    *
    * @throws {XcooBeeError}
    */
-  async deleteInboxItem(messageId, config) {
+  async deleteInboxItem(messageId, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -84,7 +84,7 @@ class Inbox {
    *
    * @throws {XcooBeeError}
    */
-  async getInboxItem(messageId, config) {
+  async getInboxItem(messageId, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -105,7 +105,8 @@ class Inbox {
    * Fetch a page of items from the inbox.
    *
    * @async
-   * @param {string} [startMessageId]
+   * @param {string} [after] - Fetch data after this cursor.
+   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config]
    *
    * @returns {Promise<PagingResponse|ErrorResponse, undefined>} - The response.
@@ -123,18 +124,18 @@ class Inbox {
    *
    * @throws {XcooBeeError}
    */
-  async listInbox(startMessageId, config) {
+  async listInbox(after = null, limit = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, first } = params;
+      const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const inboxPage = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, after, first);
+      const inboxPage = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, after, limit);
       return inboxPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = {};
+    const params = { after, limit };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }

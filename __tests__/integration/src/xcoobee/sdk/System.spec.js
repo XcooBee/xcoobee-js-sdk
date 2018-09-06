@@ -892,7 +892,7 @@ describe('System', function () {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.getEvents(overridingConfig);
+            const response = await systemSdk.getEvents(null, null, overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -1083,7 +1083,7 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1145,7 +1145,7 @@ describe('System', function () {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1218,7 +1218,7 @@ describe('System', function () {
               expect(error.message).toBe('Wrong key at line: 3, column: 7');
               expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.listEventSubscriptions(null, { apiKey, apiSecret });
+              response = await systemSdk.listEventSubscriptions(null, null, null, { apiKey, apiSecret });
               expect(response).toBeInstanceOf(ErrorResponse);
               error = response.error;
               expect(error).toBeInstanceOf(XcooBeeError);
@@ -1247,7 +1247,7 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
               expect(response).toBeInstanceOf(ErrorResponse);
               const { error } = response;
               expect(error).toBeInstanceOf(XcooBeeError);
@@ -1284,7 +1284,7 @@ describe('System', function () {
               expect(error.message).toBe('Wrong key at line: 3, column: 7');
               expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
+              response = await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
               expect(response).toBeInstanceOf(ErrorResponse);
               error = response.error;
               expect(error).toBeInstanceOf(XcooBeeError);

@@ -58,7 +58,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async addEventSubscription(events, campaignId, config) {
+  async addEventSubscription(events, campaignId, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -98,7 +98,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async deleteEventSubscription(events, campaignId, config) {
+  async deleteEventSubscription(events, campaignId, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -120,6 +120,8 @@ class System {
    * Fetches a page of the user's events.
    *
    * @async
+   * @param {string} [after] - Fetch data after this cursor.
+   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -138,20 +140,20 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async getEvents(config) {
+  async getEvents(after = null, limit = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, first } = params;
+      const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, after, first);
+      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, after, limit);
       return eventsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = {};
+    const params = { after, limit };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -164,6 +166,8 @@ class System {
    *   event subscriptions.  If `null` or `undefined`, then the campaign ID from the
    *   overriding config will be used.  If `config.campaignId` is `null` or
    *   `undefined`, then the campaign ID from the default config will be used.
+   * @param {string} [after] - Fetch data after this cursor.
+   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
@@ -182,21 +186,21 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async listEventSubscriptions(campaignId, config) {
+  async listEventSubscriptions(campaignId, after = null, limit = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, first, resolvedCampaignId } = params;
+      const { after, limit, resolvedCampaignId } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
-        apiUrlRoot, apiAccessToken, resolvedCampaignId, after, first
+        apiUrlRoot, apiAccessToken, resolvedCampaignId, after, limit
       );
       return eventSubscriptionsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { resolvedCampaignId };
+    const params = { after, limit, resolvedCampaignId };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -221,7 +225,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async ping(config) {
+  async ping(config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(null, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);

@@ -528,7 +528,7 @@ describe('Consents', function () {
             });
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await consentsSdk.listCampaigns(overridingConfig);
+            const response = await consentsSdk.listCampaigns(null, null, overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -636,7 +636,7 @@ describe('Consents', function () {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(null, overridingConfig);
+              const response = await consentsSdk.listConsents(null, null, null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -661,6 +661,60 @@ describe('Consents', function () {
 
               done();
             });// eo it
+
+          });// eo describe
+
+          describe('and called with a limit', function () {
+
+            describe('using default config', function () {
+
+              it('should fetch and return with the user\'s consents of any status', async function (done) {
+                const defaultConfig = new Config({
+                  apiKey,
+                  apiSecret,
+                  apiUrlRoot,
+                });
+
+                const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
+                const response = await consentsSdk.listConsents(null, null, 25);
+                expect(response).toBeInstanceOf(PagingResponse);
+                let { result } = response;
+                expect(result).toBeDefined();
+                let consents = result.data;
+                expect(consents).toBeInstanceOf(Array);
+                expect(consents.length).toBe(25);
+                let consent = consents[0];
+                expect('consent_cursor' in consent).toBe(true);
+                assertIsCursorLike(consent.consent_cursor);
+                expect('consent_status' in consent).toBe(true);
+                expect('date_c' in consent).toBe(true);
+                assertIso8601Like(consent.date_c)
+                expect('date_e' in consent).toBe(true);
+                assertIso8601Like(consent.date_e)
+                expect('user_xcoobee_id' in consent).toBe(true);
+
+                expect(response.hasNextPage()).toBe(true);
+                let nextPageResponse = await response.getNextPage();
+                expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+                result = nextPageResponse.result;
+                expect(result).toBeDefined();
+                consents = result.data;
+                expect(consents).toBeInstanceOf(Array);
+                expect(consents.length).toBe(25);
+
+                expect(nextPageResponse.hasNextPage()).toBe(true);
+                nextPageResponse = await nextPageResponse.getNextPage();
+                expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+                result = nextPageResponse.result;
+                expect(result).toBeDefined();
+                consents = result.data;
+                expect(consents).toBeInstanceOf(Array);
+                expect(consents.length).toBeGreaterThan(0);
+
+                done();
+              });// eo it
+
+            });// eo describe
 
           });// eo describe
 
@@ -721,7 +775,7 @@ describe('Consents', function () {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, overridingConfig);
+              const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, null, null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();

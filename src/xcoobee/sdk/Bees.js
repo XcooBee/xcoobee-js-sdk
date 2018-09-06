@@ -64,6 +64,8 @@ class Bees {
    * @async
    * @param {string} searchText - The search text.  It is a string of keywords to
    *  search for in the bee system name or label in the language of your account.
+   * @param {string} [after] - Fetch data after this cursor.
+   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -82,18 +84,18 @@ class Bees {
    *
    * @throws {XcooBeeError}
    */
-  async listBees(searchText, config) {
+  async listBees(searchText, after = null, limit = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, first, searchText } = params;
+      const { after, limit, searchText } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, first);
+      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, limit);
       return beesPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { searchText };
+    const params = { after, limit, searchText };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -125,7 +127,7 @@ class Bees {
    *
    * @throws {XcooBeeError}
    */
-  async takeOff(bees, options, subscriptions, config) {
+  async takeOff(bees, options, subscriptions, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -203,7 +205,7 @@ class Bees {
    *
    * @throws {XcooBeeError}
    */
-  async uploadFiles(files, intent, config) {
+  async uploadFiles(files, intent, config = null) {
     this._assertValidState();
     const endPointName = intent || UploadPolicyIntents.OUTBOX;
     if (endPointName !== UploadPolicyIntents.OUTBOX) {
