@@ -64,8 +64,9 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const eventSubscriptionsPage = response.results;
-                expect(eventSubscriptionsPage).toBeDefined();
+                const { result } = response;
+                expect(result).toBeDefined();
+                const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(2);
                 let eventSubscription = eventSubscriptionsPage.data[0];
@@ -120,8 +121,9 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const eventSubscriptionsPage = response.results;
-                expect(eventSubscriptionsPage).toBeDefined();
+                const { result } = response;
+                expect(result).toBeDefined();
+                const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
                 let eventSubscription = eventSubscriptionsPage.data[0];
@@ -161,8 +163,9 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const eventSubscriptionsPage = response.results;
-                expect(eventSubscriptionsPage).toBeDefined();
+                const { result } = response;
+                expect(result).toBeDefined();
+                const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
                 let eventSubscription = eventSubscriptionsPage.data[0];
@@ -202,8 +205,9 @@ describe('System', function () {
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
-                const eventSubscriptionsPage = response.results;
-                expect(eventSubscriptionsPage).toBeDefined();
+                const { result } = response;
+                expect(result).toBeDefined();
+                const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(2);
                 let eventSubscription = eventSubscriptionsPage.data[0];
@@ -1338,9 +1342,9 @@ describe('System', function () {
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await systemSdk.ping();
             expect(response).toBeInstanceOf(SuccessResponse);
-            let { results } = response;
-            expect(results).toBeDefined();
-            expect(results.ponged).toBe(true);
+            const { result } = response;
+            expect(result).toBeDefined();
+            expect(result.ponged).toBe(true);
 
             done();
           });// eo it

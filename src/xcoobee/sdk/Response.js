@@ -11,7 +11,7 @@ class Response {
    * @param {number} info.code
    * @param {Object} [info.error]
    * @param {string} [info.error.message]
-   * @param {mixed} [info.results]
+   * @param {mixed} [info.result]
    */
   constructor(info) {
     // TODO: Validate info.
@@ -29,12 +29,7 @@ class Response {
   }
 
   get result() {
-    return this._.results;
-  }
-
-  // TODO: Remove this getter.
-  get results() {
-    return this._.results;
+    return this._.result;
   }
 
   get error() {

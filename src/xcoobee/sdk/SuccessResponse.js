@@ -2,11 +2,11 @@ import Response from './Response';
 
 class SuccessResponse extends Response {
 
-  constructor(results) {
+  constructor(result) {
     super({
       code: 200,
       error: null,
-      results,
+      result,
     });
   }
 

@@ -28,9 +28,9 @@ describe('InboxApi', function () {
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
             const messageId = 'unknown';
-            const results = await InboxApi.deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
-            expect(results).toBeDefined();
-            expect(results.trans_id).toBeNull();
+            const result = await InboxApi.deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
+            expect(result).toBeDefined();
+            expect(result.trans_id).toBeNull();
             done();
           });// eo it
 
@@ -55,7 +55,7 @@ describe('InboxApi', function () {
         const result = await InboxApi.getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
         expect(result).toBeDefined();
         expect(result.inbox_item).toBeDefined();
-        const { inbox_item } = results;
+        const { inbox_item } = result;
         expect(inbox_item.download_link).toMatch('ico-lock-64x64.png');
         expect(inbox_item.info).toBeDefined();
         expect(inbox_item.info.file_tags).toEqual([]);

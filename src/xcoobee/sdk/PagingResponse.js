@@ -12,7 +12,7 @@ class PagingResponse extends Response {
       fetcher,
       hasNextPage: currentPage.page_info.has_next_page,
       params,
-      results: currentPage,
+      result: currentPage,
     });
   }
 

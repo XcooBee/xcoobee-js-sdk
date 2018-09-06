@@ -186,11 +186,11 @@ describe('EventSubscriptionsApi', function () {
               DataDeclined: 'OnDataDeclined',
             };
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-            const results = await EventSubscriptionsApi.deleteEventSubscription(
+            const result = await EventSubscriptionsApi.deleteEventSubscription(
               apiUrlRoot, apiAccessToken, eventsMapping, campaignId
             );
-            expect(results).toBeDefined();
-            expect(results.deleted_number).toBe(2);
+            expect(result).toBeDefined();
+            expect(result.deleted_number).toBe(2);
 
             done();
           });// eo it
@@ -201,20 +201,20 @@ describe('EventSubscriptionsApi', function () {
               ConsentApproved: 'OnConsentApproved',
             };
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-            let results = await EventSubscriptionsApi.deleteEventSubscription(
+            let result = await EventSubscriptionsApi.deleteEventSubscription(
               apiUrlRoot, apiAccessToken, eventsMapping, campaignId
             );
-            expect(results).toBeDefined();
-            expect(results.deleted_number).toBe(1);
+            expect(result).toBeDefined();
+            expect(result.deleted_number).toBe(1);
 
             eventsMapping = {
               DataDeclined: 'OnDataDeclined',
             };
-            results = await EventSubscriptionsApi.deleteEventSubscription(
+            result = await EventSubscriptionsApi.deleteEventSubscription(
               apiUrlRoot, apiAccessToken, eventsMapping, campaignId
             );
-            expect(results).toBeDefined();
-            expect(results.deleted_number).toBe(1);
+            expect(result).toBeDefined();
+            expect(result.deleted_number).toBe(1);
 
             done();
           });// eo it

@@ -229,12 +229,12 @@ describe('Bees', function () {
             const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
             const response = await beesSdk.uploadFiles(files);
             expect(response).toBeInstanceOf(SuccessResponse);
-            const { results } = response;
-            expect(results).toBeInstanceOf(Array);
-            expect(results.length).toBe(1);
-            const result = results[0];
-            expect(result.file).toBe(file);
-            expect(result.success).toBe(true);
+            const { result } = response;
+            expect(result).toBeInstanceOf(Array);
+            expect(result.length).toBe(1);
+            const fileResult = result[0];
+            expect(fileResult.file).toBe(file);
+            expect(fileResult.success).toBe(true);
 
             done();
           });// eo it

@@ -38,12 +38,12 @@ class Consents {
 
   // TODO: Document CampaignId
   // TODO: Document CampaignStruct
-  // * @returns {string} return.response.results.campaign_name
-  // * @returns {?} return.response.results.date_c
-  // * @returns {?} return.response.results.date_e
-  // * @returns {?} return.response.results.status
-  // * @returns {?} return.response.results.xcoobee_targets
-  // * @returns {?} return.response.results.xcoobee_targets.xcoobee_id
+  // * @returns {string} return.response.result.campaign_name
+  // * @returns {?} return.response.result.date_c
+  // * @returns {?} return.response.result.date_e
+  // * @returns {?} return.response.result.status
+  // * @returns {?} return.response.result.xcoobee_targets
+  // * @returns {?} return.response.result.xcoobee_targets.xcoobee_id
 
   // TODO: Document ConsentId
   // TODO: Document RequestRefId
@@ -404,14 +404,14 @@ class Consents {
       );
       progress.push('successfully sent message');
 
-      let results = { progress, ref_id: null };
+      let result = { progress, ref_id: null };
       if (reqRefId && Array.isArray(files) && files.length > 0) {
         const endPointName = UploadPolicyIntents.OUTBOX;
         const fileUploadResults = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
 
         const successfullyUploadedFiles = [];
-        fileUploadResults.forEach(result => {
-          const { error, file, success } = result;
+        fileUploadResults.forEach(fileUploadResult => {
+          const { error, file, success } = fileUploadResult;
           if (success) {
             successfullyUploadedFiles.push(file);
             progress.push(`successfully uploaded ${file}`);
@@ -431,10 +431,10 @@ class Consents {
           };
           const refId = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
           progress.push('successfully sent successfully uploaded files to destination');
-          results.ref_id = refId;
+          result.ref_id = refId;
         }
       }
-      response = new SuccessResponse(results);
+      response = new SuccessResponse(result);
     } catch (err) {
       errors.push(err.message);
     }
