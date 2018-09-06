@@ -30,6 +30,7 @@ class Users {
   /**
    * Fetches a page of conversations with the given target cursor.
    *
+   * @async
    * @param {string} targetCursor
    * @param {string} [after]
    * @param {number} [first]
@@ -71,6 +72,7 @@ class Users {
   /**
    * Fetches a page of the user's conversations.
    *
+   * @async
    * @param {string} [after]
    * @param {number} [first]
    * @param {Config} [config] - The configuration to use instead of the default.
@@ -113,6 +115,7 @@ class Users {
   /**
    * Fetches the user for the specified authentication credentials.
    *
+   * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
@@ -146,6 +149,7 @@ class Users {
   /**
    * Sends a message to a consent destination or a breach destination.
    *
+   * @async
    * @param {string} message
    * @param {*} consentId
    * @param {*} breachId

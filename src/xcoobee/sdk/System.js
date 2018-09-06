@@ -34,6 +34,7 @@ class System {
   /**
    * Adds an event subscription to web hooks.
    *
+   * @async
    * @param {Map<WebHookName, HandlerName>|Object<WebHookName, HandlerName>} events
    *   - A lookup from web hook names to handler names.
    * @param {CampaignId} [campaignId] - The ID of the campaign for which to subscribe
@@ -78,6 +79,7 @@ class System {
   /**
    * Deletes any event subscriptions from the specified campaign.
    *
+   * @async
    * @param {WebHookName[]|Map<WebHookName, *>|Object<WebHookName, *>|Set<WebHookName>} events - The event
    * @param {CampaignId} [campaignId] - The ID of the campaign for which to delete
    *   the event subscriptions.  If `null` or `undefined`, then the default campaign
@@ -117,6 +119,7 @@ class System {
   /**
    * Fetches a page of the user's events.
    *
+   * @async
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *

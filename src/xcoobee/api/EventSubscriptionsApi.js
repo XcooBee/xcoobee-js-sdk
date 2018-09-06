@@ -23,6 +23,7 @@ import ApiUtils from './ApiUtils';
 
 /**
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {Object} eventsMapping - A mapping between event subscription type and
@@ -89,6 +90,7 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
 
 /**
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {Object} eventsMapping - A mapping between event subscription type and

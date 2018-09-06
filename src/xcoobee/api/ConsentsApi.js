@@ -79,6 +79,7 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
 /**
  * Fetches an existing user's cookie consent information.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} xcoobeeId
@@ -370,6 +371,7 @@ export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId
 /**
  * TODO: Complete documentation.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} consentCursor
