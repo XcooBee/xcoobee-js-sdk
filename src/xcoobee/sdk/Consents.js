@@ -36,7 +36,6 @@ class Consents {
     }
   }
 
-  // TODO: Document CampaignId
   // TODO: Document CampaignStruct
   // * @returns {string} return.response.result.campaign_name
   // * @returns {?} return.response.result.date_c
@@ -44,9 +43,6 @@ class Consents {
   // * @returns {?} return.response.result.status
   // * @returns {?} return.response.result.xcoobee_targets
   // * @returns {?} return.response.result.xcoobee_targets.xcoobee_id
-
-  // TODO: Document ConsentId
-  // TODO: Document RequestRefId
 
   /**
    * Determines whether data has been changed according to changes requested.

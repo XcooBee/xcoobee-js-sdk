@@ -6,7 +6,9 @@ import ApiUtils from './ApiUtils';
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  *
- * @returns {Promise<User>}
+ * @returns {Promise<User>} - The user information.
+ *
+ * @throws {XcooBeeError}
  */
 export function getUser(apiUrlRoot, apiAccessToken) {
   // Note: There is no need to make multiple requests for user info with the same API

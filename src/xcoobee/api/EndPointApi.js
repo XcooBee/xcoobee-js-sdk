@@ -8,7 +8,12 @@ import ApiUtils from './ApiUtils';
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
- * @returns {Promise<OutboxEndpoint[]>}
+ * @returns {Promise<Object>} - The result.
+ * @property {OutboxEndpoint[]} data - The outbox endpoints.
+ * @property {null} page_info - The page information which will always be `null` for
+ *   this query.
+ *
+ * @throws {XcooBeeError}
  */
 export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
   // const query = `

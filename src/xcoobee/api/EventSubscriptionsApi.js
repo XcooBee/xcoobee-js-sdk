@@ -30,13 +30,11 @@ import ApiUtils from './ApiUtils';
  *   handler.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} - The result.
  * @property {EventSubscription[]} data - A page of the newly added event
  *   subscriptions.
- * @property {Object} page_info - The page information.
- * @property {boolean} page_info.has_next_page - Flag indicating whether there is
- *   another page of data to may be fetched.
- * @property {string} page_info.end_cursor - The end cursor.
+ * @property {null} page_info - The page information which will always be `null` for
+ *   this mutation.
  *
  * @throws {XcooBeeError}
  */
@@ -79,7 +77,7 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
     .then(response => {
       const { add_event_subscriptions } = response;
 
-      // TODO: What is page_info doing on the above mutation?
+      // Note: `page_info` should always be `null` for this mutation.
 
       return add_event_subscriptions;
     })
@@ -97,7 +95,7 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
  *   handler.  The handler is not important here.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} - The result.
  * @property {number} deleted_number - The number of event subscriptions deleted.
  *
  * @throws {XcooBeeError}
@@ -142,7 +140,7 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} - The result.
  * @property {EventSubscription[]} data - A page of event subscriptions for the
  *   given campaign cursor.
  * @property {Object} page_info - The page information.

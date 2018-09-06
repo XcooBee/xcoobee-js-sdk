@@ -40,6 +40,11 @@ class Response {
     return this._.time;
   }
 
+  /**
+   * @async
+   *
+   * @returns {Promise<PagingResponse, ErrorResponse}
+   */
   async getNextPage() {
     return null;
   }

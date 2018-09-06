@@ -52,6 +52,12 @@ class Bees {
    *       const { bee_system_name, description, bee_icon, ...etc } = bee;
    *       // DO something with this data.
    *     });
+   *     if (bees.hasNextPage()) {
+   *       bees.getNextPage()
+   *         .then(res => {
+   *           ...
+   *         });
+   *     }
    *   })
    * ```
    *

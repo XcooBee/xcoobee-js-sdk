@@ -2,9 +2,12 @@ import ErrorResponse from './ErrorResponse';
 import PagingResponse from './PagingResponse';
 
 /**
+ * Resolves the API config to use based on given input.
  *
- * @param {Config} overridingConfig
- * @param {Config} defaultConfig
+ * @param {Config} [overridingConfig]
+ * @param {Config} [defaultConfig]
+ *
+ * @returns {ApiCfg}
  */
 function resolveApiCfg(overridingConfig, defaultConfig) {
   if (
@@ -35,7 +38,8 @@ function resolveApiCfg(overridingConfig, defaultConfig) {
 }
 
 /**
- * Resolves
+ * Resolves the campaign ID to use based on the given input.
+ *
  * @param {string} [campaignId]
  * @param {Config} [overridingConfig]
  * @param {Config} [defaultConfig]
@@ -53,6 +57,18 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
   return null;
 }
 
+/**
+ * Starts the paging process.
+ *
+ * @param {Function} fetchPage - A function that fetches a page of information based
+ *   on the API config and the given parameters plus the current `after` and `first`
+ *   parameters.
+ * @param {ApiCfg} apiCfg - The API config.
+ * @param {Object} params - The static parameters expected by the fetch page
+ *   function.
+ *
+ * @returns {Promise<PagingResponse, ErrorResponse>}
+ */
 async function startPaging(fetchPage, apiCfg, params) {
   try {
     const firstPage = await fetchPage(apiCfg, { ...params, after: null, first: null });

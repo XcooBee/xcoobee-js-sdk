@@ -18,7 +18,7 @@ const MSG__GENERIC_ERROR = 'Unable to get an API access token.';
  *
  * @returns {Promise<ApiAccessToken>} An access token.
  *
- * @throws Error if unable to acquire an access token.
+ * @throws {XcooBeeError} if unable to acquire an access token.
  */
 export function getApiAccessToken(apiCfg) {
   // Note: There is no need to make multiple requests for an API access token with

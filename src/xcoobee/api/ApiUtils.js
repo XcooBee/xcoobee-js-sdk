@@ -8,10 +8,25 @@ function appearsToBeACampaignId(campaignId) {
   return typeof campaignId === 'string' && campaignId.length > 0;
 }
 
+/**
+ * Checks whether the given string appears to be an email address.
+ *
+ * @param {string} value - The value to check.
+ *
+ * @returns {boolean} `true` if the given string appears to be an email address.
+ *   Otherwise, `false`.
+ */
 export function appearsToBeAnEmailAddress(value) {
   return EMAIL_ADDRESS__RE.test(value);
 }
 
+/**
+ * Asserts that the given campaign ID string appears to be a campaign ID.
+ *
+ * @param {string} campaignId
+ *
+ * @throws {XcooBeeError}
+ */
 export function assertAppearsToBeACampaignId(campaignId) {
   if (!appearsToBeACampaignId(campaignId)) {
     throw new XcooBeeError('Campaign ID is required');
@@ -20,6 +35,11 @@ export function assertAppearsToBeACampaignId(campaignId) {
 
 /**
  * Creates a new GraphQL client, ready to make a request.
+ *
+ * ```js
+ * ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, variables)
+ *   .then(...);
+ * ```
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.

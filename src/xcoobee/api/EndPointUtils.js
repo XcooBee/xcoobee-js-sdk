@@ -23,6 +23,8 @@ async function findEndPoint(apiUrlRoot, apiAccessToken, userCursor, endPointName
         return candidateEndPoints[0];
       }
 
+      // Note: It should be the case that `page_info` is always `null`. However, for
+      // robustness, we'll iterate over any pages that may be returned.
       const { end_cursor, has_next_page } = (page_info || {});
 
       fetchNextPage = has_next_page && end_cursor;

@@ -10,7 +10,9 @@ import ApiUtils from './ApiUtils';
  * @param {string} endPointCursor
  * @param {string[]} files
  *
- * @returns {Promise<Policy[]>}
+ * @returns {Promise<Policy[]>} A list of policies, one for each file uploaded.
+ *
+ * @throws {XcooBeeError}
  */
 export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor, files) {
   // TODO: Validate arguments;

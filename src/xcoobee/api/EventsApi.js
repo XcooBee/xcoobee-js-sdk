@@ -8,7 +8,7 @@ import ApiUtils from './ApiUtils';
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} - The result.
  * @property {Event[]} data - A page of events.
  * @property {Object} page_info - The page information.
  * @property {boolean} page_info.has_next_page - Flag indicating whether there is

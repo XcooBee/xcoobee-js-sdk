@@ -30,6 +30,8 @@ class UsersCache {
    *
    * @returns {Promise<Object>} An object with information about the user that
    *   corresponds with the specified API key/secret pair.
+   *
+   * @throws {XcooBeeError}
    */
   get(apiUrlRoot, apiKey, apiSecret, fresh) {
     let key = `${apiKey}:${apiSecret}`;

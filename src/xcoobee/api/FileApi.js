@@ -21,7 +21,7 @@ import ApiUtils from './ApiUtils';
  * @param {String} policy.signature
  * @param {String} policy.upload_url
  *
- * @returns {Promise<IncomingMessage>}
+ * @returns {Promise<IncomingMessage>} - The HTTP response.
  *
  * @throws {XcooBeeError}
  */

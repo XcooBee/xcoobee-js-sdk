@@ -4,13 +4,14 @@ import NoteTypes from './NoteTypes';
 /**
  * Fetches a page of conversations with the given target cursor.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} targetCursor
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} - The result.
  * @property {Note[]} data - A page of conversations (aka notes).
  * @property {Object} page_info - The page information.
  * @property {boolean} page_info.has_next_page - Flag indicating whether there is
@@ -63,13 +64,14 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, after 
 /**
  * Fetches a page of the user's conversations.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
- * @returns {Promise<Object>}
+ * @returns {Promise<Object>} - The result.
  * @property {Note[]} data - A page of conversations (aka notes).
  * @property {Object} page_info - The page information.
  * @property {boolean} page_info.has_next_page - Flag indicating whether there is
@@ -113,6 +115,7 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, after =
 /**
  * Sends a message to a consent destination or a breach destination.
  *
+ * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} message

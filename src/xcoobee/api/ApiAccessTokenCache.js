@@ -39,6 +39,8 @@ class ApiAccessTokenCache {
    *
    * @returns {Promise<string>} An API access token for the specified API key/secret
    *   pair.
+   *
+   * @throws {TypeError} If arguments are invalid.
    */
   get(apiUrlRoot, apiKey, apiSecret, fresh) {
     if (!apiUrlRoot) {
