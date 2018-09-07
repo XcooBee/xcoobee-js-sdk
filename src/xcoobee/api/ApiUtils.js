@@ -2,10 +2,24 @@ import { GraphQLClient } from 'graphql-request';
 
 import XcooBeeError from "../core/XcooBeeError";
 
+const CURSOR__RE = /^[\w/=+]+$/;
+
 const EMAIL_ADDRESS__RE = /^[-+\w]+(\.[-+\w]+)*@([-a-z0-9]+\.)+[a-z]{2,6}$/i;
 
 function appearsToBeACampaignId(campaignId) {
   return typeof campaignId === 'string' && campaignId.length > 0;
+}
+
+/**
+ * Asserts that the given string appears to be a cursor.
+ *
+ * @param {string} value
+ *
+ * @returns {boolean} `true` if the given string appears to be a cursor. Otherwise,
+ *   `false`.
+ */
+export function appearsToBeACursor(value) {
+  return CURSOR__RE.test(value);
 }
 
 /**
@@ -106,6 +120,7 @@ function locationToMessage(loc) {
 }
 
 export default {
+  appearsToBeACursor,
   appearsToBeAnEmailAddress,
   assertAppearsToBeACampaignId,
   createClient,

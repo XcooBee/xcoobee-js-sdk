@@ -25,7 +25,9 @@ class Config {
    * @throws TypeError
    */
   constructor(data) {
-    // TODO: Validate data.
+    if (!data) {
+      throw TypeError('Config `data` is required.');
+    }
     let {
       apiKey, apiSecret, apiUrlRoot, campaignId, encrypt, pgpPassword, pgpSecret,
     } = data;

@@ -14,9 +14,24 @@ class Response {
    * @param {mixed} [info.result]
    */
   constructor(info) {
-    // TODO: Validate info.
+    if (!info) {
+      throw TypeError('Response `info` is required.');
+    }
     if (info.code < 200 || info.code > 599) {
       throw TypeError('`code` must be a valid HTTP status code.');
+    }
+    if (info.code < 300) {
+      if (info.result === null || info.result === undefined) {
+        throw TypeError('`result` is required for successful responses.');
+      }
+    }
+    else {
+      if (info.error === null || info.error === undefined) {
+        throw TypeError('`error` is required for non-successful responses.');
+      }
+      if (info.error.message === null || info.error.message === undefined) {
+        throw TypeError('`error.message` is required for non-successful responses.');
+      }
     }
     this._ = {
       ...info,

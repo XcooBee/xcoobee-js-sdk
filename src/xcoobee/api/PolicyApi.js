@@ -1,6 +1,7 @@
 import Path from 'path';
 
-import ApiUtils from './ApiUtils';
+import ApiUtils, { appearsToBeACursor } from './ApiUtils';
+import UploadPolicyIntents from './UploadPolicyIntents';
 
 /**
  *
@@ -8,14 +9,23 @@ import ApiUtils from './ApiUtils';
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {'bee_icon'|'invite_list'|'outbox'|'profile_image'} intent
  * @param {string} endPointCursor
- * @param {string[]} files
+ * @param {Array<string|File>} files
  *
  * @returns {Promise<Policy[]>} A list of policies, one for each file uploaded.
  *
  * @throws {XcooBeeError}
  */
 export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor, files) {
-  // TODO: Validate arguments;
+  if (!UploadPolicyIntents.values.includes(intent)) {
+    throw TypeError('`intent`' + ` must be one of ${UploadPolicyIntents.values.join(', ')}.`);
+  }
+  if (!appearsToBeACursor(endPointCursor)) {
+    throw TypeError('`endPointCursor` is required.');
+  }
+  if (!Array.isArray(files)) {
+    throw TypeError('`files` must be an array.');
+  }
+
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
     let baseName;

@@ -601,7 +601,7 @@ describe('Consents', function () {
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
-              expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXhLtGlgWL3mfZw7DvGY6+UkKSNSLCg+ATVIT3iaOmj+eJ13SkFPOZlm9zjOaFeADKhGYZ8OloFX');
+              assertIsCursorLike(result.page_info.end_cursor);
               expect(result.page_info.has_next_page).toBeNull();
               const consents = result.data;
               expect(consents).toBeInstanceOf(Array);
@@ -644,7 +644,7 @@ describe('Consents', function () {
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
-              expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXhLtGlgWL3mfZw7DvGY6+UkKSNSLCg+ATVIT3iaOmj+eJ13SkFPOZlm9zjOaFeADKhGYZ8OloFX');
+              assertIsCursorLike(result.page_info.end_cursor);
               expect(result.page_info.has_next_page).toBeNull();
               const consents = result.data;
               expect(consents).toBeInstanceOf(Array);
