@@ -1,0 +1,89 @@
+{
+  "name": "xcoobee-sdk-js",
+  "version": "0.0.0-alpha",
+  "description": "",
+  "keywords": [
+    "javascript",
+    "js",
+    "sdk",
+    "xcoobee"
+  ],
+  "author": {
+    "name": "XcooBee",
+    "email": "sdk.js@xcoobee.com"
+  },
+  "contributors": [
+    {
+      "name": "Danny Hurlburt"
+    }
+  ],
+  "homepage": "https://github.com/XcooBee/xcoobee-js-sdk",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.8.6"
+  },
+  "files": [
+    "dist/"
+  ],
+  "main": "",
+  "bugs": {
+    "url": "https://github.com/XcooBee/xcoobee-js-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XcooBee/xcoobee-js-sdk.git"
+  },
+  "lint-staged": {
+    "ignore": [
+      "package.json"
+    ],
+    "linters": {
+      "*.{js}": [
+        "eslint --no-ignore --fix",
+        "git add --force"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "webpack",
+    "clean": "",
+    "precommit": "lint-staged",
+    "coverage": "jest --coverage",
+    "lint": "eslint --ignore-path .gitignore --ignore-pattern \"!**/.*\" .",
+    "start": "",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:integration": "npm run test:integration:sequential && npm run test:integration:parallel",
+    "test:integration:parallel": "jest --config=__tests__/integration/jest.config.js",
+    "test:integration:sequential": "jest --config=__tests__/integration/jest.config.js --runInBand",
+    "test:unit": "jest --config=__tests__/unit/jest.config.js"
+  },
+  "dependencies": {
+    "cross-fetch": "^2.2.2",
+    "form-data": "^2.3.2",
+    "graphql-request": "^1.6.0",
+    "jwt-decode": "^2.2.0",
+    "qc-to_bool": "^1.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-jest": "^23.0.1",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "dotenv": "^6.0.0",
+    "eslint": "^5.3.0",
+    "eslint-plugin-import": "^2.13.0",
+    "jest": "^23.1.0",
+    "jest-config": "^23.5.0",
+    "klaw-sync": "^4.0.0",
+    "lint-staged": "^7.2.2",
+    "micromatch": "^3.1.10",
+    "regenerator-runtime": "^0.11.1",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0"
+  }
+}
