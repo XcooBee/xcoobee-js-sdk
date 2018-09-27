@@ -155,7 +155,7 @@ describe('Inbox', function () {
 
       describe('called with an invalid API key/secret pair', async function () {
 
-        it('should return with an error response', async function (done) {
+        it('should reject with an error response', async function (done) {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -164,10 +164,17 @@ describe('Inbox', function () {
 
           const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
           const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b'; // FIXME: TODO: Get a legit message ID.
-          const response = await inboxSdk.getInboxItem(messageId);
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await inboxSdk.getInboxItem(messageId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
