@@ -42,7 +42,7 @@ class System {
    *   from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -72,7 +72,7 @@ class System {
       const response = new SuccessResponse(eventSubscriptionsPage);
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
@@ -86,7 +86,7 @@ class System {
    *   ID will be used from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -112,7 +112,7 @@ class System {
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 

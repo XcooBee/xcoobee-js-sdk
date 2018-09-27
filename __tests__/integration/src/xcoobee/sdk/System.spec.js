@@ -249,7 +249,7 @@ describe('System', function () {
 
           describe('and an invalid events mapping', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -269,26 +269,41 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
-              let response = await systemSdk.addEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -301,7 +316,7 @@ describe('System', function () {
 
           describe('using default config', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -313,26 +328,42 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.addEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.addEventSubscription(eventsMapping, null);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.addEventSubscription(eventsMapping, null, { apiKey, apiSecret });
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                response = await systemSdk.addEventSubscription(eventsMapping, null);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, null, { apiKey, apiSecret });
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -341,7 +372,7 @@ describe('System', function () {
 
           describe('using overriding config', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -359,12 +390,18 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              const { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -373,7 +410,7 @@ describe('System', function () {
 
           describe('using campaign ID', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -392,19 +429,30 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -676,7 +724,7 @@ describe('System', function () {
 
           describe('and an invalid events mapping', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -696,26 +744,41 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
-              let response = await systemSdk.deleteEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -728,7 +791,7 @@ describe('System', function () {
 
           describe('using default config', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -740,26 +803,42 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.deleteEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, null);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, null, { apiKey, apiSecret });
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, null);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, null, { apiKey, apiSecret });
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });
@@ -768,7 +847,7 @@ describe('System', function () {
 
           describe('using overriding config', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -786,12 +865,18 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              const { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -800,7 +885,7 @@ describe('System', function () {
 
           describe('using campaign ID', function () {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -819,19 +904,30 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -1322,7 +1418,7 @@ describe('System', function () {
               expect(true).toBe(false);
             } catch (response) {
               expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
+              const { error } = response;
               expect(error).toBeInstanceOf(XcooBeeError);
               expect(error.message).toBe('Campaign ID is required');
               expect(error.name).toBe('XcooBeeError');
@@ -1374,7 +1470,7 @@ describe('System', function () {
               expect(true).toBe(false);
             } catch (response) {
               expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
+              const { error } = response;
               expect(error).toBeInstanceOf(XcooBeeError);
               expect(error.message === 'Wrong key at line: 3, column: 7' || error.message === 'Campaign not found.').toBe(true);
               expect(error.name).toBe('XcooBeeError');
