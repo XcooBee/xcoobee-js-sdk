@@ -44,7 +44,7 @@ describe('Bees', function () {
             expect(result).toBeDefined();
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
-            expect(bees.length).toBe(8);
+            expect(bees.length).toBe(9);
 
             let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
@@ -61,6 +61,10 @@ describe('Bees', function () {
             filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
+
+            filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
+            expect(filteredBees.length).toBe(1);
+            expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
 
             filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
             expect(filteredBees.length).toBe(1);
@@ -108,7 +112,7 @@ describe('Bees', function () {
             expect(result).toBeDefined();
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
-            expect(bees.length).toBe(8);
+            expect(bees.length).toBe(9);
 
             let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
@@ -125,6 +129,10 @@ describe('Bees', function () {
             filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
+
+            filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
+            expect(filteredBees.length).toBe(1);
+            expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
 
             filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
             expect(filteredBees.length).toBe(1);
@@ -151,11 +159,11 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('and called with a limit that is not divisible by the total bees', function () {
+        describe('and called with a limit that is divisible by the total bees', function () {
 
           describe('using default config', function () {
 
-            it('should fetch and return with the bees available to the user', async function (done) {
+            xit('should fetch and return with the bees available to the user', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -163,7 +171,7 @@ describe('Bees', function () {
               });
 
               const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
-              // Note: We are expecting there to be a total of 8 bees.
+              // Note: We are expecting there to be a total of 9 bees.
               const response = await beesSdk.listBees('', null, 3);
               expect(response).toBeInstanceOf(PagingResponse);
               let { result } = response;
@@ -180,9 +188,9 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
 
               expect(response.hasNextPage()).toBe(true);
               let nextPageResponse = await response.getNextPage();
@@ -201,9 +209,9 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
 
               expect(nextPageResponse.hasNextPage()).toBe(true);
               nextPageResponse = await nextPageResponse.getNextPage();
@@ -212,7 +220,11 @@ describe('Bees', function () {
               expect(result).toBeDefined();
               bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(2);
+              expect(bees.length).toBe(3);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
 
               filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
               expect(filteredBees.length).toBe(1);
@@ -222,6 +234,7 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
 
+              // TODO: The following should be expected but the backend thinks there is another page.
               expect(nextPageResponse.hasNextPage()).toBe(false);
 
               done();
@@ -231,11 +244,11 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('and called with a limit that is divisible by the total bees', function () {
+        describe('and called with a limit that is not divisible by the total bees', function () {
 
           describe('using default config', function () {
 
-            xit('should fetch and return with the bees available to the user', async function (done) {
+            it('should fetch and return with the bees available to the user', async function (done) {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -243,7 +256,7 @@ describe('Bees', function () {
               });
 
               const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
-              // Note: We are expecting there to be a total of 8 bees.
+              // Note: We are expecting there to be a total of 9 bees.
               const response = await beesSdk.listBees('', null, 4);
               expect(response).toBeInstanceOf(PagingResponse);
               let { result } = response;
@@ -264,9 +277,9 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
 
               expect(response.hasNextPage()).toBe(true);
               let nextPageResponse = await response.getNextPage();
@@ -276,6 +289,10 @@ describe('Bees', function () {
               bees = result.data;
               expect(bees).toBeInstanceOf(Array);
               expect(bees.length).toBe(4);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
 
               filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
               expect(filteredBees.length).toBe(1);
@@ -289,20 +306,18 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact_card');
 
+              expect(nextPageResponse.hasNextPage()).toBe(true);
+              nextPageResponse = await nextPageResponse.getNextPage();
+              expect(nextPageResponse).toBeInstanceOf(PagingResponse);
+              result = nextPageResponse.result;
+              expect(result).toBeDefined();
+              bees = result.data;
+              expect(bees).toBeInstanceOf(Array);
+              expect(bees.length).toBe(1);
+
               filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
-
-              // TODO: The following should be expected but the backend thinks there is another page.
-              expect(nextPageResponse.hasNextPage()).toBe(false);
-              // expect(nextPageResponse.hasNextPage()).toBe(true);
-              // nextPageResponse = await nextPageResponse.getNextPage();
-              // expect(nextPageResponse).toBeInstanceOf(PagingResponse);
-              // result = nextPageResponse.result;
-              // expect(result).toBeDefined();
-              // bees = result.data;
-              // expect(bees).toBeInstanceOf(Array);
-              // expect(bees.length).toBe(0);
 
               done();
             });// eo it
@@ -315,7 +330,7 @@ describe('Bees', function () {
 
       describe('called with an invalid API key/secret pair', function () {
 
-        it('should return with an error response', async function (done) {
+        it('should reject with an error response', async function (done) {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -323,10 +338,17 @@ describe('Bees', function () {
           });
 
           const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await beesSdk.listBees();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await beesSdk.listBees();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 

@@ -595,11 +595,16 @@ describe('Consents', function () {
           });
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await consentsSdk.listCampaigns();
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.listCampaigns();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
 
           done();
         });// eo it
@@ -849,11 +854,16 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentStatus = 'does not matter';
-          const response = await consentsSdk.listConsents(consentStatus);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.listConsents(consentStatus);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
 
           done();
         });// eo it

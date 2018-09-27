@@ -282,10 +282,17 @@ describe('Inbox', function () {
           });
 
           const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await inboxSdk.listInbox();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await inboxSdk.listInbox();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 

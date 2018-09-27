@@ -36,7 +36,7 @@ class Users {
    * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<PagingResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -77,7 +77,7 @@ class Users {
    * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<PagingResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.

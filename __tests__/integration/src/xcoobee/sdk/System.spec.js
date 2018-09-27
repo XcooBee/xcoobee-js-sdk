@@ -1019,11 +1019,17 @@ describe('System', function () {
           });
 
           const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await systemSdk.getEvents();
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await systemSdk.getEvents();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -1300,26 +1306,42 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.listEventSubscriptions();
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.listEventSubscriptions(null);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.listEventSubscriptions();
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.listEventSubscriptions(null, null, null, { apiKey, apiSecret });
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.listEventSubscriptions(null);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.listEventSubscriptions(null, null, null, { apiKey, apiSecret });
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -1343,12 +1365,18 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              const { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+
+              try {
+                await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -1373,19 +1401,30 @@ describe('System', function () {
               const campaignId = 'unknown';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.listEventSubscriptions(campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.listEventSubscriptions(campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it

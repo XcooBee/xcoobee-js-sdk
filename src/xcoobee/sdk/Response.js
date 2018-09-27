@@ -58,7 +58,7 @@ class Response {
   /**
    * @async
    *
-   * @returns {Promise<PagingResponse|ErrorResponse|null, undefined>}
+   * @returns {Promise<PagingResponse|null, ErrorResponse>}
    */
   async getNextPage() {
     return null;
