@@ -118,7 +118,7 @@ class Users {
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -142,7 +142,7 @@ class Users {
       const response = new SuccessResponse({ data: userInfo });
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
@@ -155,7 +155,7 @@ class Users {
    * @param {*} breachId
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -182,7 +182,7 @@ class Users {
       const response = new SuccessResponse({ data: note });
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 

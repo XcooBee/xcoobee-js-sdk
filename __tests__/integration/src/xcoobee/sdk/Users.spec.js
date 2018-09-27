@@ -179,7 +179,7 @@ describe('Users', function () {
 
       describe('called with an invalid API key/secret pair', function () {
 
-        it('should return with an error response', async function (done) {
+        it('should reject with an error response', async function (done) {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -187,10 +187,17 @@ describe('Users', function () {
           });
 
           const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await usersSdk.getUser();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await usersSdk.getUser();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
