@@ -1316,12 +1316,17 @@ describe('System', function () {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.ping();
-            expect(response).toBeInstanceOf(ErrorResponse);
-            let { error } = response;
-            expect(error).toBeInstanceOf(XcooBeeError);
-            expect(error.message).toBe('Campaign ID is required');
-            expect(error.name).toBe('XcooBeeError');
+            try {
+              await systemSdk.ping();
+              // This should not be called.
+              expect(true).toBe(false);
+            } catch (response) {
+              expect(response).toBeInstanceOf(ErrorResponse);
+              let { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Campaign ID is required');
+              expect(error.name).toBe('XcooBeeError');
+            }
 
             done();
           });// eo it
@@ -1363,12 +1368,17 @@ describe('System', function () {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.ping();
-            expect(response).toBeInstanceOf(ErrorResponse);
-            let { error } = response;
-            expect(error).toBeInstanceOf(XcooBeeError);
-            expect(error.message === 'Wrong key at line: 3, column: 7' || error.message === 'Campaign not found.').toBe(true);
-            expect(error.name).toBe('XcooBeeError');
+            try {
+              await systemSdk.ping();
+              // This should not be called.
+              expect(true).toBe(false);
+            } catch (response) {
+              expect(response).toBeInstanceOf(ErrorResponse);
+              let { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message === 'Wrong key at line: 3, column: 7' || error.message === 'Campaign not found.').toBe(true);
+              expect(error.name).toBe('XcooBeeError');
+            }
 
             done();
           });// eo it
