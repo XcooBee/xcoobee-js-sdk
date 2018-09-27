@@ -96,11 +96,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentId = 'does not matter';
-          const response = await consentsSdk.confirmConsentChange(consentId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.confirmConsentChange(consentId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -178,11 +184,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentId = 'does not matter';
-          const response = await consentsSdk.confirmDataDelete(consentId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.confirmDataDelete(consentId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -288,11 +300,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const campaignId = 'does not matter';
-          const response = await consentsSdk.getCampaignInfo(campaignId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.getCampaignInfo(campaignId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -372,11 +390,18 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentId = 'does not matter';
-          const response = await consentsSdk.getConsentData(consentId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.getConsentData(consentId);
+            // This should not be called.
+            expect(true).toBe(false);
+          }
+          catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -463,11 +488,17 @@ describe('Consents', function () {
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const xcoobeeId = 'does not matter';
           const campaignId = 'does not matter';
-          const response = await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -903,10 +934,17 @@ describe('Consents', function () {
           const xcoobeeId = 'does not matter';
           const campaignId = 'does not matter';
           const referenceId = 'does not matter';
-          const response = await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -1001,11 +1039,17 @@ describe('Consents', function () {
           const consentId = 'does not matter';
           const referenceId = 'does not matter';
           const files = [];
-          const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
