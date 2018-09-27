@@ -58,12 +58,16 @@ class Response {
   /**
    * @async
    *
-   * @returns {Promise<PagingResponse, ErrorResponse}
+   * @returns {Promise<PagingResponse|ErrorResponse|null, undefined>}
    */
   async getNextPage() {
     return null;
   }
 
+  /**
+   * @returns {boolean} A flag indicating whether there is another page of results
+   *   that may be retrieved.
+   */
   hasNextPage() {
     return !!this._.hasNextPage;
   };

@@ -67,7 +67,7 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
  * @param {Object} params - The static parameters expected by the fetch page
  *   function.
  *
- * @returns {Promise<PagingResponse, ErrorResponse>}
+ * @returns {Promise<PagingResponse|ErrorResponse, undefined>}
  */
 async function startPaging(fetchPage, apiCfg, params) {
   try {

@@ -125,7 +125,7 @@ class System {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse|ErrorResponse, undefined>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -170,7 +170,7 @@ class System {
    * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse|ErrorResponse, undefined>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
