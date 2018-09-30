@@ -38,27 +38,28 @@ class Bees {
    * match the specified search text.
    *
    * ```js
-   * listBees('social')
-   *   .then(res => {
-   *     const { code, result, error, time } = res;
-   *     if (code >= 300 || error) {
-   *       if (error) {
-   *         console.error(error);
-   *       }
-   *       return;
-   *     }
-   *     const bees = result.data;
-   *     bees.forEach(bee => {
+   * let socialBees = [];
+   *
+   * function collectSocialBees(pagingResponse) {
+   *   const { result } = pagingResponse;
+   *   const pageOfBees = result.data;
+   *   socialBees = socialBees.concat(pageOfBees);
+   *   if (pagingResponse.hasNextPage()) {
+   *     pagingResponse.getNextPage().then(collectSocialBees);
+   *   } else {
+   *     socialBees.forEach(bee => {
    *       const { bee_system_name, description, bee_icon, ...etc } = bee;
    *       // DO something with this data.
    *     });
-   *     if (bees.hasNextPage()) {
-   *       bees.getNextPage()
-   *         .then(res => {
-   *           ...
-   *         });
-   *     }
-   *   })
+   *   }
+   * }
+   *
+   * listBees('social')
+   *   .then(collectSocialBees)
+   *   .catch(res => {
+   *     const { error } = res;
+   *     console.error(error);
+   *   });
    * ```
    *
    * @async
