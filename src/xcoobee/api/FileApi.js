@@ -13,13 +13,13 @@ import ApiUtils from './ApiUtils';
  *   instance.
  * @param {Object} policy - The policy returned from `PolicyApi.upload_policy`.  It
  *   is used for S3 authentication.
- * @param {String} policy.credential
- * @param {String} policy.date
- * @param {String} policy.identifier
- * @param {String} policy.key
- * @param {String} policy.policy
- * @param {String} policy.signature
- * @param {String} policy.upload_url
+ * @param {string} policy.credential
+ * @param {string} policy.date
+ * @param {string} policy.identifier
+ * @param {string} policy.key
+ * @param {string} policy.policy
+ * @param {string} policy.signature
+ * @param {string} policy.upload_url
  *
  * @returns {Promise<IncomingMessage>} - The HTTP response.
  *

@@ -212,6 +212,14 @@ const TypeToEventTypeLut = {
   // ?: 'process_reroute',
 };
 
+/**
+ * @private
+ * @param {string} type
+ *
+ * @returns {string}
+ *
+ * @throws {XcooBeeError}
+ */
 function toEventType(type) {
   if (!(type in TypeToEventTypeLut)) {
     throw new XcooBeeError(`Invalid event type provided: "${type}".`);

@@ -1,17 +1,16 @@
 /**
- * Represents a response from the SDK calls.
+ * Represents a response from an SDK function call.
  *
  * @immutable
  */
 class Response {
 
   /**
-   *
    * @param {Object} info
    * @param {number} info.code
    * @param {Object} [info.error]
    * @param {string} [info.error.message]
-   * @param {mixed} [info.result]
+   * @param {*} [info.result]
    */
   constructor(info) {
     if (!info) {
@@ -39,18 +38,31 @@ class Response {
     };
   }
 
+  /**
+   * @returns {number}
+   */
   get code() {
     return this._.code;
   }
 
+  /**
+   * @returns {*}
+   */
   get result() {
     return this._.result;
   }
 
+  /**
+   * @returns {Object}
+   * @property {string} message
+   */
   get error() {
     return this._.error;
   }
 
+  /**
+   * @returns {Date}
+   */
   get time() {
     return this._.time;
   }

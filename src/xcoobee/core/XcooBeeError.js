@@ -3,6 +3,9 @@
  */
 class XcooBeeError extends Error {
 
+  /**
+   * @param  {...any} args
+   */
   constructor(...args) {
     // See https://medium.com/@xjamundx/custom-javascript-errors-in-es6-aa891b173f87
     super(...args);

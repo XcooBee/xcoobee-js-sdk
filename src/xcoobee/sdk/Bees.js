@@ -15,6 +15,11 @@ import SuccessResponse from './SuccessResponse';
  */
 class Bees {
 
+  /**
+   * @param {*} config
+   * @param {*} apiAccessTokenCache
+   * @param {*} usersCache
+   */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
       apiAccessTokenCache,
@@ -23,10 +28,16 @@ class Bees {
     };
   }
 
+  /**
+   * @param {Config} config
+   */
   set config(config) {
     this._.config = config;
   }
 
+  /**
+   * @protected
+   */
   _assertValidState() {
     if (!this._.config) {
       throw TypeError('Illegal State: Default config has not been set yet.');
@@ -104,9 +115,9 @@ class Bees {
   /**
    *
    * @async
-   * @param {string[]} bees - A mapping of bee names to bee parameters.
-   * @param {string} bees<key> - The bee name.  A 'transfer' bee will be ignored.
-   * @param {Object} bees<value> - The bee parameters.
+   * @param {Array<Object<string, Object>>} bees - A mapping of bee names to bee parameters.
+   * @property {string} key - The bee name.  A 'transfer' bee will be ignored.
+   * @property {Object} value - The bee parameters.
    * @param {Object} options - The bee take off options.
    * @param {Object} options.process -
    * @param {Array<email|XcooBeeId>} [options.process.destinations] -

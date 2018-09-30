@@ -43,14 +43,23 @@ class Sdk {
     };
   }
 
+  /**
+   * @returns {Bee}
+   */
   get bees() {
     return this._.bees;
   }
 
+  /**
+   * @returns {Config}
+   */
   get config() {
     return this._.config;
   }
 
+  /**
+   * @param {Config} config
+   */
   set config(config) {
     // TODO: Validate config.
     this._.bees.config = config;
@@ -61,18 +70,30 @@ class Sdk {
     this._.config = config;
   }
 
+  /**
+   * @returns {Consents}
+   */
   get consents() {
     return this._.consents;
   }
 
+  /**
+   * @returns {Inbox}
+   */
   get inbox() {
     return this._.inbox;
   }
 
+  /**
+   * @returns {System}
+   */
   get system() {
     return this._.system;
   }
 
+  /**
+   * @returns {Users}
+   */
   get users() {
     return this._.users;
   }

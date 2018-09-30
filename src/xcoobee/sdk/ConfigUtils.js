@@ -14,7 +14,7 @@ import Config from './Config';
  *   On Windows, the HOME directory is determined by the `USERPROFILE` environment
  *   variable.
  *
- * @return {Promise<Config, Error>}
+ * @returns {Promise<Config, Error>}
  *
  * @throws {XcooBeeError}
  */

@@ -13,6 +13,11 @@ import SuccessResponse from './SuccessResponse';
  */
 class System {
 
+  /**
+   * @param {*} config
+   * @param {*} apiAccessTokenCache
+   * @param {*} usersCache
+   */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
       apiAccessTokenCache,
@@ -21,10 +26,16 @@ class System {
     };
   }
 
+  /**
+   * @param {Config} config
+   */
   set config(config) {
     this._.config = config;
   }
 
+  /**
+   * @protected
+   */
   _assertValidState() {
     if (!this._.config) {
       throw TypeError('Illegal State: Default config has not been set yet.');

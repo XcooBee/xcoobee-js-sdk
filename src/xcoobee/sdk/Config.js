@@ -77,14 +77,23 @@ class Config {
     };
   }
 
+  /**
+   * @returns {string}
+   */
   get apiKey() {
     return this._.apiKey;
   }
 
+  /**
+   * @returns {string}
+   */
   get apiSecret() {
     return this._.apiSecret;
   }
 
+  /**
+   * @returns {string}
+   */
   get apiUrlRoot() {
     return this._.apiUrlRoot;
   }
@@ -97,14 +106,23 @@ class Config {
     return this._.campaignId;
   }
 
+  /**
+   * @returns {boolean}
+   */
   get encrypt() {
     return this._.encrypt;
   }
 
+  /**
+   * @returns {string}
+   */
   get pgpPassword() {
     return this._.pgpPassword;
   }
 
+  /**
+   * @returns {string}
+   */
   get pgpSecret() {
     return this._.pgpSecret;
   }

@@ -1,5 +1,15 @@
 import EndPointApi from '../../xcoobee/api/EndPointApi';
 
+/**
+ * @async
+ * @param {string} apiUrlRoot
+ * @param {string} apiAccessToken
+ * @param {string} userCursor
+ * @param {string} endPointName
+ * @param {string} fallbackEndPointName
+ *
+ * @returns {Promise<EndPoint, XcooBeeError>}
+ */
 async function findEndPoint(apiUrlRoot, apiAccessToken, userCursor, endPointName, fallbackEndPointName) {
   let endPointNames = [endPointName];
 

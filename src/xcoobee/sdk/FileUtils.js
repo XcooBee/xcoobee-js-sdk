@@ -2,6 +2,13 @@ import EndPointUtils from '../../xcoobee/api/EndPointUtils';
 import FileApi from '../../xcoobee/api/FileApi';
 import PolicyApi from '../../xcoobee/api/PolicyApi';
 
+/**
+ * @private
+ * @param {string[]} files
+ * @param {Object[]} policies
+ *
+ * @returns {Object[]}
+ */
 function zipTogether(files, policies) {
   const pairs = [];
   // Note: Not expecting the lengths between the two arrays to be different, but
@@ -15,6 +22,16 @@ function zipTogether(files, policies) {
   return pairs;
 }
 
+/**
+ * @async
+ * @param {string} apiUrlRoot
+ * @param {string} apiAccessToken
+ * @param {string} userCursor
+ * @param {string} endPointName
+ * @param {string[]} files
+ *
+ * @returns {Promise<Object, XcooBeeError>}
+ */
 async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files) {
   const endPoint = await EndPointUtils.findEndPoint(apiUrlRoot, apiAccessToken, userCursor, endPointName, 'flex');
 

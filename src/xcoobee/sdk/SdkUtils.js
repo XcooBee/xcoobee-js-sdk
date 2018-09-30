@@ -43,6 +43,8 @@ function resolveApiCfg(overridingConfig, defaultConfig) {
  * @param {string} [campaignId]
  * @param {Config} [overridingConfig]
  * @param {Config} [defaultConfig]
+ *
+ * @returns {string} The resolved campaign ID.
  */
 function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
   if (campaignId && typeof campaignId === 'string') {

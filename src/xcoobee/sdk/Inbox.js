@@ -9,6 +9,11 @@ import SuccessResponse from './SuccessResponse';
  */
 class Inbox {
 
+  /**
+   * @param {Config} config
+   * @param {ApiAccessTokenCache} apiAccessTokenCache
+   * @param {UsersCache} usersCache
+   */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
       apiAccessTokenCache,
@@ -17,10 +22,16 @@ class Inbox {
     };
   }
 
+  /**
+   * @param {Config} config
+   */
   set config(config) {
     this._.config = config;
   }
 
+  /**
+   * @protected
+   */
   _assertValidState() {
     if (!this._.config) {
       throw TypeError('Illegal State: Default config has not been set yet.');

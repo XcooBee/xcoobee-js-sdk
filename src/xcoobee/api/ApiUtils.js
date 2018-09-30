@@ -6,6 +6,12 @@ const CURSOR__RE = /^[\w/=+]+$/;
 
 const EMAIL_ADDRESS__RE = /^[-+\w]+(\.[-+\w]+)*@([-a-z0-9]+\.)+[a-z]{2,6}$/i;
 
+/**
+ * @private
+ * @param {string} campaignId
+ *
+ * @returns {boolean}
+ */
 function appearsToBeACampaignId(campaignId) {
   return typeof campaignId === 'string' && campaignId.length > 0;
 }
@@ -100,6 +106,14 @@ export function transformError(inputError) {
   return new XcooBeeError(inputError);
 }
 
+/**
+ * @private
+ * @param {Object} error
+ * @param {string} [error.message]
+ * @param {Object[]} [error.locations]
+ *
+ * @returns {string}
+ */
 function errorToMessage(error) {
   let msg = [];
   if (error.message) {
@@ -115,6 +129,12 @@ function errorToMessage(error) {
   return msg;
 }
 
+/**
+ * @private
+ * @param {Object} loc
+ *
+ * @returns {string}
+ */
 function locationToMessage(loc) {
   return `at line: ${loc.line}, column: ${loc.column}`;
 }
