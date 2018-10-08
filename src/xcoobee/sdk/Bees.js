@@ -11,14 +11,27 @@ import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
 
 /**
- * The Bees service.
+ * The Bees SDK service.
+ *
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to a `Bees` SDK instance through the {@link Sdk#bees bees} property.
+ *
+ * ```js
+ * import SdkJs from '@xcoobee/sdk-js';
+ *
+ * const sdk = new SdkJs.Sdk(...);
+ * sdk.bees.listBees(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class Bees {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   * @param {*} config
-   * @param {*} apiAccessTokenCache
-   * @param {*} usersCache
+   * Constructs a Bees SDK service instance.
    */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
@@ -29,6 +42,7 @@ class Bees {
   }
 
   /**
+   * @protected
    * @param {Config} config
    */
   set config(config) {
@@ -65,7 +79,7 @@ class Bees {
    *   }
    * }
    *
-   * listBees('social')
+   * sdk.bees.listBees('social')
    *   .then(collectSocialBees)
    *   .catch(res => {
    *     const { error } = res;
@@ -116,8 +130,8 @@ class Bees {
    *
    * @async
    * @param {Array<Object<string, Object>>} bees - A mapping of bee names to bee parameters.
-   * @property {string} key - The bee name.  A 'transfer' bee will be ignored.
-   * @property {Object} value - The bee parameters.
+   * @param {string} bees[].key - The bee name.  A 'transfer' bee will be ignored.
+   * @param {Object} bees[].value - The bee parameters.
    * @param {Object} options - The bee take off options.
    * @param {Object} options.process -
    * @param {Array<email|XcooBeeId>} [options.process.destinations] -

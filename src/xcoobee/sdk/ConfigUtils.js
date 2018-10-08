@@ -7,16 +7,17 @@ import { toBool } from 'qc-to_bool';
 import Config from './Config';
 
 /**
+ * Creates a {@link Config Config} instance from the given XcooBee path.
  *
  * @param {string} [xcoobPath] - The path to the `.xcoobee` directory containing
  *   the configuration file.  If `undefined`, then tries the user's `HOME` directory.
- *   On Linux, the HOME directory is determined by the `HOME` environment variable.
- *   On Windows, the HOME directory is determined by the `USERPROFILE` environment
+ *   On Linux, the `HOME` directory is determined by the `HOME` environment variable.
+ *   On Windows, the `HOME` directory is determined by the `USERPROFILE` environment
  *   variable.
  *
  * @returns {Promise<Config, Error>}
  *
- * @throws {XcooBeeError}
+ * @throws {core.XcooBeeError}
  */
 export function createConfigFromFile(xcoobPath) {
   // Home Environment Variable:
@@ -111,7 +112,14 @@ export function createConfigFromFile(xcoobPath) {
   });
 }
 
+/**
+ * @namespace ConfigUtils
+ */
 const ConfigUtils = {
+  /**
+   * An alias of {@link createConfigFromFile}.
+   * @memberof ConfigUtils
+   */
   createFromFile: createConfigFromFile,
 };
 

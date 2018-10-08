@@ -1,36 +1,37 @@
 /**
- * The configuration to use with the SDK.
+ * The configuration to use with a particular SDK instance.
  *
- * @immutable
- * @see xcoobee/sdk/ConfigUtils
+ * @param {Object} values - The configuration data.
+ * @param {string} values.apiKey - Your API key.
+ * @param {string} values.apiSecret - Your API secret associated with your API key.
+ * @param {string} values.apiUrlRoot - The root of the API URL.
+ * @param {string} [values.campaignId] - The default campaign ID to use if a campaign
+ *   ID is not explicitly set during an SDK call.
+ * @param {boolean} [values.encrypt=false] - Flag indicating whether data should be
+ *   encrypted using the specified PGP password and secret.
+ * @param {string} [values.pgpPassword] - The PGP password.  Required when
+ *   `data.encrypt` is `true`.
+ * @param {string} [values.pgpSecret] - The PGP secret.  Required when `data.encrypt`
+ *   is `true`.
+ *
+ * @throws {TypeError} when configuration data is invalid.
+ *
+ * @see {@link Sdk.ConfigUtils} for other ways to construct configuration
+ *   instances.
  */
 class Config {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   * Constructs a new `Config` object.
-   *
-   * @param {Object} data - The configuration data.
-   * @param {string} data.apiKey - Your API key.
-   * @param {string} data.apiSecret - Your API secret associated with your API key.
-   * @param {string} data.apiUrlRoot - The root of the API URL.
-   * @param {string} [data.campaignId] - The default campaign ID to use if a campaign
-   *   ID is not explicitly set during an SDK call.
-   * @param {boolean} [data.encrypt=false] - Flag indicating whether data should be
-   *   encrypted using the specified PGP password and secret.
-   * @param {string} [data.pgpPassword] - The PGP password.  Required when
-   *   `data.encrypt` is `true`.
-   * @param {string} [data.pgpSecret] - The PGP secret.  Required when `data.encrypt`
-   *   is `true`.
-   *
-   * @throws TypeError
+   * Constructs an immutable configuration.
    */
-  constructor(data) {
-    if (!data) {
+  constructor(values) {
+    if (!values) {
       throw TypeError('Config `data` is required.');
     }
     let {
       apiKey, apiSecret, apiUrlRoot, campaignId, encrypt, pgpPassword, pgpSecret,
-    } = data;
+    } = values;
     campaignId = campaignId === undefined ? null : campaignId;
     encrypt = encrypt === undefined ? false : encrypt;
     pgpPassword = pgpPassword === undefined ? null : pgpPassword;
@@ -78,6 +79,9 @@ class Config {
   }
 
   /**
+   * The XcooBee API key.
+   *
+   * @readonly
    * @returns {string}
    */
   get apiKey() {
@@ -85,6 +89,9 @@ class Config {
   }
 
   /**
+   * The XcooBee API secret.
+   *
+   * @readonly
    * @returns {string}
    */
   get apiSecret() {
@@ -92,6 +99,9 @@ class Config {
   }
 
   /**
+   * The XcooBee API URL root.
+   *
+   * @readonly
    * @returns {string}
    */
   get apiUrlRoot() {
@@ -101,12 +111,16 @@ class Config {
   /**
    * The default campaign ID.  This is used if a campaign ID is not explicitly set
    * during an SDK call.
+   *
+   * @readonly
+   * @returns {string}
    */
   get campaignId() {
     return this._.campaignId;
   }
 
   /**
+   * @readonly
    * @returns {boolean}
    */
   get encrypt() {
@@ -114,6 +128,7 @@ class Config {
   }
 
   /**
+   * @readonly
    * @returns {string}
    */
   get pgpPassword() {
@@ -121,6 +136,7 @@ class Config {
   }
 
   /**
+   * @readonly
    * @returns {string}
    */
   get pgpSecret() {

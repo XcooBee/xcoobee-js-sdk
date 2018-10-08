@@ -8,26 +8,46 @@ import System from './System';
 import Users from './Users';
 
 /**
- * The SDK entry point.
+ * The SDK class.
  *
  * ```js
- * const config = {
+ * import SdkJs from '@xcoobee/sdk-js';
+ *
+ * const config = new SdkJs.Config({
  *   apiKey: '...',
  *   apiSecret: '...',
+ *   apiUrlRoot: '...',
  *   campaignId: null,
- *   encrypt: true,
+ *   encrypt: false,
  *   pgpPassword: null,
  *   pgpSecret: null,
- * };
- * const xcooBeeSdk = new Sdk(config);
+ * });
+ * const sdk = new SdkJs.Sdk(config);
  * ```
+ *
+ * ```js
+ * import { Config, Sdk } from '@xcoobee/sdk-js';
+ *
+ * const config = new Config({
+ *   apiKey: '...',
+ *   apiSecret: '...',
+ *   apiUrlRoot: '...',
+ *   campaignId: null,
+ *   encrypt: false,
+ *   pgpPassword: null,
+ *   pgpSecret: null,
+ * });
+ * const sdk = new Sdk(config);
+ * ```
+ *
+ * @param {Config?} config The default configuration to use when a configuration
+ *   is not specified with individual SDK calls.
  */
 class Sdk {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   *
-   * @param {Object} [config] The default configuration to use when a configuration
-   *   is not specified with individual SDK calls.
+   * Constructs an Sdk instance.
    */
   constructor(config) {
     let cfg = config || null;
@@ -44,13 +64,18 @@ class Sdk {
   }
 
   /**
-   * @returns {Bee}
+   * Returns a reference to a bees SDK instance.
+   *
+   * @readonly
+   * @returns {Bees}
    */
   get bees() {
     return this._.bees;
   }
 
   /**
+   * Returns a reference to the current configuration.
+   *
    * @returns {Config}
    */
   get config() {
@@ -58,6 +83,8 @@ class Sdk {
   }
 
   /**
+   * Sets the current configuration to the given configuration.
+   *
    * @param {Config} config
    */
   set config(config) {
@@ -71,6 +98,9 @@ class Sdk {
   }
 
   /**
+   * Returns a reference to a consents SDK instance.
+   *
+   * @readonly
    * @returns {Consents}
    */
   get consents() {
@@ -78,6 +108,9 @@ class Sdk {
   }
 
   /**
+   * Returns a reference to a inbox SDK instance.
+   *
+   * @readonly
    * @returns {Inbox}
    */
   get inbox() {
@@ -85,6 +118,9 @@ class Sdk {
   }
 
   /**
+   * Returns a reference to a system SDK instance.
+   *
+   * @readonly
    * @returns {System}
    */
   get system() {
@@ -92,6 +128,9 @@ class Sdk {
   }
 
   /**
+   * Returns a reference to an users SDK instance.
+   *
+   * @readonly
    * @returns {Users}
    */
   get users() {

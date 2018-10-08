@@ -14,14 +14,28 @@ import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
 
 /**
- * The Consents service.
+ * The Consents SDK service.
+ *
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to a `Consents` SDK instance through the {@link Sdk#consents consents}
+ * property.
+ *
+ * ```js
+ * import SdkJs from '@xcoobee/sdk-js';
+ *
+ * const sdk = new SdkJs.Sdk(...);
+ * sdk.consents.getConsentData(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class Consents {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   * @param {*} config
-   * @param {*} apiAccessTokenCache
-   * @param {*} usersCache
+   * Constructs a Consents SDK service instance.
    */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
@@ -32,6 +46,7 @@ class Consents {
   }
 
   /**
+   * @protected
    * @param {Config} config
    */
   set config(config) {

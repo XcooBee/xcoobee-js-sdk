@@ -5,14 +5,27 @@ import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
 
 /**
- * The Inbox service.
+ * The Inbox SDK service.
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to an `Inbox` SDK instance through the {@link Sdk#inbox inbox}
+ * property.
+ *
+ * ```js
+ * import SdkJs from '@xcoobee/sdk-js';
+ *
+ * const sdk = new SdkJs.Sdk(...);
+ * sdk.inbox.listInbox(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class Inbox {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   * @param {Config} config
-   * @param {ApiAccessTokenCache} apiAccessTokenCache
-   * @param {UsersCache} usersCache
+   * Constructs an `Inbox` SDK service instance.
    */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
@@ -23,6 +36,7 @@ class Inbox {
   }
 
   /**
+   * @protected
    * @param {Config} config
    */
   set config(config) {

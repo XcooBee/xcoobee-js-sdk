@@ -1,5 +1,7 @@
 /**
  * A XcooBee specific error.
+ *
+ * @memberof module:core
  */
 class XcooBeeError extends Error {
 

@@ -9,14 +9,27 @@ import SdkUtils from './SdkUtils';
 import SuccessResponse from './SuccessResponse';
 
 /**
- * The System service.
+ * The System SDK service.
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to a `System` SDK instance through the {@link Sdk#system system}
+ * property.
+ *
+ * ```js
+ * import SdkJs from '@xcoobee/sdk-js';
+ *
+ * const sdk = new SdkJs.Sdk(...);
+ * sdk.system.ping(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class System {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   * @param {*} config
-   * @param {*} apiAccessTokenCache
-   * @param {*} usersCache
+   * Constructs a `System` SDK service instance.
    */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
@@ -27,6 +40,7 @@ class System {
   }
 
   /**
+   * @protected
    * @param {Config} config
    */
   set config(config) {
