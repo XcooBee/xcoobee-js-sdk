@@ -17,6 +17,10 @@ toc:
   - System
   - Users
   - name: Responses
+    description: |
+      Each of the SDK function calls returns a {@link Promise} that resolves with a
+      {@link PagingResponse} or a {@link SuccessResponse}. The promise may reject
+      with an {@link ErrorResponse}.
   - Response
   - PagingResponse
   - SuccessResponse
