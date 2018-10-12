@@ -185,9 +185,29 @@ For convenience we have built a Single Page Application (SPA) that can be used t
 If your application is under development and you need to work with events you can use the `poller` program. The poller program is a single page application that you can access from the `poller` directory of the repo. We recommend that you copy the contents to a local webserver. It acts as bridge to XcooBee events for you. This will allow relay events without  the need to publish your website.
 
 
-## API Function Reference
+## SDK Function Call Reference
 
-You can generate an API function reference by calling the documentation command `npm run build:docs` from your terminal. This will generate function call signatures for all exposed functions in the `/dist` folder.
+You can generate an SDK function reference by calling the documentation command `npm run build:docs` from your terminal. This will generate function call signatures for all exposed functions in the `/dist` folder.
+
+## Tests
+
+### Running Unit Tests
+
+You can use the following command line to run unit test to validate the project
+
+TODO: add command lin
+
+### Running Integration Tests
+
+When your initial developer account is created it will be populated with data so that you can test the project against actual data and system.
+You will have to configure your `__tests__\integration\.env.local` file prior to running the integration tests.
+
+TODO: add description for `local.env` file
+
+You can use the following command line to run the integration tests for this project.
+
+TODO: add command line
+
 
 ## More information
 
