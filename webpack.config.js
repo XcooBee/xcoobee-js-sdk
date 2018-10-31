@@ -1,12 +1,14 @@
 const path = require('path');
 
+const manifest = require('./package.json');
+
 // https://webpack.js.org/configuration/entry-context/#context
 const context = path.resolve(__dirname, 'src');
 
 // https://webpack.js.org/configuration/entry-context/#entry
 const entry = [
   'regenerator-runtime/runtime',
-  './index.js',
+  './xcoobee/sdk/index.js',
 ];
 
 // https://webpack.js.org/configuration/externals/#externals
@@ -50,9 +52,12 @@ const output = {
   // TODO: Use the package version number in the filename.
   //
   // https://webpack.js.org/configuration/output/#output-filename
-  filename: 'xcoobee-sdk-[chunkhash].web.js',
+  // filename: 'xcoobee-sdk-[chunkhash].web.js',
+  filename: `xcoobee-sdk-${manifest.version}.web.js`,
   // Note: The following will become the name of a global variable.
-  library: 'XcooBee',
+  library: ['XcooBee', 'sdk'],
+  libraryExport: 'default',
+  libraryTarget: 'umd',
   // Note that `[hash]` in this parameter will be replaced with an hash of the
   // compilation.
   // https://webpack.js.org/configuration/output/#output-path
