@@ -1,0 +1,4 @@
+apiKey = testApiKey
+apiSecret = testApiSecret
+apiUrlRoot = https://api.xcoobee.net
+pgpPassword = asdf1234

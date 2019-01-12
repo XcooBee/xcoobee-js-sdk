@@ -64,7 +64,7 @@ export function createConfigFromFile(xcoobPath) {
       // directory.
       lineReader.on('close', function () {
         if ('campaignId' in configData) {
-          if (campaignId === '') {
+          if (configData.campaignId === '') {
             configData.campaignId = null;
           }
         }
@@ -72,12 +72,12 @@ export function createConfigFromFile(xcoobPath) {
           configData.encrypt = toBool(configData.encrypt, false);
         }
         if ('pgpPassword' in configData) {
-          if (pgpPassword === '') {
+          if (configData.pgpPassword === '') {
             configData.pgpPassword = null;
           }
         }
         if ('pgpSecret' in configData) {
-          if (pgpSecret === '') {
+          if (configData.pgpSecret === '') {
             configData.pgpSecret = null;
           }
         }
@@ -87,7 +87,7 @@ export function createConfigFromFile(xcoobPath) {
           // Note: To avoid the race condition between checking for existance of a file and
           // reading it, it is best practice to just attempt to read it and handle the case
           // when it doesn't exist.
-          Fs.readFile(pgpSecretFilename, (err, data) => {
+          Fs.readFile(pgpSecretFilename, 'utf8', (err, data) => {
             if (err) {
               // If the file doesn't exist, then that is fine.
               if (err.code === 'ENOENT') {
