@@ -84,7 +84,7 @@ describe('CampaignApi', function () {
         expect(result).toBeDefined();
         expect(result.data).toBeInstanceOf(Array);
         expect(result.page_info).toBeDefined();
-        expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+        expect(result.page_info.end_cursor).toBeNull();
         expect(result.page_info.has_next_page).toBeNull();
         const campaigns = result.data;
         expect(campaigns.length).toBe(1);

@@ -140,14 +140,17 @@ export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor,
     }
   `;
   const noteType = breachId ? NoteTypes.BREACH : NoteTypes.CONSENT;
+  const config = {
+    consent_cursor: consentId,
+    message,
+    note_type: noteType,
+    user_cursor: userCursor,
+  };
+  if (breachId) {
+    config.breach_cursor = breachId;
+  }
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
-    config: {
-      breach_cursor: breachId,
-      consent_cursor: consentId,
-      message,
-      note_type: noteType,
-      user_cursor: userCursor,
-    },
+    config,
   })
     .then(response => {
       const { send_message } = response;

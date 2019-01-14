@@ -95,8 +95,8 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
 export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId) {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
-    query getCookieConsent($userCursor: String!, $campaignId: String!, $status: ConsentStatus) {
-      consents(campaign_owner_cursor: $userCursor, campaign_cursor: $campaignId, status: $status) {
+    query getCookieConsent($userCursor: String!, $campaignIds: [String!]!, $statuses: [ConsentStatus]) {
+      consents(campaign_owner_cursor: $userCursor, campaign_cursors: $campaignIds, statuses: $statuses) {
         data {
           consent_type,
           request_data_types,
@@ -110,8 +110,8 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
-    campaignId,
-    status: ConsentStatuses.ACTIVE,
+    campaignIds: [campaignId],
+    statuses: [ConsentStatuses.ACTIVE],
     userCursor,
   })
     .then(response => {
@@ -294,8 +294,8 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status, aft
   // - user_display_name
   // - valid_length
   const query = `
-    query listConsents($userCursor: String!, $status: ConsentStatus, $after: String, $first: Int) {
-      consents(campaign_owner_cursor: $userCursor, status : $status, after: $after, first: $first) {
+    query listConsents($userCursor: String!, $statuses: [ConsentStatus], $after: String, $first: Int) {
+      consents(campaign_owner_cursor: $userCursor, statuses: $statuses, after: $after, first: $first) {
         data {
           consent_cursor,
           consent_status,
@@ -313,7 +313,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status, aft
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     after,
     first,
-    status,
+    statuses: [status],
     userCursor,
   })
     .then(response => {
