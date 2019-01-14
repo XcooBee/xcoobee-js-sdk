@@ -188,4 +188,89 @@ describe('SdkUtils', function () {
 
   });// eo describe('.resolveCampaignId')
 
+  describe('.resolveSdkCfg', function () {
+
+    const defaultConfig = {
+      apiKey: 'default-api-key',
+      apiSecret: 'default-api-secret',
+      apiUrlRoot: 'https://default.api.xcoobee.net',
+      mayHaveOther: 'NameValuePairs',
+      pgpPassword: 'default_asdf1234',
+      pgpSecret: '-----BEGIN PGP PRIVATE KEY BLOCK-----\ndefault...',
+    };
+
+    const overridingConfig = {
+      apiKey: 'overriding-api-key',
+      apiSecret: 'overriding-api-secret',
+      apiUrlRoot: 'https://overriding.api.xcoobee.net',
+      mayHaveOther: 'NameValuePairs',
+      pgpPassword: 'overriding_asdf1234',
+      pgpSecret: '-----BEGIN PGP PRIVATE KEY BLOCK-----\noverriding...',
+    };
+
+    describe('called with a valid overriding config and a valid default config', function () {
+
+      it('should return an SDK cfg using the overriding config', function () {
+        let sdkCfg = SdkUtils.resolveSdkCfg(overridingConfig, defaultConfig);
+        expect(sdkCfg).toBeDefined();
+        expect(sdkCfg.apiKey).toBe('overriding-api-key');
+        expect(sdkCfg.apiSecret).toBe('overriding-api-secret');
+        expect(sdkCfg.apiUrlRoot).toBe('https://overriding.api.xcoobee.net');
+        expect(sdkCfg.pgpPassword).toBe('overriding_asdf1234');
+        expect(sdkCfg.pgpSecret).toBe('-----BEGIN PGP PRIVATE KEY BLOCK-----\noverriding...');
+      });
+
+    });// eo describe
+
+    describe('called with no overriding config and a valid default config', function () {
+
+      it('should return an SDK cfg using the default config', function () {
+        let sdkCfg = SdkUtils.resolveSdkCfg(null, defaultConfig);
+        expect(sdkCfg).toBeDefined();
+        expect(sdkCfg.apiKey).toBe('default-api-key');
+        expect(sdkCfg.apiSecret).toBe('default-api-secret');
+        expect(sdkCfg.apiUrlRoot).toBe('https://default.api.xcoobee.net');
+        expect(sdkCfg.pgpPassword).toBe('default_asdf1234');
+        expect(sdkCfg.pgpSecret).toBe('-----BEGIN PGP PRIVATE KEY BLOCK-----\ndefault...');
+
+        sdkCfg = SdkUtils.resolveSdkCfg(undefined, defaultConfig);
+        expect(sdkCfg).toBeDefined();
+        expect(sdkCfg.apiKey).toBe('default-api-key');
+        expect(sdkCfg.apiSecret).toBe('default-api-secret');
+        expect(sdkCfg.apiUrlRoot).toBe('https://default.api.xcoobee.net');
+        expect(sdkCfg.pgpPassword).toBe('default_asdf1234');
+        expect(sdkCfg.pgpSecret).toBe('-----BEGIN PGP PRIVATE KEY BLOCK-----\ndefault...');
+      });
+
+    });// eo describe
+
+    describe('called with no overriding config and no default config', function () {
+
+      it('should return `null`', function () {
+        let sdkCfg = SdkUtils.resolveSdkCfg(null, null);
+        expect(sdkCfg).toBeNull();
+
+        sdkCfg = SdkUtils.resolveSdkCfg(null, undefined);
+        expect(sdkCfg).toBeNull();
+
+        sdkCfg = SdkUtils.resolveSdkCfg(null);
+        expect(sdkCfg).toBeNull();
+
+        sdkCfg = SdkUtils.resolveSdkCfg(undefined, null);
+        expect(sdkCfg).toBeNull();
+
+        sdkCfg = SdkUtils.resolveSdkCfg(undefined, undefined);
+        expect(sdkCfg).toBeNull();
+
+        sdkCfg = SdkUtils.resolveSdkCfg(undefined);
+        expect(sdkCfg).toBeNull();
+
+        sdkCfg = SdkUtils.resolveSdkCfg();
+        expect(sdkCfg).toBeNull();
+      });
+
+    });// eo describe
+
+  });// eo describe('.resolveSdkCfg')
+
 });// eo describe('SdkUtils')

@@ -168,19 +168,19 @@ class System {
   async getEvents(after = null, limit = null, config = null) {
     this._assertValidState();
 
-    const fetchPage = async (apiCfg, params) => {
-      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+    const fetchPage = async (sdkCfg, params) => {
+      const { apiKey, apiSecret, apiUrlRoot, pgpPassword, pgpSecret } = sdkCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
       const userCursor = user.cursor;
-      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, after, limit);
+      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, pgpSecret, pgpPassword, after, limit);
       return eventsPage;
     };
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
     const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, sdkCfg, params);
   }
 
   /**

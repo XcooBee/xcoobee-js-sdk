@@ -66,6 +66,7 @@
     "form-data": "^2.3.2",
     "graphql-request": "^1.6.0",
     "jwt-decode": "^2.2.0",
+    "openpgp": "^4.2.1",
     "qc-to_bool": "^1.1.2"
   },
   "devDependencies": {

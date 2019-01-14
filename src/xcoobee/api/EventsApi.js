@@ -1,3 +1,5 @@
+import { decryptWithEncryptedPrivateKey } from '../core/EncryptionUtils';
+
 import ApiUtils from './ApiUtils';
 
 /**
@@ -5,6 +7,8 @@ import ApiUtils from './ApiUtils';
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} userCursor - The user's cursor.
+ * @param {string} [privateKey] - The armored, encrypted private key.
+ * @param {string} [passphrase] - The passphrase to decrypt the encrypted private key.
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
@@ -17,7 +21,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getEvents(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
+export function getEvents(apiUrlRoot, apiAccessToken, userCursor, privateKey, passphrase, after = null, first = null) {
   const query = `
     query getEvents($userCursor: String!, $after: String, $first: Int) {
       events(user_cursor: $userCursor, after: $after, first: $first) {
@@ -44,7 +48,25 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor, after = null, 
     userCursor,
   })
     .then(response => {
-      const { events } = response;
+      let { events } = response;
+
+      // If a private key and its passphrase are supplied, then decrypt payload for SDK
+      // user.
+      if (privateKey && passphrase) {
+        events.data = events.data.map(async event => {
+          const payloadJson = await decryptWithEncryptedPrivateKey(
+            event.payload,
+            privateKey,
+            passphrase,
+          );
+          const payload = JSON.parse(payloadJson);
+          event = {
+            ...event,
+            payload,
+          };
+          return event;
+        });
+      }
 
       return events;
     })

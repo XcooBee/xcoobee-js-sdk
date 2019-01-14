@@ -60,6 +60,46 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
 }
 
 /**
+ * Resolves the SDK config to use based on given input.
+ *
+ * @param {Config} [overridingConfig]
+ * @param {Config} [defaultConfig]
+ *
+ * @returns {ApiCfg}
+ */
+function resolveSdkCfg(overridingConfig, defaultConfig) {
+  if (
+    overridingConfig &&
+    'apiKey' in overridingConfig &&
+    'apiSecret' in overridingConfig &&
+    'apiUrlRoot' in overridingConfig
+  ) {
+    return {
+      apiKey: overridingConfig.apiKey,
+      apiSecret: overridingConfig.apiSecret,
+      apiUrlRoot: overridingConfig.apiUrlRoot,
+      pgpPassword: overridingConfig.pgpPassword,
+      pgpSecret: overridingConfig.pgpSecret,
+    };
+  }
+  if (
+    defaultConfig &&
+    'apiKey' in defaultConfig &&
+    'apiSecret' in defaultConfig &&
+    'apiUrlRoot' in defaultConfig
+  ) {
+    return {
+      apiKey: defaultConfig.apiKey,
+      apiSecret: defaultConfig.apiSecret,
+      apiUrlRoot: defaultConfig.apiUrlRoot,
+      pgpPassword: defaultConfig.pgpPassword,
+      pgpSecret: defaultConfig.pgpSecret,
+    };
+  }
+  return null;
+}
+
+/**
  * Starts the paging process.
  *
  * @param {Function} fetchPage - A function that fetches a page of information based
@@ -84,5 +124,6 @@ async function startPaging(fetchPage, apiCfg, params) {
 export default {
   resolveApiCfg,
   resolveCampaignId,
+  resolveSdkCfg,
   startPaging,
 };
