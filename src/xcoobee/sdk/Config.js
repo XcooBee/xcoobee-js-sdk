@@ -10,8 +10,8 @@
  * @param {boolean} [values.encrypt=false] - Flag indicating whether data should be
  *   encrypted using the specified PGP password and secret.
  * @param {string} [values.pgpPassword] - The PGP password.  Required when
- *   `data.encrypt` is `true`.
- * @param {string} [values.pgpSecret] - The PGP secret.  Required when `data.encrypt`
+ *   `values.encrypt` is `true`.
+ * @param {string} [values.pgpSecret] - The PGP secret.  Required when `data.values`
  *   is `true`.
  *
  * @throws {TypeError} when configuration data is invalid.

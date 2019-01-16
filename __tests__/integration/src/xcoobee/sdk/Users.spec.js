@@ -45,7 +45,7 @@ describe('Users', function () {
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.page_info).toBeDefined();
-            assertIsCursorLike(result.page_info.end_cursor);
+            expect(result.page_info.end_cursor).toBeNull();
             expect(result.page_info.has_next_page).toBeNull();
             const conversations = result.data;
             expect(conversations).toBeInstanceOf(Array);
@@ -100,7 +100,7 @@ describe('Users', function () {
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.page_info).toBeDefined();
-            assertIsCursorLike(result.page_info.end_cursor);
+            expect(result.page_info.end_cursor).toBeNull();
             expect(result.page_info.has_next_page).toBeNull();
             const conversations = result.data;
             expect(conversations).toBeInstanceOf(Array);
