@@ -1,6 +1,11 @@
 const path = require('path');
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
 const manifest = require('./package.json');
+
+const analyze = process.argv.includes("--analyze");
 
 // https://webpack.js.org/configuration/entry-context/#context
 const context = path.resolve(__dirname, 'src');
@@ -66,7 +71,9 @@ const output = {
 };
 
 // https://webpack.js.org/configuration/plugins/
-const plugins = [];
+const plugins = [
+  analyze && new BundleAnalyzerPlugin(),
+].filter(Boolean);
 
 // https://webpack.js.org/configuration/resolve/
 const resolve = undefined;
