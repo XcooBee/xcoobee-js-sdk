@@ -15,6 +15,12 @@
   "contributors": [
     {
       "name": "Danny Hurlburt"
+    },
+    {
+      "name": "Volodymyr Rabeshko "
+    },
+    {
+      "name": "Bilal Soylu"
     }
   ],
   "homepage": "https://github.com/XcooBee/xcoobee-js-sdk",
