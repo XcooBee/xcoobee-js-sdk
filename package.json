@@ -1,6 +1,6 @@
 {
-  "name": "xcoobee-sdk-js",
-  "version": "0.8.1-beta",
+  "name": "xcoobee-js-sdk",
+  "version": "0.8.2",
   "description": "",
   "keywords": [
     "javascript",
@@ -15,6 +15,12 @@
   "contributors": [
     {
       "name": "Danny Hurlburt"
+    },
+    {
+      "name": "Volodymyr Rabeshko "
+    },
+    {
+      "name": "Bilal Soylu"
     }
   ],
   "homepage": "https://github.com/XcooBee/xcoobee-js-sdk",
