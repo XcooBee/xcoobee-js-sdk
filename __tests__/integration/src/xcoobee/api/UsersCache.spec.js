@@ -1,7 +1,7 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import { assertIsCursorLike, sleep } from '../../../../lib/Utils';
+const { assertIsCursorLike, sleep } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -9,17 +9,17 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('UsersCache', function () {
+describe('UsersCache', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.get', function () {
+    describe('.get', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        it('should fetch and return with user info', async function (done) {
+        it('should fetch and return with user info', async (done) => {
           const userInfo = await (new UsersCache(apiAccessTokenCache)).get(apiUrlRoot, apiKey, apiSecret);
           expect(userInfo).toBeDefined();
           expect('cursor' in userInfo).toBe(true);
@@ -31,14 +31,14 @@ describe('UsersCache', function () {
 
       });// eo describe
 
-      describe('called with a valid API key/secret pair multiple times back to back', function () {
+      describe('called with a valid API key/secret pair multiple times back to back', () => {
 
-        it('should return the cached user info', async function (done) {
+        it('should return the cached user info', async (done) => {
           let usersCache = new UsersCache(apiAccessTokenCache);
           Promise.all([
             usersCache.get(apiUrlRoot, apiKey, apiSecret),
             usersCache.get(apiUrlRoot, apiKey, apiSecret),
-          ]).then(userInfoList => {
+          ]).then((userInfoList) => {
             expect(userInfoList[0]).toBe(userInfoList[1]);
             done();
           });
@@ -54,14 +54,14 @@ describe('UsersCache', function () {
 
       });// eo describe
 
-      describe('called with a valid API key/secret pair multiple times sequentially', function () {
+      describe('called with a valid API key/secret pair multiple times sequentially', () => {
 
-        it('should return the cached user info', async function (done) {
+        it('should return the cached user info', async (done) => {
           let usersCache = new UsersCache(apiAccessTokenCache);
           usersCache.get(apiUrlRoot, apiKey, apiSecret)
-            .then(userInfo1 => {
+            .then((userInfo1) => {
               usersCache.get(apiUrlRoot, apiKey, apiSecret)
-                .then(userInfo2 => {
+                .then((userInfo2) => {
                   expect(userInfo1).toBe(userInfo2);
                   done();
                 });
@@ -76,16 +76,16 @@ describe('UsersCache', function () {
 
       });// eo describe
 
-      describe('called with a valid API key/secret pair multiple times sequentially with a pause in between', function () {
+      describe('called with a valid API key/secret pair multiple times sequentially with a pause in between', () => {
 
-        it('should return the cached user info', async function (done) {
+        it('should return the cached user info', async (done) => {
           let usersCache = new UsersCache(apiAccessTokenCache);
           usersCache.get(apiUrlRoot, apiKey, apiSecret)
-            .then(userInfo1 => {
+            .then((userInfo1) => {
               sleep(10000)
                 .then(() => {
                   usersCache.get(apiUrlRoot, apiKey, apiSecret)
-                    .then(userInfo2 => {
+                    .then((userInfo2) => {
                       expect(userInfo1).toBe(userInfo2);
                       done();
                     });

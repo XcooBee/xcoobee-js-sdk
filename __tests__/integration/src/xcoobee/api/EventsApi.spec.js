@@ -1,8 +1,8 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import EventsApi from '../../../../../src/xcoobee/api/EventsApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const EventsApi = require('../../../../../src/xcoobee/api/EventsApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -10,18 +10,18 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('EventsApi', function () {
+describe('EventsApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.getEvents', function () {
+  describe('.getEvents', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with a known user ID', function () {
+      describe('and called with a known user ID', () => {
 
-        it('should return the user\'s events', async function (done) {
+        it('should return the user\'s events', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
@@ -39,9 +39,9 @@ describe('EventsApi', function () {
 
       });// eo describe
 
-      describe('and called with an unknown user ID', function () {
+      describe('and called with an unknown user ID', () => {
 
-        it('should return with no data', async function (done) {
+        it('should return with no data', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = 'unknown';
           try {

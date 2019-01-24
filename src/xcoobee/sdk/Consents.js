@@ -1,17 +1,17 @@
-import Path from 'path';
+const Path = require('path');
 
-import CampaignApi from '../../xcoobee/api/CampaignApi';
-import ConsentsApi from '../../xcoobee/api/ConsentsApi';
-import ConversationsApi from '../../xcoobee/api/ConversationsApi';
-import DirectiveApi from '../../xcoobee/api/DirectiveApi';
-import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
+const CampaignApi = require('../../xcoobee/api/CampaignApi');
+const ConsentsApi = require('../../xcoobee/api/ConsentsApi');
+const ConversationsApi = require('../../xcoobee/api/ConversationsApi');
+const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
+const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
 
-import XcooBeeError from '../core/XcooBeeError';
+const XcooBeeError = require('../core/XcooBeeError');
 
-import ErrorResponse from './ErrorResponse';
-import FileUtils from './FileUtils';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const FileUtils = require('./FileUtils');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Consents SDK service.
@@ -285,7 +285,7 @@ class Consents {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const campaignsPage = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after, limit);
       return campaignsPage;
@@ -436,7 +436,7 @@ class Consents {
         const fileUploadResults = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
 
         const successfullyUploadedFiles = [];
-        fileUploadResults.forEach(fileUploadResult => {
+        fileUploadResults.forEach((fileUploadResult) => {
           const { error, file, success } = fileUploadResult;
           if (success) {
             successfullyUploadedFiles.push(file);
@@ -473,4 +473,4 @@ class Consents {
 
 }// eo class Consents
 
-export default Consents;
+module.exports = Consents;

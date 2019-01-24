@@ -1,10 +1,7 @@
-import Fs from 'fs';
-
-import FormData from 'form-data';
-
-import XcooBeeError from '../core/XcooBeeError';
-
-import ApiUtils from './ApiUtils';
+const Fs = require('fs');
+const FormData = require('form-data');
+const XcooBeeError = require('../core/XcooBeeError');
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Uploads the specified file to the system.
@@ -25,7 +22,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function upload_file(file, policy) {
+const upload_file = (file, policy) => {
   const url = policy.upload_url;
   // See https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
   const formData = new FormData();
@@ -39,13 +36,12 @@ export function upload_file(file, policy) {
   formData.append('X-Amz-Signature', policy.signature);
   if (file instanceof File) {
     formData.append('file', file);
-  }
-  else {
+  } else {
     formData.append('file', Fs.createReadStream(file));
   }
 
-  return new Promise((resolve, reject_unused) => {
-    formData.submit(url, (err, res /*: IncomingMessage */) => {
+  return new Promise((resolve) => {
+    formData.submit(url, (err, res) => {
       if (err) {
         throw ApiUtils.transformError(err);
       }
@@ -66,6 +62,6 @@ export function upload_file(file, policy) {
   });
 }
 
-export default {
+module.exports = {
   upload_file,
 };

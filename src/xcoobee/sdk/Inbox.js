@@ -1,8 +1,8 @@
-import InboxApi from '../../xcoobee/api/InboxApi';
+const InboxApi = require('../../xcoobee/api/InboxApi');
 
-import ErrorResponse from './ErrorResponse';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Inbox SDK service.
@@ -167,4 +167,4 @@ class Inbox {
 
 }// eo class Inbox
 
-export default Inbox;
+module.exports = Inbox;

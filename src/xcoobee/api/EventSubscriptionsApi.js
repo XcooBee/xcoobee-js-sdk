@@ -1,6 +1,5 @@
-import XcooBeeError from '../core/XcooBeeError';
-
-import ApiUtils from './ApiUtils';
+const XcooBeeError = require('../core/XcooBeeError');
+const ApiUtils = require('./ApiUtils');
 
 /**
  * An event subscription type.
@@ -38,21 +37,19 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId) {
+const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
-  let events = [];
+  const events = [];
 
   for (let type in eventsMapping) {
-    let handler = eventsMapping[type];
-    let event_type = toEventType(type);
     events.push({
-      handler,
-      event_type,
+      handler: eventsMapping[type],
+      event_type: toEventType(type),
     });
   }
   const addSubscriptionsConfig = {
     campaign_cursor: campaignId,
-    events: events,
+    events,
   };
   const mutation = `
     mutation addEventSubscription($config: AddSubscriptionsConfig!) {
@@ -74,17 +71,17 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: addSubscriptionsConfig,
   })
-    .then(response => {
+    .then((response) => {
       const { add_event_subscriptions } = response;
 
       // Note: `page_info` should always be `null` for this mutation.
 
       return add_event_subscriptions;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  *
@@ -100,13 +97,12 @@ export function addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, 
  *
  * @throws {XcooBeeError}
  */
-export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId) {
+const deleteEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
 
-  let eventTypes = [];
+  const eventTypes = [];
   for (let type in eventsMapping) {
-    let event_type = toEventType(type);
-    eventTypes.push(event_type);
+    eventTypes.push(toEventType(type));
   }
   const deleteSubscriptionsConfig = {
     campaign_cursor: campaignId,
@@ -122,15 +118,15 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: deleteSubscriptionsConfig,
   })
-    .then(response => {
+    .then((response) => {
       const { delete_event_subscriptions } = response;
 
       return delete_event_subscriptions;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetches a page of event subscriptions for the given campaign cursor.
@@ -150,7 +146,7 @@ export function deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMappin
  *
  * @throws {XcooBeeError}
  */
-export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
+const listEventSubscriptions = (apiUrlRoot, apiAccessToken, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
     query listEventSubscriptions($campaignId: String!) {
@@ -172,7 +168,7 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
-    .then(response => {
+    .then((response) => {
       const { event_subscriptions } = response;
 
       // TODO: Remove the following once `event_subscriptions` returns a valid `page_info`
@@ -181,10 +177,10 @@ export function listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId) {
 
       return event_subscriptions;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 const TypeToEventTypeLut = {
   BreachBeeUsed: 'breach_bee_used',
@@ -224,11 +220,10 @@ function toEventType(type) {
   if (!(type in TypeToEventTypeLut)) {
     throw new XcooBeeError(`Invalid event type provided: "${type}".`);
   }
-  let eventType = TypeToEventTypeLut[type];
-  return eventType;
+  return TypeToEventTypeLut[type];
 }
 
-export default {
+module.exports = {
   addEventSubscription,
   deleteEventSubscription,
   listEventSubscriptions,

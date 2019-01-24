@@ -29,9 +29,8 @@ class Config {
     if (!values) {
       throw TypeError('Config `data` is required.');
     }
-    let {
-      apiKey, apiSecret, apiUrlRoot, campaignId, encrypt, pgpPassword, pgpSecret,
-    } = values;
+    const { apiKey, apiSecret, apiUrlRoot } = values;
+    let { campaignId, encrypt, pgpPassword, pgpSecret } = values;
     campaignId = campaignId === undefined ? null : campaignId;
     encrypt = encrypt === undefined ? false : encrypt;
     pgpPassword = pgpPassword === undefined ? null : pgpPassword;
@@ -145,4 +144,4 @@ class Config {
 
 }
 
-export default Config;
+module.exports = Config;

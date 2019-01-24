@@ -1,4 +1,4 @@
-import ApiUtils from './ApiUtils';
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Fetches user information associated with the specified API access token.
@@ -10,17 +10,16 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getUser(apiUrlRoot, apiAccessToken) {
+const getUser = (apiUrlRoot, apiAccessToken) => {
   // Note: There is no need to make multiple requests for user info with the same API
   // access token if the first request has not been fulfilled yet.  Here we simply
   // return any existing unfulfilled promises instead of making a new request.
   const key = apiAccessToken;
   if (key in getUser._.unfulfilledPromises) {
-    let unfulfilledPromise = getUser._.unfulfilledPromises[key];
-    return unfulfilledPromise;
+    return getUser._.unfulfilledPromises[key];
   }
 
-  let unfulfilledPromise = new Promise((resolve, reject) => {
+  const unfulfilledPromise = new Promise((resolve, reject) => {
     try {
       const client = ApiUtils.createClient(apiUrlRoot, apiAccessToken);
       const query = `
@@ -33,13 +32,13 @@ export function getUser(apiUrlRoot, apiAccessToken) {
         }
       `;
       client.request(query)
-        .then(response => {
+        .then((response) => {
           delete getUser._.unfulfilledPromises[key];
           const { user } = response;
 
           resolve(user);
         })
-        .catch(err => {
+        .catch((err) => {
           delete getUser._.unfulfilledPromises[key];
           reject(ApiUtils.transformError(err));
         });
@@ -52,12 +51,12 @@ export function getUser(apiUrlRoot, apiAccessToken) {
   getUser._.unfulfilledPromises[key] = unfulfilledPromise;
 
   return unfulfilledPromise;
-}
+};
 
 getUser._ = {
   unfulfilledPromises: {},
 };
 
-export default {
+module.exports = {
   getUser,
 };

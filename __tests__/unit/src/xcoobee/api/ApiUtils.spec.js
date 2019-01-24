@@ -1,20 +1,20 @@
-import ApiUtils, { appearsToBeAnEmailAddress } from '../../../../../src/xcoobee/api/ApiUtils';
+const ApiUtils = require('../../../../../src/xcoobee/api/ApiUtils');
 
-describe('ApiUtils', function () {
+describe('ApiUtils', () => {
 
-  describe('appearsToBeAnEmailAddress', function () {
+  describe('appearsToBeAnEmailAddress', () => {
 
-    describe('called with an email address', function () {
+    describe('called with an email address', () => {
 
-      it('should return true', function () {
-        expect(appearsToBeAnEmailAddress('a@b.com')).toBe(true);
-        expect(appearsToBeAnEmailAddress('a@a.b.com')).toBe(true);
+      it('should return true', () => {
+        expect(ApiUtils.appearsToBeAnEmailAddress('a@b.com')).toBe(true);
         expect(ApiUtils.appearsToBeAnEmailAddress('a@a.b.com')).toBe(true);
-        expect(appearsToBeAnEmailAddress('a.b@c.de')).toBe(true);
-        expect(appearsToBeAnEmailAddress('a.b@c.d.ef')).toBe(true);
-        expect(appearsToBeAnEmailAddress('+.+@a.com')).toBe(true);
-        expect(appearsToBeAnEmailAddress('-.+@a.com')).toBe(true);
-        expect(appearsToBeAnEmailAddress('a@b-c.de')).toBe(true);
+        expect(ApiUtils.appearsToBeAnEmailAddress('a@a.b.com')).toBe(true);
+        expect(ApiUtils.appearsToBeAnEmailAddress('a.b@c.de')).toBe(true);
+        expect(ApiUtils.appearsToBeAnEmailAddress('a.b@c.d.ef')).toBe(true);
+        expect(ApiUtils.appearsToBeAnEmailAddress('+.+@a.com')).toBe(true);
+        expect(ApiUtils.appearsToBeAnEmailAddress('-.+@a.com')).toBe(true);
+        expect(ApiUtils.appearsToBeAnEmailAddress('a@b-c.de')).toBe(true);
       });
 
     });

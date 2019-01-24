@@ -1,4 +1,4 @@
-import Response from './Response';
+const Response = require('./Response');
 
 /**
  * A response representing a successful response. That is, the SDK function call
@@ -19,4 +19,4 @@ class SuccessResponse extends Response {
 
 }
 
-export default SuccessResponse;
+module.exports = SuccessResponse;

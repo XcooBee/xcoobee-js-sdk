@@ -1,15 +1,15 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import Bees from '../../../../../src/xcoobee/sdk/Bees';
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
+const Bees = require('../../../../../src/xcoobee/sdk/Bees');
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 
-import { findBeesBySystemName } from '../../../../lib/Utils';
+const { findBeesBySystemName } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -17,20 +17,20 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('Bees', function () {
+describe('Bees', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.listBees', function () {
+    describe('.listBees', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the bees available to the user', async function (done) {
+          it('should fetch and return with the bees available to the user', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -95,9 +95,9 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the bees available to the user', async function (done) {
+          it('should fetch and return with the bees available to the user', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -159,11 +159,11 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('and called with a limit that is divisible by the total bees', function () {
+        describe('and called with a limit that is divisible by the total bees', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            xit('should fetch and return with the bees available to the user', async function (done) {
+            xit('should fetch and return with the bees available to the user', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -244,11 +244,11 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('and called with a limit that is not divisible by the total bees', function () {
+        describe('and called with a limit that is not divisible by the total bees', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the bees available to the user', async function (done) {
+            it('should fetch and return with the bees available to the user', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -324,9 +324,9 @@ describe('Bees', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should reject with an error response', async function (done) {
+        it('should reject with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -352,13 +352,13 @@ describe('Bees', function () {
 
     });// eo describe('.listBees')
 
-    describe('.takeOff', function () {
+    describe('.takeOff', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should make bees take off', async function (done) {
+          it('should make bees take off', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -389,13 +389,13 @@ describe('Bees', function () {
 
     });// eo describe('.takeOff')
 
-    describe('.uploadFiles', function () {
+    describe('.uploadFiles', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should successfully upload files', async function (done) {
+          it('should successfully upload files', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,

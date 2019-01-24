@@ -17,7 +17,7 @@
       "name": "Danny Hurlburt"
     },
     {
-      "name": "Volodymyr Rabeshko "
+      "name": "Volodymyr Rabeshko"
     },
     {
       "name": "Bilal Soylu"
@@ -26,13 +26,10 @@
   "homepage": "https://github.com/XcooBee/xcoobee-js-sdk",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=6.0.0",
+    "node": ">=8.10.0",
     "npm": ">=3.8.6"
   },
-  "files": [
-    "dist/"
-  ],
-  "main": "",
+  "main": "index.js",
   "bugs": {
     "url": "https://github.com/XcooBee/xcoobee-js-sdk/issues"
   },
@@ -52,15 +49,9 @@
     }
   },
   "scripts": {
-    "build": "webpack",
-    "build:docs": "documentation build --access public --access undefined --config .documentation.yml --format html --output dist/docs/api --shallow src/xcoobee/sdk/index.js src/xcoobee/sdk/Bees.js src/xcoobee/sdk/Config.js src/xcoobee/sdk/ConfigUtils.js src/xcoobee/sdk/Consents.js src/xcoobee/sdk/ErrorResponse.js src/xcoobee/sdk/Inbox.js src/xcoobee/sdk/PagingResponse.js src/xcoobee/sdk/Response.js src/xcoobee/sdk/Sdk.js src/xcoobee/sdk/SuccessResponse.js src/xcoobee/sdk/System.js src/xcoobee/sdk/Users.js",
-    "clean": "",
     "doc:serve": "documentation serve --access public --access undefined --config .documentation.yml --format html --shallow --watch src/xcoobee/sdk/index.js src/xcoobee/sdk/Bees.js src/xcoobee/sdk/Config.js src/xcoobee/sdk/ConfigUtils.js src/xcoobee/sdk/Consents.js src/xcoobee/sdk/ErrorResponse.js src/xcoobee/sdk/Inbox.js src/xcoobee/sdk/PagingResponse.js src/xcoobee/sdk/Response.js src/xcoobee/sdk/Sdk.js src/xcoobee/sdk/SuccessResponse.js src/xcoobee/sdk/System.js src/xcoobee/sdk/Users.js",
     "precommit": "lint-staged",
     "coverage": "jest --coverage",
-    "lint": "eslint --ignore-path .gitignore --ignore-pattern \"!**/.*\" .",
-    "lint:doc": "documentation lint src/**",
-    "start": "",
     "test": "npm run test:unit && npm run test:integration",
     "test:integration": "npm run test:integration:sequential && npm run test:integration:parallel",
     "test:integration:parallel": "jest --config=__tests__/integration/jest.config.js",
@@ -76,26 +67,15 @@
     "qc-to_bool": "^1.1.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.6",
-    "babel-jest": "^23.0.1",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "^6.24.1",
     "documentation": "^8.1.2",
     "dotenv": "^6.0.0",
     "eslint": "^5.3.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.13.0",
     "jest": "^23.1.0",
     "jest-config": "^23.5.0",
     "klaw-sync": "^4.0.0",
     "lint-staged": "^7.2.2",
-    "micromatch": "^3.1.10",
-    "regenerator-runtime": "^0.11.1",
-    "webpack": "^4.16.2",
-    "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.1.0"
+    "micromatch": "^3.1.10"
   }
 }

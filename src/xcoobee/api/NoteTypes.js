@@ -1,7 +1,7 @@
-export const BREACH = 'breach';
-export const BROADCAST = 'broadcast';
-export const CONSENT = 'consent';
-export const TICKET = 'ticket';
+const BREACH = 'breach';
+const BROADCAST = 'broadcast';
+const CONSENT = 'consent';
+const TICKET = 'ticket';
 
 const values = Object.freeze([
   BREACH,
@@ -18,4 +18,4 @@ const NoteTypes = Object.freeze({
   values,
 });
 
-export default NoteTypes;
+module.exports = NoteTypes;

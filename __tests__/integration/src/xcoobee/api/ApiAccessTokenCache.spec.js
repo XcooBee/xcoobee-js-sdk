@@ -1,8 +1,7 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
-
-import { assertIsJwtToken, sleep } from '../../../../lib/Utils';
+const { assertIsJwtToken, sleep } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -10,15 +9,15 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('ApiAccessTokenCache', function () {
+describe('ApiAccessTokenCache', () => {
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.get', function () {
+    describe('.get', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        it('should fetch and return an API access token', async function (done) {
+        it('should fetch and return an API access token', async (done) => {
           const apiAccessToken = await (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret);
           expect(apiAccessToken).toBeDefined();
           assertIsJwtToken(apiAccessToken);
@@ -27,17 +26,17 @@ describe('ApiAccessTokenCache', function () {
 
       });// eo describe
 
-      describe('called with a valid API key/secret pair multiple times back to back', function () {
+      describe('called with a valid API key/secret pair multiple times back to back', () => {
 
-        it('should return the cached API access token', async function (done) {
-          let cache = new ApiAccessTokenCache();
+        it('should return the cached API access token', async (done) => {
+          const cache = new ApiAccessTokenCache();
 
           // Note: Not using async/await here since we need the calls to be back to back.
           Promise.all([
             cache.get(apiUrlRoot, apiKey, apiSecret),
             cache.get(apiUrlRoot, apiKey, apiSecret),
           ])
-            .then(apiAccessTokens => {
+            .then((apiAccessTokens) => {
               expect(apiAccessTokens[0]).toBe(apiAccessTokens[1]);
               done();
             });
@@ -52,14 +51,14 @@ describe('ApiAccessTokenCache', function () {
 
       });// eo describe
 
-      describe('called with a valid API key/secret pair multiple times sequentially', function () {
+      describe('called with a valid API key/secret pair multiple times sequentially', () => {
 
-        it('should return the cached API access token', async function (done) {
+        it('should return the cached API access token', async (done) => {
           let cache = new ApiAccessTokenCache();
           cache.get(apiUrlRoot, apiKey, apiSecret)
-            .then(apiAccessToken1 => {
+            .then((apiAccessToken1) => {
               cache.get(apiUrlRoot, apiKey, apiSecret)
-                .then(apiAccessToken2 => {
+                .then((apiAccessToken2) => {
                   expect(apiAccessToken1).toBe(apiAccessToken2);
                   done();
                 });
@@ -74,16 +73,16 @@ describe('ApiAccessTokenCache', function () {
 
       });// eo describe
 
-      describe('called with a valid API key/secret pair multiple times sequentially with a pause in between', function () {
+      describe('called with a valid API key/secret pair multiple times sequentially with a pause in between', () => {
 
-        it('should return the cached API access token', async function (done) {
+        it('should return the cached API access token', async (done) => {
           let cache = new ApiAccessTokenCache();
           cache.get(apiUrlRoot, apiKey, apiSecret)
-            .then(apiAccessToken1 => {
+            .then((apiAccessToken1) => {
               sleep(10000)
                 .then(() => {
                   cache.get(apiUrlRoot, apiKey, apiSecret)
-                    .then(apiAccessToken2 => {
+                    .then((apiAccessToken2) => {
                       expect(apiAccessToken1).toBe(apiAccessToken2);
                       done();
                     });
@@ -100,25 +99,22 @@ describe('ApiAccessTokenCache', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should reject with a XcooBeeError', async function (done) {
-          const apiKey = 'invalid';
-          const apiSecret = 'invalid';
-
-          (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret)
-            .then(apiAccessToken_unused => {
+        it('should reject with a XcooBeeError', async (done) => {
+          (new ApiAccessTokenCache()).get(apiUrlRoot, 'invalid', 'invalid')
+            .then(() => {
               // This should not be called.
               expect(true).toBe(false);
             })
-            .catch(err => {
+            .catch((err) => {
               expect(err).toBeInstanceOf(XcooBeeError);
               expect(err.message).toBe('Unable to get an API access token.');
               done();
             });
 
           try {
-            await (new ApiAccessTokenCache()).get(apiUrlRoot, apiKey, apiSecret);
+            await (new ApiAccessTokenCache()).get(apiUrlRoot, 'invalid', 'invalid');
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {

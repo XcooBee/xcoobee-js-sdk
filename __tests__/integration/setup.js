@@ -1,3 +1,3 @@
-import Utils from '../lib/Utils';
+const Utils = require('../lib/Utils');
 
 Utils.loadEnv(__dirname);

@@ -1,13 +1,13 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
-import Users from '../../../../../src/xcoobee/sdk/Users';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
+const Users = require('../../../../../src/xcoobee/sdk/Users');
 
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -15,20 +15,20 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('Users', function () {
+describe('Users', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.getConversation', function () {
+    describe('.getConversation', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s conversations', async function (done) {
+          it('should fetch and return with the user\'s conversations', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -50,15 +50,15 @@ describe('Users', function () {
             const conversations = result.data;
             expect(conversations).toBeInstanceOf(Array);
             expect(conversations.length).toBeGreaterThan(0);
-            let conversation = conversations[0];
+            const conversation = conversations[0];
             expect('breach_cursor' in conversation).toBe(true);
             assertIsCursorLike(conversation.breach_cursor, true);
             expect('consent_cursor' in conversation).toBe(true);
             assertIsCursorLike(conversation.consent_cursor);
             expect('date_c' in conversation).toBe(true);
-            assertIso8601Like(conversation.date_c)
+            assertIso8601Like(conversation.date_c);
             expect('date_e' in conversation).toBe(true);
-            assertIso8601Like(conversation.date_e, true)
+            assertIso8601Like(conversation.date_e, true);
             expect('display_city' in conversation).toBe(true);
             expect('display_country' in conversation).toBe(true);
             expect('display_name' in conversation).toBe(true);
@@ -78,13 +78,13 @@ describe('Users', function () {
 
     });// eo describe('.getConversation')
 
-    describe('.getConversations', function () {
+    describe('.getConversations', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s conversations', async function (done) {
+          it('should fetch and return with the user\'s conversations', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -105,9 +105,9 @@ describe('Users', function () {
             const conversations = result.data;
             expect(conversations).toBeInstanceOf(Array);
             expect(conversations.length).toBe(1);
-            let conversation = conversations[0];
+            const conversation = conversations[0];
             expect('date_c' in conversation).toBe(true);
-            assertIso8601Like(conversation.date_c)
+            assertIso8601Like(conversation.date_c);
             expect(conversation.display_name).toBe('SDKTester Developer');
             expect(conversation.note_type).toBe('consent');
             expect('target_cursor' in conversation).toBe(true);
@@ -122,13 +122,13 @@ describe('Users', function () {
 
     });// eo describe('.getConversations')
 
-    describe('.getUser', function () {
+    describe('.getUser', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s information', async function (done) {
+          it('should fetch and return with the user\'s information', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -148,9 +148,9 @@ describe('Users', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the user\'s information', async function (done) {
+          it('should fetch and return with the user\'s information', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -177,9 +177,9 @@ describe('Users', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should reject with an error response', async function (done) {
+        it('should reject with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -205,13 +205,13 @@ describe('Users', function () {
 
     });// eo describe('.getUser')
 
-    xdescribe('.sendUserMessage', function () {
+    xdescribe('.sendUserMessage', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should send a message', async function (done) {
+          it('should send a message', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,

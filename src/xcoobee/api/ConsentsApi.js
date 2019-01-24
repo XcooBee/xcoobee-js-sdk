@@ -1,9 +1,8 @@
-import XcooBeeError from '../core/XcooBeeError';
-
-import ApiUtils from './ApiUtils';
-import ConsentDataTypes from './ConsentDataTypes';
-import ConsentStatuses from './ConsentStatuses';
-import ConsentTypes from './ConsentTypes';
+const XcooBeeError = require('../core/XcooBeeError');
+const ApiUtils = require('./ApiUtils');
+const ConsentDataTypes = require('./ConsentDataTypes');
+const ConsentStatuses = require('./ConsentStatuses');
+const ConsentTypes = require('./ConsentTypes');
 
 /**
  * Allows a company to confirm consent data modification.
@@ -18,7 +17,7 @@ import ConsentTypes from './ConsentTypes';
  *
  * @throws {XcooBeeError}
  */
-export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) {
+const confirmConsentChange = (apiUrlRoot, apiAccessToken, consentCursor) => {
   const mutation = `
     mutation confirmConsentChange($consentCursor: String!) {
       confirm_consent_change(consent_cursor: $consentCursor) {
@@ -29,16 +28,16 @@ export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     consentCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { confirm_consent_change } = response;
 
       const confirmed = confirm_consent_change.consent_cursor === consentCursor;
       return { confirmed };
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Allows a company to confirm consent data deletion.
@@ -54,7 +53,7 @@ export function confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor) 
  *
  * @throws {XcooBeeError}
  */
-export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
+const confirmDataDelete = (apiUrlRoot, apiAccessToken, consentCursor) => {
   const mutation = `
     mutation confirmDataDelete($consentCursor: String!) {
       confirm_consent_deletion(consent_cursor: $consentCursor) {
@@ -65,16 +64,16 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     consentCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { confirm_consent_deletion } = response;
 
       const confirmed = confirm_consent_deletion.consent_cursor === consentCursor;
       return { confirmed };
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetches an existing user's cookie consent information.
@@ -92,7 +91,7 @@ export function confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor) {
  *
  * @throws {XcooBeeError}
  */
-export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId) {
+const getCookieConsent = (apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
     query getCookieConsent($userCursor: String!, $campaignIds: [String!]!, $statuses: [ConsentStatus]) {
@@ -114,7 +113,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
     statuses: [ConsentStatuses.ACTIVE],
     userCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { consents } = response;
       const { data, page_info } = consents;
 
@@ -134,7 +133,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
         [ConsentDataTypes.USAGE_COOKIE]: false,
       };
 
-      data.forEach(consent => {
+      data.forEach((consent) => {
         if (consent.user_xcoobee_id === xcoobeeId) {
           if ([ConsentTypes.WEB_APPLICATION_TRACKING, ConsentTypes.WEBSITE_TRACKING].includes(consent.consent_type)) {
             if (consent.request_data_types.includes(ConsentDataTypes.ADVERTISING_COOKIE)) {
@@ -156,10 +155,10 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
       const result = { cookie_consents };
       return result;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetches the consent data with the specified ID.
@@ -174,7 +173,7 @@ export function getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCurs
  *
  * @throws {XcooBeeError}
  */
-export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
+const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
   // TODO: Decide what data should be returned.
   // Additional Consent Fields:
   // - allow_affiliates
@@ -224,15 +223,15 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     consentCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { consent } = response;
 
       return { consent };
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetches a page of consents with the given status.
@@ -254,7 +253,7 @@ export function getConsentData(apiUrlRoot, apiAccessToken, consentCursor) {
  *
  * @throws {XcooBeeError}
  */
-export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status, after = null, first = null) {
+const listConsents = (apiUrlRoot, apiAccessToken, userCursor, status, after = null, first = null) => {
   if (typeof status === 'string') {
     if (!ConsentStatuses.values.includes(status)) {
       throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
@@ -316,15 +315,15 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status, aft
     statuses: [status],
     userCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { consents } = response;
 
       return consents;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Requests consent from the specified user.
@@ -341,7 +340,7 @@ export function listConsents(apiUrlRoot, apiAccessToken, userCursor, status, aft
  *
  * @throws {XcooBeeError}
  */
-export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId) {
+const requestConsent = (apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId) => {
   const mutation = `
     mutation requestConsent($config: AdditionalRequestConfig) {
       send_consent_request(config: $config) {
@@ -356,16 +355,16 @@ export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId
       xcoobee_id: xcoobeeId,
     },
   })
-    .then(response => {
+    .then((response) => {
       const { send_consent_request } = response;
 
       const result = { ref_id: send_consent_request.ref_id };
       return result;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 
 /**
@@ -378,7 +377,7 @@ export function requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, campaignId
  *
  * @returns {Promise<string>}
  */
-export function resolveXcoobeeId(apiUrlRoot, apiAccessToken, consentCursor) {
+const resolveXcoobeeId = (apiUrlRoot, apiAccessToken, consentCursor) => {
   const query = `
     query resolveXcoobeeId($consentCursor: String!) {
       consent(consent_cursor: $consentCursor) {
@@ -389,17 +388,17 @@ export function resolveXcoobeeId(apiUrlRoot, apiAccessToken, consentCursor) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     consentCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { consent } = response;
 
       return consent.user_xcoobee_id;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   confirmConsentChange,
   confirmDataDelete,
   getCookieConsent,

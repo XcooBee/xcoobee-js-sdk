@@ -1,8 +1,6 @@
-import fetch from 'cross-fetch';
-
-import XcooBeeError from '../core/XcooBeeError';
-
-import ApiUtils from './ApiUtils';
+const fetch = require('cross-fetch');
+const XcooBeeError = require('../core/XcooBeeError');
+const ApiUtils = require('./ApiUtils');
 
 const MSG__GENERIC_ERROR = 'Unable to get an API access token.';
 
@@ -20,21 +18,20 @@ const MSG__GENERIC_ERROR = 'Unable to get an API access token.';
  *
  * @throws {XcooBeeError} if unable to acquire an access token.
  */
-export function getApiAccessToken(apiCfg) {
+const getApiAccessToken = (apiCfg) => {
   // Note: There is no need to make multiple requests for an API access token with
   // the same API key/secret if the first request has not been fulfilled yet.  Here
   // we simply return any existing unfulfilled promises instead of making a new
   // request.
 
-  let { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-  let key = `${apiKey}:${apiSecret}`;
+  const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+  const key = `${apiKey}:${apiSecret}`;
   if (key in getApiAccessToken._.unfulfilledPromises) {
-    let unfulfilledPromise = getApiAccessToken._.unfulfilledPromises[key];
-    return unfulfilledPromise;
+    return getApiAccessToken._.unfulfilledPromises[key];
   }
 
-  let unfulfilledPromise = new Promise((resolve, reject) => {
-    const apiAccessTokenUrl = apiUrlRoot + '/get_token';
+  const unfulfilledPromise = new Promise((resolve, reject) => {
+    const apiAccessTokenUrl = `${apiUrlRoot}/get_token`;
 
     try {
       fetch(
@@ -51,56 +48,49 @@ export function getApiAccessToken(apiCfg) {
           timeout: 30000,
         }
       )
-        .then(response => {
+        .then((response) => {
           delete getApiAccessToken._.unfulfilledPromises[key];
           response.json()
-            .then(body => {
-              let msg = [];
+            .then((body) => {
+              const msg = [];
               if (body) {
                 if (response.ok) {
                   // The API is returning error messages even when the status is a 200.
                   if (typeof body.errorType === 'string' && body.errorType.length > 0) {
                     if (body.errorMessage) {
                       msg.push(body.errorMessage);
-                    }
-                    else {
+                    } else {
                       msg.push(MSG__GENERIC_ERROR);
                     }
-                  }
-                  else if (typeof body.token !== 'string' || body.token.trim().length === 0) {
+                  } else if (typeof body.token !== 'string' || body.token.trim().length === 0) {
                     msg.push(MSG__GENERIC_ERROR);
                   }
-                }
-                else if (response.status === 403) {
+                } else if (response.status === 403) {
                   msg.push('Forbidden.');
                   if (body.message) {
                     msg.push(body.message);
                   }
-                }
-                else {
+                } else {
                   msg.push(MSG__GENERIC_ERROR);
                 }
                 if (msg.length === 0) {
-                  let apiAccessToken = body.token.trim();
-                  resolve(apiAccessToken);
+                  resolve(body.token.trim());
                   return;
                 }
-              }
-              else {
+              } else {
                 msg.push(MSG__GENERIC_ERROR);
               }
               reject(new XcooBeeError(msg.join(' ')));
             })
-            .catch(err => {
+            .catch((err) => {
               reject(ApiUtils.transformError(err));
             });
         })
-        .catch(err => {
+        .catch((err) => {
           delete getApiAccessToken._.unfulfilledPromises[key];
           reject(ApiUtils.transformError(err));
         });
-    }
-    catch (err) {
+    } catch (err) {
       delete getApiAccessToken._.unfulfilledPromises[key];
       reject(ApiUtils.transformError(err));
     }
@@ -109,12 +99,12 @@ export function getApiAccessToken(apiCfg) {
   getApiAccessToken._.unfulfilledPromises[key] = unfulfilledPromise;
 
   return unfulfilledPromise;
-}
+};
 
 getApiAccessToken._ = {
   unfulfilledPromises: {},
 };
 
-export default {
+module.exports = {
   getApiAccessToken,
 };

@@ -1,14 +1,14 @@
-import ApiUtils from '../../xcoobee/api/ApiUtils';
-import BeesApi from '../../xcoobee/api/BeesApi';
-import DirectiveApi from '../../xcoobee/api/DirectiveApi';
-import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
+const ApiUtils = require('../../xcoobee/api/ApiUtils');
+const BeesApi = require('../../xcoobee/api/BeesApi');
+const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
+const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
 
-import XcooBeeError from '../core/XcooBeeError';
+const XcooBeeError = require('../core/XcooBeeError');
 
-import ErrorResponse from './ErrorResponse';
-import FileUtils from './FileUtils';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const FileUtils = require('./FileUtils');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Bees SDK service.
@@ -172,7 +172,7 @@ class Bees {
       options.process.destinations.length > 0
     ) {
       directiveInput.destinations = options.process.destinations.map(
-        destination => {
+        (destination) => {
           if (ApiUtils.appearsToBeAnEmailAddress(destination)) {
             return { email: destination };
           }
@@ -256,4 +256,4 @@ class Bees {
 
 }// eo class Bees
 
-export default Bees;
+module.exports = Bees;

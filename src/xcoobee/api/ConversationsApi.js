@@ -1,5 +1,5 @@
-import ApiUtils from './ApiUtils';
-import NoteTypes from './NoteTypes';
+const ApiUtils = require('./ApiUtils');
+const NoteTypes = require('./NoteTypes');
 
 /**
  * Fetches a page of conversations with the given target cursor.
@@ -20,7 +20,7 @@ import NoteTypes from './NoteTypes';
  *
  * @throws {XcooBeeError}
  */
-export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, after = null, first = null) {
+const getConversation = (apiUrlRoot, apiAccessToken, targetCursor, after = null, first = null) => {
   const query = `
     query getConversation($targetCursor: String!, $after: String, $first: Int) {
       conversation(target_cursor: $targetCursor, after: $after, first: $first) {
@@ -51,15 +51,15 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, after 
     first,
     targetCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { conversation } = response;
 
       return conversation;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetches a page of the user's conversations.
@@ -80,7 +80,7 @@ export function getConversation(apiUrlRoot, apiAccessToken, targetCursor, after 
  *
  * @throws {XcooBeeError}
  */
-export function getConversations(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
+const getConversations = (apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) => {
   const query = `
     query getConversations($userCursor: String!, $after: String, $first: Int) {
       conversations(user_cursor: $userCursor, after: $after, first: $first) {
@@ -102,15 +102,15 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, after =
     first,
     userCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { conversations } = response;
 
       return conversations;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Sends a message to a consent destination or a breach destination.
@@ -127,7 +127,7 @@ export function getConversations(apiUrlRoot, apiAccessToken, userCursor, after =
  *
  * @throws {XcooBeeError}
  */
-export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId) {
+const sendUserMessage = (apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId) => {
   const mutation = `
     mutation sendUserMessage($config: SendMessageConfig) {
       send_message(config: $config) {
@@ -152,17 +152,17 @@ export function sendUserMessage(apiUrlRoot, apiAccessToken, message, userCursor,
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config,
   })
-    .then(response => {
+    .then((response) => {
       const { send_message } = response;
 
       return send_message;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   getConversation,
   getConversations,
   sendUserMessage,

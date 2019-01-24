@@ -1,7 +1,7 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import BeesApi from '../../../../../src/xcoobee/api/BeesApi';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const BeesApi = require('../../../../../src/xcoobee/api/BeesApi');
 
-import { findBeesBySystemName } from '../../../../lib/Utils';
+const { findBeesBySystemName } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -9,15 +9,15 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('BeesApi', function () {
+describe('BeesApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
 
-  describe('.bees', function () {
+  describe('.bees', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      it('should fetch and return with a list of bees', async function (done) {
+      it('should fetch and return with a list of bees', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const result = await BeesApi.bees(apiUrlRoot, apiAccessToken, '');
         expect(result).toBeDefined();

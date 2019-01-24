@@ -1,7 +1,7 @@
-export const BEE_ICON = 'bee_icon';
-export const INVITE_LIST = 'invite_list';
-export const OUTBOX = 'outbox';
-export const PROFILE_IMAGE = 'profile_image';
+const BEE_ICON = 'bee_icon';
+const INVITE_LIST = 'invite_list';
+const OUTBOX = 'outbox';
+const PROFILE_IMAGE = 'profile_image';
 
 const values = Object.freeze([
   BEE_ICON,
@@ -18,4 +18,4 @@ const UploadPolicyIntents = Object.freeze({
   values,
 });
 
-export default UploadPolicyIntents;
+module.exports = UploadPolicyIntents;

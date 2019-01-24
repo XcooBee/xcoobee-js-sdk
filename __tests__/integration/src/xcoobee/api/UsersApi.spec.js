@@ -1,7 +1,7 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersApi from '../../../../../src/xcoobee/api/UsersApi';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersApi = require('../../../../../src/xcoobee/api/UsersApi');
 
-import { assertIsCursorLike } from '../../../../lib/Utils';
+const { assertIsCursorLike } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -9,22 +9,22 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('UsersApi', function () {
+describe('UsersApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
 
-  describe('.getUser', function () {
+  describe('.getUser', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      it('should fetch and return with user info', async function (done) {
+      it('should fetch and return with user info', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const userInfo = await UsersApi.getUser(apiUrlRoot, apiAccessToken);
         expect(userInfo).toBeDefined();
         expect('cursor' in userInfo).toBe(true);
         assertIsCursorLike(userInfo.cursor);
         expect('pgp_public_key' in userInfo).toBe(true);
-        let expectedPgpPublicKey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
+        const expectedPgpPublicKey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: OpenPGP.js v2.6.2
 Comment: https://openpgpjs.org
 

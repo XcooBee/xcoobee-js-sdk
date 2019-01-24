@@ -1,4 +1,4 @@
-import ApiUtils from './ApiUtils';
+const ApiUtils = require('./ApiUtils');
 
 /**
  *
@@ -15,7 +15,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
+const outbox_endpoints = (apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) => {
   // const query = `
   //   query getOutboxEndpoints($userCursor: String!, $after: String, $first: Int) {
   //     outbox_endpoints(user_cursor: $userCursor, after: $after, first: $first) {
@@ -51,16 +51,12 @@ export function outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor, after =
     first,
     userCursor,
   })
-    .then(response => {
-      const { outbox_endpoints } = response;
-
-      return outbox_endpoints;
-    })
-    .catch(err => {
+    .then(response => response.outbox_endpoints)
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   outbox_endpoints,
 };

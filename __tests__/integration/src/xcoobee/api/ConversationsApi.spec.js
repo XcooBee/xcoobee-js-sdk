@@ -1,8 +1,8 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import ConversationsApi from '../../../../../src/xcoobee/api/ConversationsApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const ConversationsApi = require('../../../../../src/xcoobee/api/ConversationsApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -10,31 +10,31 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('ConversationsApi', function () {
+describe('ConversationsApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.getConversation', function () {
+  describe('.getConversation', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      it('should fetch and return with conversations', async function (done) {
+      it('should fetch and return with conversations', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const targetCursor = 'CTZamTgKRkN8LMb/AtKR8d72P4v/k5bkI7ynikFlf1QFL0ybh8ZvKR6MAb4KJDIL1v6aAA==';
         const conversationsPage = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor);
         expect(conversationsPage).toBeDefined();
         expect(conversationsPage.data).toBeInstanceOf(Array);
         expect(conversationsPage.data.length).toBeGreaterThan(1);
-        let conversation = conversationsPage.data[0];
+        const conversation = conversationsPage.data[0];
         expect('breach_cursor' in conversation).toBe(true);
         assertIsCursorLike(conversation.breach_cursor, true);
         expect('consent_cursor' in conversation).toBe(true);
         assertIsCursorLike(conversation.consent_cursor);
         expect('date_c' in conversation).toBe(true);
-        assertIso8601Like(conversation.date_c)
+        assertIso8601Like(conversation.date_c);
         expect('date_e' in conversation).toBe(true);
-        assertIso8601Like(conversation.date_e, true)
+        assertIso8601Like(conversation.date_e, true);
         expect('display_city' in conversation).toBe(true);
         expect('display_country' in conversation).toBe(true);
         expect('display_name' in conversation).toBe(true);
@@ -52,11 +52,11 @@ describe('ConversationsApi', function () {
 
   });// eo describe('.getConversation')
 
-  describe('.getConversations', function () {
+  describe('.getConversations', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      it('should fetch and return with conversations', async function (done) {
+      it('should fetch and return with conversations', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
@@ -64,9 +64,9 @@ describe('ConversationsApi', function () {
         expect(conversationsPage).toBeDefined();
         expect(conversationsPage.data).toBeInstanceOf(Array);
         expect(conversationsPage.data.length).toBe(1);
-        let conversation = conversationsPage.data[0];
+        const conversation = conversationsPage.data[0];
         expect('date_c' in conversation).toBe(true);
-        assertIso8601Like(conversation.date_c)
+        assertIso8601Like(conversation.date_c);
         expect(conversation.display_name).toBe('SDKTester Developer');
         expect(conversation.note_type).toBe('consent');
         expect('target_cursor' in conversation).toBe(true);
@@ -79,11 +79,11 @@ describe('ConversationsApi', function () {
 
   });// eo describe('.getConversations')
 
-  xdescribe('.sendUserMessage', function () {
+  xdescribe('.sendUserMessage', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      it('should create, send, and return a note', async function (done) {
+      it('should create, send, and return a note', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const message = 'Testing. 1, 2, 3!';

@@ -1,6 +1,5 @@
-import { decryptWithEncryptedPrivateKey } from '../core/EncryptionUtils';
-
-import ApiUtils from './ApiUtils';
+const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
+const ApiUtils = require('./ApiUtils');
 
 /**
  *
@@ -21,7 +20,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getEvents(apiUrlRoot, apiAccessToken, userCursor, privateKey, passphrase, after = null, first = null) {
+const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphrase, after = null, first = null) => {
   const query = `
     query getEvents($userCursor: String!, $after: String, $first: Int) {
       events(user_cursor: $userCursor, after: $after, first: $first) {
@@ -47,34 +46,33 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor, privateKey, pa
     first,
     userCursor,
   })
-    .then(response => {
-      let { events } = response;
+    .then((response) => {
+      const { events } = response;
 
       // If a private key and its passphrase are supplied, then decrypt payload for SDK
       // user.
       if (privateKey && passphrase) {
-        events.data = events.data.map(async event => {
+        events.data = events.data.map(async (event) => {
           const payloadJson = await decryptWithEncryptedPrivateKey(
             event.payload,
             privateKey,
             passphrase,
           );
           const payload = JSON.parse(payloadJson);
-          event = {
+          return {
             ...event,
             payload,
           };
-          return event;
         });
       }
 
       return events;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   getEvents,
 };

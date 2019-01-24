@@ -1,6 +1,6 @@
-import Config from './Config';
-import ConfigUtils from './ConfigUtils';
-import Sdk from './Sdk';
+const Config = require('./Config');
+const ConfigUtils = require('./ConfigUtils');
+const Sdk = require('./Sdk');
 
 /**
  * The XcooBee SDK JavaScript module. It may be imported with whatever name you
@@ -12,7 +12,7 @@ import Sdk from './Sdk';
  *
  * @module SdkJs
  */
-export default {
+module.exports = {
   /**
    * A reference to the XcooBee SDK `Config` class.
    *

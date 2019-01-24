@@ -1,4 +1,4 @@
-import ApiUtils from './ApiUtils';
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Fetches the campaign information for the given campaign ID.
@@ -13,7 +13,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
+const getCampaignInfo = (apiUrlRoot, apiAccessToken, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
     query getCampaignInfo($campaignId: String!) {
@@ -45,15 +45,15 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
-    .then(response => {
+    .then((response) => {
       const { campaign } = response;
 
       return { campaign };
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetch a page of campaigns.
@@ -74,7 +74,7 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
  *
  * @throws {XcooBeeError}
  */
-export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
+const getCampaigns = (apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) => {
   /*
   Available Campaign Data:
     campaign_cursor
@@ -141,17 +141,17 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after = nul
     first,
     userCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { campaigns } = response;
 
-      return campaigns
+      return campaigns;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   getCampaignInfo,
   getCampaigns,
 };

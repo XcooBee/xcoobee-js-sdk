@@ -1,5 +1,5 @@
-import ErrorResponse from './ErrorResponse';
-import PagingResponse from './PagingResponse';
+const ErrorResponse = require('./ErrorResponse');
+const PagingResponse = require('./PagingResponse');
 
 /**
  * Resolves the API config to use based on given input.
@@ -10,11 +10,10 @@ import PagingResponse from './PagingResponse';
  * @returns {ApiCfg}
  */
 function resolveApiCfg(overridingConfig, defaultConfig) {
-  if (
-    overridingConfig &&
-    'apiKey' in overridingConfig &&
-    'apiSecret' in overridingConfig &&
-    'apiUrlRoot' in overridingConfig
+  if (overridingConfig
+    && 'apiKey' in overridingConfig
+    && 'apiSecret' in overridingConfig
+    && 'apiUrlRoot' in overridingConfig
   ) {
     return {
       apiKey: overridingConfig.apiKey,
@@ -22,11 +21,10 @@ function resolveApiCfg(overridingConfig, defaultConfig) {
       apiUrlRoot: overridingConfig.apiUrlRoot,
     };
   }
-  if (
-    defaultConfig &&
-    'apiKey' in defaultConfig &&
-    'apiSecret' in defaultConfig &&
-    'apiUrlRoot' in defaultConfig
+  if (defaultConfig
+    && 'apiKey' in defaultConfig
+    && 'apiSecret' in defaultConfig
+    && 'apiUrlRoot' in defaultConfig
   ) {
     return {
       apiKey: defaultConfig.apiKey,
@@ -68,11 +66,10 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
  * @returns {ApiCfg}
  */
 function resolveSdkCfg(overridingConfig, defaultConfig) {
-  if (
-    overridingConfig &&
-    'apiKey' in overridingConfig &&
-    'apiSecret' in overridingConfig &&
-    'apiUrlRoot' in overridingConfig
+  if (overridingConfig
+    && 'apiKey' in overridingConfig
+    && 'apiSecret' in overridingConfig
+    && 'apiUrlRoot' in overridingConfig
   ) {
     return {
       apiKey: overridingConfig.apiKey,
@@ -82,11 +79,10 @@ function resolveSdkCfg(overridingConfig, defaultConfig) {
       pgpSecret: overridingConfig.pgpSecret,
     };
   }
-  if (
-    defaultConfig &&
-    'apiKey' in defaultConfig &&
-    'apiSecret' in defaultConfig &&
-    'apiUrlRoot' in defaultConfig
+  if (defaultConfig
+    && 'apiKey' in defaultConfig
+    && 'apiSecret' in defaultConfig
+    && 'apiUrlRoot' in defaultConfig
   ) {
     return {
       apiKey: defaultConfig.apiKey,
@@ -121,7 +117,7 @@ async function startPaging(fetchPage, apiCfg, params) {
   }
 }
 
-export default {
+module.exports = {
   resolveApiCfg,
   resolveCampaignId,
   resolveSdkCfg,

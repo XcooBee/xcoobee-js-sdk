@@ -1,8 +1,8 @@
-import ConversationsApi from '../../xcoobee/api/ConversationsApi';
+const ConversationsApi = require('../../xcoobee/api/ConversationsApi');
 
-import ErrorResponse from './ErrorResponse';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Users SDK service.
@@ -199,7 +199,7 @@ class Users {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const note = await ConversationsApi.sendUserMessage(
         apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId
@@ -213,4 +213,4 @@ class Users {
 
 }// eo class Users
 
-export default Users;
+module.exports = Users;

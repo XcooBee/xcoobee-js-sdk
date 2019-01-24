@@ -1,12 +1,12 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import EndPointApi from '../../../../../src/xcoobee/api/EndPointApi';
-import FileApi from '../../../../../src/xcoobee/api/FileApi';
-import PolicyApi from '../../../../../src/xcoobee/api/PolicyApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const EndPointApi = require('../../../../../src/xcoobee/api/EndPointApi');
+const FileApi = require('../../../../../src/xcoobee/api/FileApi');
+const PolicyApi = require('../../../../../src/xcoobee/api/PolicyApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import { assertIsCursorLike } from '../../../../lib/Utils';
+const { assertIsCursorLike } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -14,16 +14,16 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('FileApi', function () {
+describe('FileApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.upload_file', function () {
+  describe('.upload_file', () => {
 
-    describe('called with a valid policy', function () {
+    describe('called with a valid policy', () => {
 
-      xit('should successfully upload a file', async function (done) {
+      xit('should successfully upload a file', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
@@ -37,7 +37,7 @@ describe('FileApi', function () {
         const endPoints = data;
         const intent = 'outbox';
         expect(endPoints).toBeInstanceOf(Array);
-        let candidateEndPoints = endPoints.filter(endPoint => {
+        const candidateEndPoints = endPoints.filter((endPoint) => {
           return endPoint.name === intent;
         });
         expect(candidateEndPoints.length).toBe(1);
@@ -47,7 +47,7 @@ describe('FileApi', function () {
         const files = [
           Path.resolve(__dirname, '..', '..', '..', 'assets', 'upload-file-test.txt'),
         ];
-        const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files)
+        const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files);
         expect(policies).toBeInstanceOf(Array);
         expect(policies.length).toBe(1);
         const policy = policies[0];

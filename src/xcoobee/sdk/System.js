@@ -1,12 +1,12 @@
-import CampaignApi from '../../xcoobee/api/CampaignApi';
-import EventsApi from '../../xcoobee/api/EventsApi';
-import EventSubscriptionsApi from '../../xcoobee/api/EventSubscriptionsApi';
+const CampaignApi = require('../../xcoobee/api/CampaignApi');
+const EventsApi = require('../../xcoobee/api/EventsApi');
+const EventSubscriptionsApi = require('../../xcoobee/api/EventSubscriptionsApi');
 
-import XcooBeeError from '../../xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../xcoobee/core/XcooBeeError');
 
-import ErrorResponse from './ErrorResponse';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The System SDK service.
@@ -258,7 +258,7 @@ class System {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const pgpPublicKey = user.pgp_public_key;
 
       let err = null;
@@ -269,8 +269,7 @@ class System {
           return response;
         }
         err = new XcooBeeError('Campaign not found.');
-      }
-      else {
+      } else {
         err = new XcooBeeError('PGP key not found.');
       }
       throw new ErrorResponse(400, err);
@@ -281,4 +280,4 @@ class System {
 
 }// eo class System
 
-export default System;
+module.exports = System;
