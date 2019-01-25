@@ -1,0 +1,16 @@
+{
+    "plugins": [
+        [
+        "babel-plugin-transform-builtin-extend",
+        {
+            "globals": [
+            "Error"
+            ]
+        }
+        ]
+    ],
+    "presets": [
+        "env",
+        "stage-0"
+    ]
+}
