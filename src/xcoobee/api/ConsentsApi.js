@@ -152,8 +152,7 @@ const getCookieConsent = (apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, cam
         }
       });
 
-      const result = { cookie_consents };
-      return result;
+      return { cookie_consents };
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);

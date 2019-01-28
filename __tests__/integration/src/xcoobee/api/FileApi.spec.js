@@ -23,31 +23,25 @@ describe('FileApi', () => {
 
     describe('called with a valid policy', () => {
 
-      xit('should successfully upload a file', async (done) => {
+      it('should successfully upload a file', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
         const result = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);
         expect(result).toBeDefined();
         const { data, page_info } = result;
-        expect(page_info).toBeDefined();
-        expect(page_info.end_cursor).toBeDefined();
-        expect(page_info.has_next_page).toBe(false);
+        expect(page_info).toBe(null);
         expect(data).toBeDefined();
         const endPoints = data;
-        const intent = 'outbox';
         expect(endPoints).toBeInstanceOf(Array);
-        const candidateEndPoints = endPoints.filter((endPoint) => {
-          return endPoint.name === intent;
-        });
-        expect(candidateEndPoints.length).toBe(1);
-        const endPoint = candidateEndPoints[0];
+        expect(endPoints.length).toBe(1);
+        const endPoint = endPoints[0];
         assertIsCursorLike(endPoint.cursor);
 
         const files = [
           Path.resolve(__dirname, '..', '..', '..', 'assets', 'upload-file-test.txt'),
         ];
-        const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, endPoint, files);
+        const policies = await PolicyApi.upload_policy(apiUrlRoot, apiAccessToken, 'outbox', endPoint.cursor, files);
         expect(policies).toBeInstanceOf(Array);
         expect(policies.length).toBe(1);
         const policy = policies[0];

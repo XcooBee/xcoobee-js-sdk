@@ -163,7 +163,7 @@ describe('Bees', () => {
 
           describe('using default config', () => {
 
-            xit('should fetch and return with the bees available to the user', async (done) => {
+            it('should fetch and return with the bees available to the user', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -172,15 +172,19 @@ describe('Bees', () => {
 
               const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
               // Note: We are expecting there to be a total of 9 bees.
-              const response = await beesSdk.listBees('', null, 3);
+              const response = await beesSdk.listBees('', null, 4);
               expect(response).toBeInstanceOf(PagingResponse);
               let { result } = response;
               expect(result).toBeDefined();
               let bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(3);
+              expect(bees.length).toBe(4);
 
-              let filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
+              let filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_dropbox_uploader');
 
@@ -188,9 +192,9 @@ describe('Bees', () => {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_timestamp');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_timestamp');
 
               expect(response.hasNextPage()).toBe(true);
               let nextPageResponse = await response.getNextPage();
@@ -199,7 +203,11 @@ describe('Bees', () => {
               expect(result).toBeDefined();
               bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(3);
+              expect(bees.length).toBe(4);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
 
               filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
               expect(filteredBees.length).toBe(1);
@@ -209,9 +217,9 @@ describe('Bees', () => {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
 
               expect(nextPageResponse.hasNextPage()).toBe(true);
               nextPageResponse = await nextPageResponse.getNextPage();
@@ -220,15 +228,11 @@ describe('Bees', () => {
               expect(result).toBeDefined();
               bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(3);
+              expect(bees.length).toBe(2);
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
-
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
-              expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact_card');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact');
 
               filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
               expect(filteredBees.length).toBe(1);

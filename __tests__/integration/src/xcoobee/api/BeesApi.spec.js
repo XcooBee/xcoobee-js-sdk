@@ -23,11 +23,9 @@ describe('BeesApi', () => {
         expect(result).toBeDefined();
         expect(result.data).toBeInstanceOf(Array);
         expect(result.page_info).toBeDefined();
-        expect(result.page_info.end_cursor).toBe('Va79BL9EQW9JSGYvLy8vLy8vLy84L0JXUTRabVkwTUdJNExXUmhOVEV0TkRreU9DMWlOakpqTFRGaE1UazBObUkwWW1GaU5RPT0K');
         expect(result.page_info.has_next_page).toBe(false);
         const bees = result.data;
         expect(bees).toBeInstanceOf(Array);
-        expect(bees.length).toBe(10);
 
         let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
         expect(filteredBees.length).toBe(1);
