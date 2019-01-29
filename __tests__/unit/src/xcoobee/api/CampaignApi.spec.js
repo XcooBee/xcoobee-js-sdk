@@ -1,23 +1,27 @@
-const sinon = require('sinon');
+const jest = require('jest');
+
+jest.mock('graphql-request');
+
 const { GraphQLClient } = require('graphql-request');
 
 const { getCampaignInfo, getCampaigns } = require('../../../../../src/xcoobee/api/CampaignApi');
 
 describe('CampaignApi', () => {
 
-  afterEach(() => sinon.restore());
+  afterEach(() => GraphQLClient.prototype.request.mockReset());
 
   describe('getCampaignInfo', () => {
 
     it('should call graphql endpoint with params', () => {
-      const stub = sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({ campaign: 'campaignData' }));
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ campaign: 'campaignData' }));
 
       return getCampaignInfo('apiUrlRoot', 'accessToken', 'campaignId')
         .then((res) => {
           expect(res).toBeInstanceOf(Object);
           expect(res.campaign).toBe('campaignData');
-          expect(stub.calledOnce).toBeTruthy();
-          expect(stub.getCall(0).args[1].campaignId).toBe('campaignId');
+
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].campaignId).toBe('campaignId');
         });
     });
 
@@ -26,14 +30,14 @@ describe('CampaignApi', () => {
   describe('getCampaigns', () => {
 
     it('should call graphql endpoint with params', () => {
-      const stub = sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({ campaigns: [{ title: 'test' }] }));
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ campaigns: [{ title: 'test' }] }));
 
       return getCampaigns('apiUrlRoot', 'accessToken', 'userId')
         .then((res) => {
           expect(res).toBeInstanceOf(Array);
           expect(res[0].title).toBe('test');
-          expect(stub.calledOnce).toBeTruthy();
-          expect(stub.getCall(0).args[1].userCursor).toBe('userId');
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].userCursor).toBe('userId');
         });
     });
 

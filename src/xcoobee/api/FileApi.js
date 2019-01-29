@@ -34,11 +34,7 @@ const upload_file = (file, policy) => {
   formData.append('X-Amz-meta-identifier', policy.identifier);
   formData.append('Policy', policy.policy);
   formData.append('X-Amz-Signature', policy.signature);
-  if (file instanceof File) {
-    formData.append('file', file);
-  } else {
-    formData.append('file', Fs.createReadStream(file));
-  }
+  formData.append('file', Fs.createReadStream(file));
 
   return new Promise((resolve) => {
     formData.submit(url, (err, res) => {
@@ -47,20 +43,13 @@ const upload_file = (file, policy) => {
       }
       const { statusCode } = res;
       if (statusCode >= 300) {
-        let filePath;
-        if (file instanceof File) {
-          filePath = file.name;
-        }
-        else {
-          filePath = file;
-        }
-        throw new XcooBeeError(`Failed to upload file at: ${filePath} using policy: ${JSON.stringify(policy)}`);
+        throw new XcooBeeError(`Failed to upload file at: ${file} using policy: ${JSON.stringify(policy)}`);
       }
 
       resolve(res);
     });
   });
-}
+};
 
 module.exports = {
   upload_file,

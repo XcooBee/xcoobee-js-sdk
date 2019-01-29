@@ -1,4 +1,7 @@
-const sinon = require('sinon');
+const jest = require('jest');
+
+jest.mock('graphql-request');
+
 const { GraphQLClient } = require('graphql-request');
 
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
@@ -11,12 +14,12 @@ const {
 
 describe('EventSubscriptionsApi', () => {
 
-  afterEach(() => sinon.restore());
+  afterEach(() => GraphQLClient.prototype.request.mockReset());
 
   describe('addEventSubscription', () => {
 
     it('should call graphql endpoint with params', () => {
-      const stub = sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({ add_event_subscriptions: true }));
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ add_event_subscriptions: true }));
 
       const events = {
         ConsentApproved: 'consent_approved_handler',
@@ -26,9 +29,10 @@ describe('EventSubscriptionsApi', () => {
       return addEventSubscription('apiUrlRoot', 'accessToken', events, 'campaignId')
         .then((res) => {
           expect(res).toBeTruthy();
-          expect(stub.calledOnce).toBeTruthy();
 
-          const options = stub.getCall(0).args[1];
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
           expect(options.config.campaign_cursor).toBe('campaignId');
 
           expect(options.config.events.length).toBe(2);
@@ -56,7 +60,7 @@ describe('EventSubscriptionsApi', () => {
   describe('deleteEventSubscription', () => {
 
     it('should call graphql endpoint with params', () => {
-      const stub = sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({ delete_event_subscriptions: true }));
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ delete_event_subscriptions: true }));
 
       const events = {
         ConsentApproved: 'consent_approved_handler',
@@ -66,9 +70,9 @@ describe('EventSubscriptionsApi', () => {
       return deleteEventSubscription('apiUrlRoot', 'accessToken', events, 'campaignId')
         .then((res) => {
           expect(res).toBeTruthy();
-          expect(stub.calledOnce).toBeTruthy();
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
 
-          const options = stub.getCall(0).args[1];
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
           expect(options.config.campaign_cursor).toBe('campaignId');
 
           expect(options.config.events.length).toBe(2);
@@ -94,14 +98,14 @@ describe('EventSubscriptionsApi', () => {
   describe('listEventSubscriptions', () => {
 
     it('should call graphql endpoint with params', () => {
-      const stub = sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({ event_subscriptions: { data: 'eventSubscriptionData' } }));
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ event_subscriptions: { data: 'eventSubscriptionData' } }));
 
       return listEventSubscriptions('apiUrlRoot', 'accessToken', 'campaignId')
         .then((res) => {
           expect(res.data).toBe('eventSubscriptionData');
-          expect(stub.calledOnce).toBeTruthy();
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
 
-          const options = stub.getCall(0).args[1];
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
           expect(options.campaignId).toBe('campaignId');
         });
     });

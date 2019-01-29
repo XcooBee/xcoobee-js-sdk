@@ -31,8 +31,7 @@ const deleteInboxItem = (apiUrlRoot, apiAccessToken, userCursor, messageId) => {
       // Note: remove_inbox_item is not defined if nothing is deleted.
       const { trans_id } = remove_inbox_item || { trans_id: null };
 
-      const result = { trans_id };
-      return result;
+      return { trans_id };
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);
@@ -91,8 +90,7 @@ const getInboxItem = (apiUrlRoot, apiAccessToken, userCursor, messageId) => {
     .then((response) => {
       const { inbox_item } = response;
 
-      const result = { inbox_item };
-      return result;
+      return { inbox_item };
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);

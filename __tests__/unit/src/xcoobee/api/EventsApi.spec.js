@@ -1,5 +1,7 @@
-const sinon = require('sinon');
 const jest = require('jest');
+
+jest.mock('graphql-request');
+
 const { GraphQLClient } = require('graphql-request');
 
 const { getEvents } = require('../../../../../src/xcoobee/api/EventsApi');
@@ -10,12 +12,12 @@ const EncryptionUtils = require('../../../../../src/xcoobee/core/EncryptionUtils
 
 describe('EventsApi', () => {
 
-  afterEach(() => sinon.restore());
+  afterEach(() => GraphQLClient.prototype.request.mockReset());
 
   describe('getEvents', () => {
 
     it('should get events and decrypt payload', () => {
-      sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({
         events: {
           data: [{ payload: 'encryptedPayload' }],
           page_info: {},
@@ -25,9 +27,7 @@ describe('EventsApi', () => {
       EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue('{"decrypted": "test"}');
 
       return getEvents('apiUrlRoot', 'accessToken', 'userId', 'privateKey', 'passphrase')
-        .then((res) => {
-          expect(res.data[0].payload.decrypted).toBe('test');
-        });
+        .then(res => expect(res.data[0].payload.decrypted).toBe('test'));
     });
 
   });

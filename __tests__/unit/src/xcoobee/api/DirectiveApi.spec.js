@@ -1,22 +1,25 @@
-const sinon = require('sinon');
+const jest = require('jest');
+
+jest.mock('graphql-request');
+
 const { GraphQLClient } = require('graphql-request');
 
 const { addDirective } = require('../../../../../src/xcoobee/api/DirectiveApi');
 
 describe('DirectiveApi', () => {
 
-  afterEach(() => sinon.restore());
+  afterEach(() => GraphQLClient.prototype.request.mockReset());
 
   describe('addDirective', () => {
 
     it('should call graphql endpoint with params', () => {
-      const stub = sinon.stub(GraphQLClient.prototype, 'request').returns(Promise.resolve({ add_directive: { ref_id: 'refId' } }));
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ add_directive: { ref_id: 'refId' } }));
 
       return addDirective('apiUrlRoot', 'accessToken', 'directiveInput')
         .then((res) => {
           expect(res).toBe('refId');
-          expect(stub.calledOnce).toBeTruthy();
-          expect(stub.getCall(0).args[1].directiveInput).toBe('directiveInput');
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].directiveInput).toBe('directiveInput');
         });
     });
 
