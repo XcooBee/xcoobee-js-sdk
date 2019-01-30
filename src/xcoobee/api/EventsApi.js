@@ -46,24 +46,24 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
     first,
     userCursor,
   })
-    .then((response) => {
+    .then(async (response) => {
       const { events } = response;
 
       // If a private key and its passphrase are supplied, then decrypt payload for SDK
       // user.
       if (privateKey && passphrase) {
-        events.data = events.data.map(async (event) => {
+        events.data = await Promise.all(events.data.map(async (event) => {
           const payloadJson = await decryptWithEncryptedPrivateKey(
             event.payload,
             privateKey,
-            passphrase,
+            passphrase
           );
           const payload = JSON.parse(payloadJson);
           return {
             ...event,
             payload,
           };
-        });
+        }));
       }
 
       return events;

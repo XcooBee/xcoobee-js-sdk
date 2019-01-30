@@ -175,6 +175,8 @@ const listEventSubscriptions = (apiUrlRoot, apiAccessToken, campaignId) => {
       // property or no longer does cursor-based pagination.
       event_subscriptions.page_info = event_subscriptions.page_info || { end_cursor: null, has_next_page: false };
 
+      // TODO: retrun valid event type
+
       return event_subscriptions;
     })
     .catch((err) => {

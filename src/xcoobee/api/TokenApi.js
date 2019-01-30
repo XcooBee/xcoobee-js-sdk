@@ -30,71 +30,64 @@ const getApiAccessToken = (apiCfg) => {
     return getApiAccessToken._.unfulfilledPromises[key];
   }
 
-  const unfulfilledPromise = new Promise((resolve, reject) => {
-    const apiAccessTokenUrl = `${apiUrlRoot}/get_token`;
+  const apiAccessTokenUrl = `${apiUrlRoot}/get_token`;
 
-    try {
-      fetch(
-        apiAccessTokenUrl,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            key: apiKey,
-            secret: apiSecret,
-          }),
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-          },
-          timeout: 30000,
-        }
-      )
-        .then((response) => {
-          delete getApiAccessToken._.unfulfilledPromises[key];
-          response.json()
-            .then((body) => {
-              const msg = [];
-              if (body) {
-                if (response.ok) {
-                  // The API is returning error messages even when the status is a 200.
-                  if (typeof body.errorType === 'string' && body.errorType.length > 0) {
-                    if (body.errorMessage) {
-                      msg.push(body.errorMessage);
-                    } else {
-                      msg.push(MSG__GENERIC_ERROR);
-                    }
-                  } else if (typeof body.token !== 'string' || body.token.trim().length === 0) {
-                    msg.push(MSG__GENERIC_ERROR);
-                  }
-                } else if (response.status === 403) {
-                  msg.push('Forbidden.');
-                  if (body.message) {
-                    msg.push(body.message);
-                  }
+  const unfulfilledPromise = fetch(
+    apiAccessTokenUrl,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        key: apiKey,
+        secret: apiSecret,
+      }),
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      timeout: 30000,
+    }
+  )
+    .then((response) => {
+      delete getApiAccessToken._.unfulfilledPromises[key];
+
+      return response.json()
+        .then((body) => {
+          const msg = [];
+          if (body) {
+            if (response.ok) {
+              // The API is returning error messages even when the status is a 200.
+              if (typeof body.errorType === 'string' && body.errorType.length > 0) {
+                if (body.errorMessage) {
+                  msg.push(body.errorMessage);
                 } else {
                   msg.push(MSG__GENERIC_ERROR);
                 }
-                if (msg.length === 0) {
-                  resolve(body.token.trim());
-                  return;
-                }
-              } else {
+              } else if (typeof body.token !== 'string' || body.token.trim().length === 0) {
                 msg.push(MSG__GENERIC_ERROR);
               }
-              reject(new XcooBeeError(msg.join(' ')));
-            })
-            .catch((err) => {
-              reject(ApiUtils.transformError(err));
-            });
-        })
-        .catch((err) => {
-          delete getApiAccessToken._.unfulfilledPromises[key];
-          reject(ApiUtils.transformError(err));
+            } else if (response.status === 403) {
+              msg.push('Forbidden.');
+
+              if (body.message) {
+                msg.push(body.message);
+              }
+            } else {
+              msg.push(MSG__GENERIC_ERROR);
+            }
+
+            if (msg.length === 0) {
+              return body.token.trim();
+            }
+          } else {
+            msg.push(MSG__GENERIC_ERROR);
+          }
+
+          throw new XcooBeeError(msg.join(' '));
         });
-    } catch (err) {
+    })
+    .catch((err) => {
       delete getApiAccessToken._.unfulfilledPromises[key];
-      reject(ApiUtils.transformError(err));
-    }
-  });
+      throw ApiUtils.transformError(err);
+    });
 
   getApiAccessToken._.unfulfilledPromises[key] = unfulfilledPromise;
 

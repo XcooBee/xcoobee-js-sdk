@@ -19,34 +19,27 @@ const getUser = (apiUrlRoot, apiAccessToken) => {
     return getUser._.unfulfilledPromises[key];
   }
 
-  const unfulfilledPromise = new Promise((resolve, reject) => {
-    try {
-      const client = ApiUtils.createClient(apiUrlRoot, apiAccessToken);
-      const query = `
-        query {
-          user {
-            cursor
-            xcoobee_id
-            pgp_public_key
-          }
-        }
-      `;
-      client.request(query)
-        .then((response) => {
-          delete getUser._.unfulfilledPromises[key];
-          const { user } = response;
-
-          resolve(user);
-        })
-        .catch((err) => {
-          delete getUser._.unfulfilledPromises[key];
-          reject(ApiUtils.transformError(err));
-        });
-    } catch (err) {
-      delete getUser._.unfulfilledPromises[key];
-      reject(ApiUtils.transformError(err));
+  const client = ApiUtils.createClient(apiUrlRoot, apiAccessToken);
+  const query = `
+    query {
+      user {
+        cursor
+        xcoobee_id
+        pgp_public_key
+      }
     }
-  });
+  `;
+
+  const unfulfilledPromise = client.request(query)
+    .then((response) => {
+      delete getUser._.unfulfilledPromises[key];
+
+      return response.user;
+    })
+    .catch((err) => {
+      delete getUser._.unfulfilledPromises[key];
+      throw ApiUtils.transformError(err);
+    });
 
   getUser._.unfulfilledPromises[key] = unfulfilledPromise;
 

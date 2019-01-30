@@ -17,23 +17,18 @@ const UploadPolicyIntents = require('./UploadPolicyIntents');
  */
 const upload_policy = (apiUrlRoot, apiAccessToken, intent, endPointCursor, files) => {
   if (!UploadPolicyIntents.values.includes(intent)) {
-    throw TypeError(`'intent' must be one of ${UploadPolicyIntents.values.join(', ')}.`);
+    return Promise.reject(new TypeError(`'intent' must be one of ${UploadPolicyIntents.values.join(', ')}.`));
   }
   if (!ApiUtils.appearsToBeACursor(endPointCursor)) {
-    throw TypeError('`endPointCursor` is required.');
+    return Promise.reject(new TypeError('`endPointCursor` is required.'));
   }
   if (!Array.isArray(files)) {
-    throw TypeError('`files` must be an array.');
+    return Promise.reject(new TypeError('`files` must be an array.'));
   }
 
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
-    let baseName;
-    if (file instanceof File) {
-      baseName = file.name;
-    } else {
-      baseName = Path.basename(file);
-    }
+    const baseName = Path.basename(file);
 
     /* eslint-disable-next-line max-len */
     query.push(`  policy${idx}: upload_policy(filePath: "${baseName}", intent: ${intent}, identifier: "${endPointCursor}") {`);
@@ -47,7 +42,7 @@ const upload_policy = (apiUrlRoot, apiAccessToken, intent, endPointCursor, files
     query.push('  }');
   });
   query.push('}');
-  query = query.join('\n')
+  query = query.join('\n');
 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query)
     .then((response) => {
@@ -57,7 +52,7 @@ const upload_policy = (apiUrlRoot, apiAccessToken, intent, endPointCursor, files
         let policy = null;
         const key = `policy${i}`;
 
-        if (key in response) {
+        if (response[key]) {
           policy = response[key];
         }
         policies.push(policy);
