@@ -24,8 +24,13 @@ module.exports = {
     // '<rootDir>/xcoobee/api/UsersCache.spec.js',
     // '<rootDir>/xcoobee/core/EncryptionUtils.spec.js',
     // '<rootDir>/xcoobee/core/XcooBeeError.spec.js',
+    // '<rootDir>/xcoobee/sdk/Bees.spec.js',
     // '<rootDir>/xcoobee/sdk/Config.spec.js',
     // '<rootDir>/xcoobee/sdk/ConfigUtils.spec.js',
+    // '<rootDir>/xcoobee/sdk/ErrorResponse.spec.js',
+    // '<rootDir>/xcoobee/sdk/PagingResponse.spec.js',
+    // '<rootDir>/xcoobee/sdk/Response.spec.js',
     // '<rootDir>/xcoobee/sdk/SdkUtils.spec.js',
+    // '<rootDir>/xcoobee/sdk/SuccessResponse.spec.js',
   ],
 };

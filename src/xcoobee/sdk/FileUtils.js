@@ -57,17 +57,15 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
 
   // Then here we resolve each promise.
   const fileUploadResults = await new Promise((resolve) => {
-    const fileUploadResults = fileUploadPromises.map(async (promise) => {
+    resolve(Promise.all(fileUploadPromises.map(async (promise) => {
       let fileUploadResult;
       try {
         fileUploadResult = await promise;
-      }
-      catch (err) {
+      } catch (err) {
         fileUploadResult = err;
       }
       return fileUploadResult;
-    });
-    resolve(fileUploadResults);
+    })));
   });
 
   const result = policyFilePairs.map((pair, idx) => {

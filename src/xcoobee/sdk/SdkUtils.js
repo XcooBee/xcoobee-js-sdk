@@ -110,6 +110,7 @@ function resolveSdkCfg(overridingConfig, defaultConfig) {
 async function startPaging(fetchPage, apiCfg, params) {
   try {
     const firstPage = await fetchPage(apiCfg, { ...params, after: null });
+
     const response = new PagingResponse(fetchPage, firstPage, apiCfg, params);
     return response;
   } catch (err) {

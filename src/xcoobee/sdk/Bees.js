@@ -3,8 +3,6 @@ const BeesApi = require('../../xcoobee/api/BeesApi');
 const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
 const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
 
-const XcooBeeError = require('../core/XcooBeeError');
-
 const ErrorResponse = require('./ErrorResponse');
 const FileUtils = require('./FileUtils');
 const SdkUtils = require('./SdkUtils');
@@ -164,12 +162,13 @@ class Bees {
     };
 
     if (subscriptions) {
+      // TODO: validate subscriptions
       directiveInput.subscriptions = subscriptions;
     }
 
     if (
-      Array.isArray(options.process.destinations) &&
-      options.process.destinations.length > 0
+      Array.isArray(options.process.destinations)
+      && options.process.destinations.length > 0
     ) {
       directiveInput.destinations = options.process.destinations.map(
         (destination) => {
@@ -211,9 +210,6 @@ class Bees {
    *   of 'File' objects as is available in a modern browser.
    *   TODO: Test what file paths actually work and make sure the documentation is
    *   adequate.  Be sure to show examples of various path types.
-   * @param {string} [intent] - One of the "outbox" endpoints defined in the
-   *   XcooBee UI.  If an endpoint is not specified, then be sure to call the
-   *   `takeOff` function afterwards.  TODO: Make sure this documentation is accurate.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -228,25 +224,18 @@ class Bees {
    *   sub-result has a string `file` property and a boolean `success` property
    *   indicating whether the file was successfully uploaded. If `success` is `false`,
    *   then an error `error` property will also exist.
-   *
-   * @throws {XcooBeeError}
    */
-  async uploadFiles(files, intent, config = null) {
+  async uploadFiles(files, config = null) {
     this._assertValidState();
-    const endPointName = intent || UploadPolicyIntents.OUTBOX;
-    if (endPointName !== UploadPolicyIntents.OUTBOX) {
-      throw new XcooBeeError(
-        `The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`
-      );
-    }
-    let apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
+      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, UploadPolicyIntents.OUTBOX, files);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {

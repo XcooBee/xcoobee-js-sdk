@@ -31,7 +31,13 @@ class PagingResponse extends Response {
    */
   async getNextPage() {
     if (this.hasNextPage()) {
-      const { apiCfg, currentPage, fetcher, params } = this._;
+      const {
+        apiCfg,
+        currentPage,
+        fetcher,
+        params,
+      } = this._;
+
       const nextParams = {
         ...params,
         after: currentPage.page_info.end_cursor,
@@ -40,7 +46,7 @@ class PagingResponse extends Response {
         const nextPage = await this._.fetcher(apiCfg, nextParams);
         return new PagingResponse(fetcher, nextPage, apiCfg, params);
       } catch (err) {
-        return new ErrorResponse(400, err);
+        throw new ErrorResponse(400, err);
       }
     }
     return null;

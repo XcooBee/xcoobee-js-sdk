@@ -14,7 +14,7 @@ module.exports = {
       "imports": "always-multiline",
       "exports": "always-multiline",
       "functions": "never",
-  }],
+    }],
     "arrow-body-style": ["off", "as-needed", { "requireReturnForObjectLiteral": true }],
   },
 };

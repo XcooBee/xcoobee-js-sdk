@@ -11,6 +11,8 @@ module.exports = {
     'max-len': 'off',
     'no-new': 'off',
     'prefer-promise-reject-errors': 'off',
+    'import/no-extraneous-dependencies': 'off',
+
 
     // Recommend not to leave any console.log in your code
     // Use console.error, console.warn and console.info instead

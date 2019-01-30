@@ -30,7 +30,12 @@ class Config {
       throw TypeError('Config `data` is required.');
     }
     const { apiKey, apiSecret, apiUrlRoot } = values;
-    let { campaignId, encrypt, pgpPassword, pgpSecret } = values;
+    let {
+      campaignId,
+      encrypt,
+      pgpPassword,
+      pgpSecret,
+    } = values;
     campaignId = campaignId === undefined ? null : campaignId;
     encrypt = encrypt === undefined ? false : encrypt;
     pgpPassword = pgpPassword === undefined ? null : pgpPassword;
@@ -49,8 +54,8 @@ class Config {
     }
 
     if (
-      (campaignId !== null && typeof campaignId !== 'string') ||
-      (typeof campaignId === 'string' && campaignId.length === 0)
+      (campaignId !== null && typeof campaignId !== 'string')
+      || (typeof campaignId === 'string' && campaignId.length === 0)
     ) {
       throw new TypeError(
         'Default campaign ID must be null or a valid campaign ID.'
