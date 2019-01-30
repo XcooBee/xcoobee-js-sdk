@@ -1,4 +1,3 @@
-const sinon = require('sinon');
 const FormData = require('form-data');
 
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
@@ -6,8 +5,6 @@ const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 const { upload_file } = require('../../../../../src/xcoobee/api/FileApi');
 
 describe('FileApi', () => {
-
-  afterEach(() => sinon.restore());
 
   describe('upload_file', () => {
 
@@ -22,7 +19,7 @@ describe('FileApi', () => {
     };
 
     it('should format and return error', () => {
-      sinon.stub(FormData.prototype, 'submit').yields('error');
+      FormData.prototype.submit = (url, cb) => cb('error');
 
       return upload_file('image.jpg', policy)
         .then(() => expect(false).toBe(true)) // this will newer happen
@@ -33,7 +30,7 @@ describe('FileApi', () => {
     });
 
     it('should return error if result status code more than 300', () => {
-      sinon.stub(FormData.prototype, 'submit').yields(null, { statusCode: 400 });
+      FormData.prototype.submit = (url, cb) => cb(null, { statusCode: 400 });
 
       return upload_file('image.jpg', policy)
         .then(() => expect(false).toBe(true)) // this will newer happen
@@ -44,7 +41,7 @@ describe('FileApi', () => {
     });
 
     it('should return result if everything is ok', () => {
-      sinon.stub(FormData.prototype, 'submit').yields(null, { statusCode: 200 });
+      FormData.prototype.submit = (url, cb) => cb(null, { statusCode: 200 });
 
       return upload_file('image.jpg', policy)
         .then(res => expect(res.statusCode).toBe(200));

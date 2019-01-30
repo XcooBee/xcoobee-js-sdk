@@ -1,4 +1,3 @@
-const sinon = require('sinon');
 const jest = require('jest');
 
 jest.mock('openpgp');
@@ -9,8 +8,6 @@ const openpgp = require('openpgp');
 const { decryptWithEncryptedPrivateKey } = require('../../../../../src/xcoobee/core/EncryptionUtils');
 
 describe('EncryptionUtils', () => {
-
-  afterEach(() => sinon.restore());
 
   describe('decryptWithEncryptedPrivateKey', () => {
 
