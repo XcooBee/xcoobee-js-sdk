@@ -83,7 +83,7 @@ indirectly via an utility function.
 **Constructor**
 
 ```js
-import XcooBee from '@xcoobee/sdk-js';
+const XcooBee = require('xcoobee-sdk');
 
 const config = new XcooBee.sdk.Config({
   apiKey: 'YourApiKey',
@@ -96,7 +96,7 @@ const config = new XcooBee.sdk.Config({
 **Utility Function**
 
 ```js
-import XcooBee from '@xcoobee/sdk-js';
+const XcooBee = require('xcoobee-sdk');
 
 XcooBee.sdk.ConfigUtils.createFromFile()
   .then(config => {

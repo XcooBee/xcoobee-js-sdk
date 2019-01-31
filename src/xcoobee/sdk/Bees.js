@@ -15,9 +15,9 @@ const SuccessResponse = require('./SuccessResponse');
  * reference to a `Bees` SDK instance through the {@link Sdk#bees bees} property.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const sdk = new SdkJs.Sdk(...);
+ * const sdk = new XcooBee.Sdk(...);
  * sdk.bees.listBees(...).then(...);
  * ```
  *

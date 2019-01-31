@@ -11,9 +11,9 @@ const Users = require('./Users');
  * The SDK class.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const config = new SdkJs.Config({
+ * const config = new XcooBee.Config({
  *   apiKey: '...',
  *   apiSecret: '...',
  *   apiUrlRoot: '...',
@@ -22,11 +22,11 @@ const Users = require('./Users');
  *   pgpPassword: null,
  *   pgpSecret: null,
  * });
- * const sdk = new SdkJs.Sdk(config);
+ * const sdk = new XcooBee.Sdk(config);
  * ```
  *
  * ```js
- * import { Config, Sdk } from '@xcoobee/sdk-js';
+ * const { Config, Sdk } = require('xcoobee-sdk');
  *
  * const config = new Config({
  *   apiKey: '...',

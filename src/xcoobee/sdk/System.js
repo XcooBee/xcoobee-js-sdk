@@ -15,9 +15,9 @@ const SuccessResponse = require('./SuccessResponse');
  * property.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const sdk = new SdkJs.Sdk(...);
+ * const sdk = new XcooBee.Sdk(...);
  * sdk.system.ping(...).then(...);
  * ```
  *
