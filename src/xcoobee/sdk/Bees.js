@@ -88,8 +88,6 @@ class Bees {
    * @async
    * @param {string} searchText - The search text.  It is a string of keywords to
    *  search for in the bee system name or label in the language of your account.
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -108,18 +106,18 @@ class Bees {
    *
    * @throws {XcooBeeError}
    */
-  async listBees(searchText, after = null, limit = null, config = null) {
+  async listBees(searchText = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, limit, searchText } = params;
+      const { after, limit, searchText: search } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, limit);
+      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, search, after, limit);
       return beesPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, searchText };
+    const params = { searchText };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -210,6 +208,7 @@ class Bees {
    *   of 'File' objects as is available in a modern browser.
    *   TODO: Test what file paths actually work and make sure the documentation is
    *   adequate.  Be sure to show examples of various path types.
+   * @param {string} endpoint - Endpoint type
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -225,7 +224,7 @@ class Bees {
    *   indicating whether the file was successfully uploaded. If `success` is `false`,
    *   then an error `error` property will also exist.
    */
-  async uploadFiles(files, config = null) {
+  async uploadFiles(files, endpoint = UploadPolicyIntents.OUTBOX, config = null) {
     this._assertValidState();
 
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -235,7 +234,7 @@ class Bees {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, UploadPolicyIntents.OUTBOX, files);
+      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endpoint, files);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {

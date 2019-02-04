@@ -3,6 +3,7 @@ const ApiUtils = require('./ApiUtils');
 const ConsentDataTypes = require('./ConsentDataTypes');
 const ConsentStatuses = require('./ConsentStatuses');
 const ConsentTypes = require('./ConsentTypes');
+const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
 
 /**
  * Allows a company to confirm consent data modification.
@@ -120,12 +121,7 @@ const getCookieConsent = (apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, cam
       if (page_info.has_next_page) {
         throw XcooBeeError('Too many active consents to be able to determine cookie consents. Please notify XcooBee of this issue.');
       }
-      // TODO: Find out what to do with the page_info.  If page_info.has_next_page is
-      // true, then do more requests need to be made for more data?
 
-      // Unfortunately, the consents query does not yet allow searching by
-      // user_xcoobee_id, multiple consent_types, or multiple request_data_types.
-      // So, we have to post-process the data.
       const cookie_consents = {
         [ConsentDataTypes.ADVERTISING_COOKIE]: false,
         [ConsentDataTypes.APPLICATION_COOKIE]: false,
@@ -173,31 +169,6 @@ const getCookieConsent = (apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, cam
  * @throws {XcooBeeError}
  */
 const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
-  // TODO: Decide what data should be returned.
-  // Additional Consent Fields:
-  // - allow_affiliates
-  // - campaign_cursor
-  // - campaign_status
-  // - consent_cursor
-  // - consent_details {
-  //     marker
-  //     share_hash
-  //   }
-  // - consent_source
-  // - date_approved
-  // - date_deleted
-  // - date_u
-  // - is_data_request
-  // - notes_allowed
-  // - offer_expiration_date
-  // - offer_points
-  // - renewal_points
-  // - request_data_form
-  // - request_owner_cursor
-  // - share_count
-  // - share_type
-  // - update_confirmed
-  // - valid_length
   const query = `
     query getConsentData($consentCursor: String!) {
       consent(consent_cursor: $consentCursor) {
@@ -239,7 +210,7 @@ const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} userCursor
- * @param {ConsentStatus} status
+ * @param {ConsentStatus[]} statuses
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
@@ -252,45 +223,19 @@ const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
  *
  * @throws {XcooBeeError}
  */
-const listConsents = (apiUrlRoot, apiAccessToken, userCursor, status, after = null, first = null) => {
-  if (typeof status === 'string') {
-    if (!ConsentStatuses.values.includes(status)) {
-      throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
-    }
+const listConsents = (apiUrlRoot, apiAccessToken, userCursor, statuses, after = null, first = null) => {
+  if (!Array.isArray(statuses)) {
+    throw TypeError('`statuses` should be array');
   }
-  // TODO: Decide what data should be returned.
-  // Additional Consent Fields:
-  // - allow_affiliates
-  // - campaign_cursor
-  // - campaign_status
-  // - consent_description
-  // - consent_details {
-  //     datatype
-  //     marker
-  //     share_hash
-  //   }
-  // - consent_name
-  // - consent_source
-  // - consent_type
-  // - date_approved
-  // - date_deleted
-  // - date_u
-  // - is_data_request
-  // - notes_allowed
-  // - offer_expiration_date
-  // - offer_points
-  // - renewal_points
-  // - request_data_form
-  // - request_data_types
-  // - request_owner
-  // - request_owner_cursor
-  // - required_data_types
-  // - share_count
-  // - share_type
-  // - update_confirmed
-  // - user_cursor
-  // - user_display_name
-  // - valid_length
+
+  statuses.forEach((status) => {
+    if (typeof status === 'string') {
+      if (!ConsentStatuses.values.includes(status)) {
+        throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
+      }
+    }
+  });
+
   const query = `
     query listConsents($userCursor: String!, $statuses: [ConsentStatus], $after: String, $first: Int) {
       consents(campaign_owner_cursor: $userCursor, statuses: $statuses, after: $after, first: $first) {
@@ -308,10 +253,11 @@ const listConsents = (apiUrlRoot, apiAccessToken, userCursor, status, after = nu
       }
     }
   `;
+
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     after,
     first,
-    statuses: [status],
+    statuses: statuses.length ? statuses : null,
     userCursor,
   })
     .then((response) => {
@@ -347,6 +293,7 @@ const requestConsent = (apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, refer
       }
     }
   `;
+
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: {
       campaign_cursor: campaignId,
@@ -397,6 +344,51 @@ const resolveXcoobeeId = (apiUrlRoot, apiAccessToken, consentCursor) => {
     });
 };
 
+/**
+ * Return consent data package
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} consentId
+ * @param {string} privateKey
+ * @param {string} passphrase
+ *
+ * @returns {Promise<Object>} - The result.
+ * @property {boolean} confirmed - Flag indicating whether the change is confirmed.
+ *
+ * @throws {XcooBeeError}
+ */
+const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passphrase) => {
+  const query = `
+    query getDataPackage($consentId: String!) {
+      data_package(consent_cursor: $consentId) {
+          data
+      }
+    }
+  `;
+
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    consentId,
+  })
+    .then(async (response) => {
+      if (privateKey && passphrase) {
+        const payloadJson = await decryptWithEncryptedPrivateKey(
+          response.data_package.data,
+          privateKey,
+          passphrase
+        );
+
+        return { payload: JSON.parse(payloadJson) };
+      }
+
+      return { payload: response.data_package && response.data_package.data };
+    })
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 module.exports = {
   confirmConsentChange,
   confirmDataDelete,
@@ -405,4 +397,5 @@ module.exports = {
   listConsents,
   resolveXcoobeeId,
   requestConsent,
+  getDataPackage,
 };

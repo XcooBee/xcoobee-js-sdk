@@ -4,6 +4,10 @@ jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');
 
+jest.mock('../../../../../src/xcoobee/core/EncryptionUtils');
+
+const EncryptionUtils = require('../../../../../src/xcoobee/core/EncryptionUtils');
+
 const {
   confirmConsentChange,
   confirmDataDelete,
@@ -12,6 +16,7 @@ const {
   listConsents,
   resolveXcoobeeId,
   requestConsent,
+  getDataPackage,
 } = require('../../../../../src/xcoobee/api/ConsentsApi');
 
 describe('ConsentsApi', () => {
@@ -107,9 +112,18 @@ describe('ConsentsApi', () => {
 
   describe('listConsents', () => {
 
-    it('should throw an error if invalid status given', () => {
+    it('should throw an error if statuses is not array', () => {
       try {
         listConsents('apiUrlRoot', 'accessToken', 'userId', 'invalid');
+      } catch (err) {
+        expect(err).toBeInstanceOf(TypeError);
+        expect(err.message).toBe('`statuses` should be array');
+      }
+    });
+
+    it('should throw an error if invalid status given', () => {
+      try {
+        listConsents('apiUrlRoot', 'accessToken', 'userId', ['canceled', 'invalid']);
       } catch (err) {
         expect(err).toBeInstanceOf(TypeError);
         expect(err.message).toBe('Invalid consent status: invalid.  Must be one of active, canceled, expired, pending, offer, rejected, updating.');
@@ -119,7 +133,7 @@ describe('ConsentsApi', () => {
     it('should call graphql endpoint with params', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ consents: ['consent1', 'consent2'] }));
 
-      return listConsents('apiUrlRoot', 'accessToken', 'userId', 'canceled')
+      return listConsents('apiUrlRoot', 'accessToken', 'userId', ['canceled'])
         .then((res) => {
           expect(res[0]).toBe('consent1');
           expect(res[1]).toBe('consent2');
@@ -160,6 +174,39 @@ describe('ConsentsApi', () => {
           expect(options.config.campaign_cursor).toBe('campaignId');
           expect(options.config.reference).toBe('refId');
           expect(options.config.xcoobee_id).toBe('~xid');
+        });
+    });
+
+  });
+
+  describe('getDataPackage', () => {
+
+    it('should return decrypted package', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ data_package: { data: 'encrypted' } }));
+
+      return getDataPackage('apiUrlRoot', 'accessToken', 'consentId')
+        .then((res) => {
+          expect(res.payload).toBe('encrypted');
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
+          expect(options.consentId).toBe('consentId');
+        });
+    });
+
+    it('should decrypt package', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ data_package: { data: 'encrypted' } }));
+      EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue('{"decrypted": "test"}');
+
+      return getDataPackage('apiUrlRoot', 'accessToken', 'consentId', 'privateKey', 'passphrase')
+        .then((res) => {
+          expect(res.payload.decrypted).toBe('test');
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
+          expect(options.consentId).toBe('consentId');
+
+          expect(EncryptionUtils.decryptWithEncryptedPrivateKey).toHaveBeenCalledWith('encrypted', 'privateKey', 'passphrase');
         });
     });
 

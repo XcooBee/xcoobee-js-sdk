@@ -75,52 +75,6 @@ const getCampaignInfo = (apiUrlRoot, apiAccessToken, campaignId) => {
  * @throws {XcooBeeError}
  */
 const getCampaigns = (apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) => {
-  /*
-  Available Campaign Data:
-    campaign_cursor
-    owner_cursor
-    campaign_name
-    date_c
-    date_u
-    date_e
-    webhook
-    webkey
-    endpoint
-    status
-    campaign_title {
-      locale
-      text
-    }
-    campaign_description {
-      locale
-      text
-    }
-    is_data_campaign
-    allow_notes
-    restrict_additional_users
-    targets {
-      recipient
-      locale
-      contract_ref
-      name
-    }
-    xcoobee_targets {
-      xcoobee_id
-      contract_ref
-    }
-    email_targets {
-      email
-      locale
-      contract_ref
-    }
-    countries
-    requests {
-      data {
-        request_cursor
-        request_name
-      }
-    }
-  */
   const query = `
     query getCampaigns($userCursor: String!, $after: String, $first: Int) {
       campaigns(user_cursor: $userCursor, after: $after, first: $first) {

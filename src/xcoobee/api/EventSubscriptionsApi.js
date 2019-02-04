@@ -199,15 +199,6 @@ const TypeToEventTypeLut = {
   DataNearExpiration: 'data_near_expiration',
   UserDataRequest: 'user_data_request',
   UserMessage: 'user_message',
-  // ?: 'bee_success',
-  // ?: 'bee_error',
-  // ?: 'process_success',
-  // ?: 'process_error',
-  // ?: 'process_file_delivered',
-  // ?: 'process_file_presented',
-  // ?: 'process_file_downloaded',
-  // ?: 'process_file_deleted',
-  // ?: 'process_reroute',
 };
 
 /**

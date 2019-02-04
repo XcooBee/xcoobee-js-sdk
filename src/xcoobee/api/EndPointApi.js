@@ -16,21 +16,6 @@ const ApiUtils = require('./ApiUtils');
  * @throws {XcooBeeError}
  */
 const outbox_endpoints = (apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) => {
-  // const query = `
-  //   query getOutboxEndpoints($userCursor: String!, $after: String, $first: Int) {
-  //     outbox_endpoints(user_cursor: $userCursor, after: $after, first: $first) {
-  //       data {
-  //         cursor
-  //         date_c
-  //         name
-  //       }
-  //       page_info {
-  //         end_cursor
-  //         has_next_page
-  //       }
-  //     }
-  //   }
-  // `;
   const query = `
     query getOutboxEndpoints($userCursor: String!) {
       outbox_endpoints(user_cursor: $userCursor) {

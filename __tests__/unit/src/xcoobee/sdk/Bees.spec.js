@@ -38,7 +38,7 @@ describe('Bees', () => {
 
       return bees.listBees('bee')
         .then((res) => {
-          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, null);
+          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, undefined);
 
           expect(res).toBeInstanceOf(PagingResponse);
           expect(res.code).toBe(200);
@@ -111,7 +111,7 @@ describe('Bees', () => {
         .then((res) => {
           expect(res.result.ref_id).toBe('refId');
 
-          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, null);
+          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, undefined);
           expect(DirectiveApi.addDirective).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', {
             filenames: ['image.png'],
             user_reference: null,
@@ -144,7 +144,7 @@ describe('Bees', () => {
         .then((res) => {
           expect(res.result.ref_id).toBe('refId');
 
-          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, null);
+          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, undefined);
           expect(DirectiveApi.addDirective).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', {
             filenames: ['image.png'],
             user_reference: null,
@@ -177,7 +177,7 @@ describe('Bees', () => {
         .then((res) => {
           expect(res.result.ref_id).toBe('refId');
 
-          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, null);
+          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, undefined);
           expect(DirectiveApi.addDirective).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', {
             filenames: ['image.png'],
             user_reference: null,
@@ -214,7 +214,7 @@ describe('Bees', () => {
         .then((res) => {
           expect(res.result.ref_id).toBe('refId');
 
-          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, null);
+          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, undefined);
           expect(DirectiveApi.addDirective).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', {
             filenames: ['image.png'],
             user_reference: null,
