@@ -83,7 +83,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async addEventSubscription(events, campaignId, config = null) {
+  async addEventSubscription(events, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -123,7 +123,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async deleteEventSubscription(events, campaignId, config = null) {
+  async deleteEventSubscription(events, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -145,8 +145,6 @@ class System {
    * Fetches a page of the user's events.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -165,22 +163,27 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async getEvents(after = null, limit = null, config = null) {
+  async getEvents(config = null) {
     this._assertValidState();
 
     const fetchPage = async (sdkCfg, params) => {
-      const { apiKey, apiSecret, apiUrlRoot, pgpPassword, pgpSecret } = sdkCfg;
+      const {
+        apiKey,
+        apiSecret,
+        apiUrlRoot,
+        pgpPassword,
+        pgpSecret,
+      } = sdkCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, pgpSecret, pgpPassword, after, limit);
       return eventsPage;
     };
     const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
-    const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, sdkCfg, params);
+    return SdkUtils.startPaging(fetchPage, sdkCfg, {});
   }
 
   /**
@@ -191,8 +194,6 @@ class System {
    *   event subscriptions.  If `null` or `undefined`, then the campaign ID from the
    *   overriding config will be used.  If `config.campaignId` is `null` or
    *   `undefined`, then the campaign ID from the default config will be used.
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<PagingResponse, ErrorResponse>}
@@ -211,9 +212,8 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async listEventSubscriptions(campaignId, after = null, limit = null, config = null) {
+  async listEventSubscriptions(campaignId = null, config = null) {
     this._assertValidState();
-    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -225,7 +225,7 @@ class System {
       return eventSubscriptionsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, resolvedCampaignId };
+    const params = { resolvedCampaignId: SdkUtils.resolveCampaignId(campaignId, config, this._.config) };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -261,23 +261,21 @@ class System {
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const pgpPublicKey = user.pgp_public_key;
 
-      let err = null;
       if (pgpPublicKey) {
         const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
         if (result && result.campaign) {
-          const response = new SuccessResponse({ ponged: true });
-          return response;
+          return new SuccessResponse(true);
         }
-        err = new XcooBeeError('Campaign not found.');
-      } else {
-        err = new XcooBeeError('PGP key not found.');
+
+        throw new XcooBeeError('Campaign not found.');
       }
-      throw new ErrorResponse(400, err);
+
+      throw new XcooBeeError('PGP key not found.');
     } catch (err) {
       throw new ErrorResponse(400, err);
     }
   }
 
-}// eo class System
+}
 
 module.exports = System;

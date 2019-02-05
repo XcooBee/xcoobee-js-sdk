@@ -130,8 +130,6 @@ class Inbox {
    * Fetch a page of items from the inbox.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config]
    *
    * @returns {Promise<PagingResponse, ErrorResponse>} - The response.
@@ -149,7 +147,7 @@ class Inbox {
    *
    * @throws {XcooBeeError}
    */
-  async listInbox(after = null, limit = null, config = null) {
+  async listInbox(config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
@@ -160,9 +158,8 @@ class Inbox {
       return inboxPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, {});
   }
 
 }// eo class Inbox

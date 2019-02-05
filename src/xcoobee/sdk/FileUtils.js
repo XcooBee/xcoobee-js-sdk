@@ -49,24 +49,11 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
   // Note: We don't want to upload one file, wait for the promise to resolve,
   // and then repeat.  Here we are uploading all files back-to-back so that they
   // can be processed concurrently.
-  const fileUploadPromises = policyFilePairs.map((pair) => {
+  const fileUploadResults = await Promise.all(policyFilePairs.map((pair) => {
     const { file, policy } = pair;
 
-    return FileApi.upload_file(file, policy);
-  });
-
-  // Then here we resolve each promise.
-  const fileUploadResults = await new Promise((resolve) => {
-    resolve(Promise.all(fileUploadPromises.map(async (promise) => {
-      let fileUploadResult;
-      try {
-        fileUploadResult = await promise;
-      } catch (err) {
-        fileUploadResult = err;
-      }
-      return fileUploadResult;
-    })));
-  });
+    return FileApi.upload_file(file, policy).catch(err => err); // return error back to user
+  }));
 
   const result = policyFilePairs.map((pair, idx) => {
     const { file } = pair;

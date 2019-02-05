@@ -56,9 +56,7 @@ class Users {
    * Fetches a page of conversations with the given target cursor.
    *
    * @async
-   * @param {string} targetCursor
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
+   * @param {string} userId
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<PagingResponse, ErrorResponse>}
@@ -76,7 +74,7 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async getConversation(targetCursor, after = null, limit = null, config = null) {
+  async getConversation(userId, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
@@ -89,17 +87,14 @@ class Users {
       return conversationsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, targetCursor };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, { targetCursor: userId });
   }
 
   /**
    * Fetches a page of the user's conversations.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<PagingResponse, ErrorResponse>}
@@ -117,14 +112,14 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async getConversations(after = null, limit = null, config = null) {
+  async getConversations(config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const conversationsPage = await ConversationsApi.getConversations(
         apiUrlRoot, apiAccessToken, userCursor, after, limit
@@ -132,9 +127,8 @@ class Users {
       return conversationsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, {});
   }
 
   /**
@@ -192,7 +186,7 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async sendUserMessage(message, consentId, breachId, config = null) {
+  async sendUserMessage(message, consentId, breachId = null, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
