@@ -21,8 +21,7 @@ describe('InboxApi', () => {
 
       return deleteInboxItem('apiUrlRoot', 'accessToken', 'userId', 'image.png')
         .then((res) => {
-          expect(res).toBeInstanceOf(Object);
-          expect(res.trans_id).toBe('transId');
+          expect(res).toBeTruthy();
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
           expect(GraphQLClient.prototype.request.mock.calls[0][1].userCursor).toBe('userId');
           expect(GraphQLClient.prototype.request.mock.calls[0][1].messageId).toBe('image.png');

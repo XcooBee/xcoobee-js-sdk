@@ -26,13 +26,7 @@ const deleteInboxItem = (apiUrlRoot, apiAccessToken, userCursor, messageId) => {
     userCursor,
     messageId,
   })
-    .then((response) => {
-      const { remove_inbox_item } = response;
-      // Note: remove_inbox_item is not defined if nothing is deleted.
-      const { trans_id } = remove_inbox_item || { trans_id: null };
-
-      return { trans_id };
-    })
+    .then(() => true)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });

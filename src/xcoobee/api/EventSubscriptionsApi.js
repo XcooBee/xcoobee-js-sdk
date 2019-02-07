@@ -8,6 +8,39 @@ const ApiUtils = require('./ApiUtils');
  * @enum {string}
  */
 
+const TypeToEventTypeLut = {
+  BreachBeeUsed: 'breach_bee_used',
+  BreachPresented: 'breach_presented',
+  ConsentApproved: 'consent_approved',
+  ConsentChanged: 'consent_changed',
+  ConsentDeclined: 'consent_declined',
+  ConsentExpired: 'consent_expired',
+  ConsentNearExpiration: 'consent_near_expiration',
+  DataApproved: 'data_approved',
+  DataChanged: 'data_changed',
+  DataDeclined: 'data_declined',
+  DataExpired: 'data_expired',
+  DataNearExpiration: 'data_near_expiration',
+  UserDataRequest: 'user_data_request',
+  UserMessage: 'user_message',
+};
+
+/**
+ * @private
+ * @param {string} type
+ *
+ * @returns {string}
+ *
+ * @throws {XcooBeeError}
+ */
+const toEventType = (type) => {
+  if (!(type in TypeToEventTypeLut)) {
+    throw new XcooBeeError(`Invalid event type provided: "${type}".`);
+  }
+
+  return TypeToEventTypeLut[type];
+};
+
 /**
  * A summary of an event subscription.
  *
@@ -88,7 +121,7 @@ const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaig
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {Object} eventsMapping - A mapping between event subscription type and
+ * @param {Array} arrayOfEventNames - A mapping between event subscription type and
  *   handler.  The handler is not important here.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
@@ -97,13 +130,14 @@ const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaig
  *
  * @throws {XcooBeeError}
  */
-const deleteEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaignId) => {
+const deleteEventSubscription = (apiUrlRoot, apiAccessToken, arrayOfEventNames, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
 
   const eventTypes = [];
-  for (let type in eventsMapping) {
+  arrayOfEventNames.forEach((type) => {
     eventTypes.push(toEventType(type));
-  }
+  });
+
   const deleteSubscriptionsConfig = {
     campaign_cursor: campaignId,
     events: eventTypes,
@@ -183,38 +217,6 @@ const listEventSubscriptions = (apiUrlRoot, apiAccessToken, campaignId) => {
       throw ApiUtils.transformError(err);
     });
 };
-
-const TypeToEventTypeLut = {
-  BreachBeeUsed: 'breach_bee_used',
-  BreachPresented: 'breach_presented',
-  ConsentApproved: 'consent_approved',
-  ConsentChanged: 'consent_changed',
-  ConsentDeclined: 'consent_declined',
-  ConsentExpired: 'consent_expired',
-  ConsentNearExpiration: 'consent_near_expiration',
-  DataApproved: 'data_approved',
-  DataChanged: 'data_changed',
-  DataDeclined: 'data_declined',
-  DataExpired: 'data_expired',
-  DataNearExpiration: 'data_near_expiration',
-  UserDataRequest: 'user_data_request',
-  UserMessage: 'user_message',
-};
-
-/**
- * @private
- * @param {string} type
- *
- * @returns {string}
- *
- * @throws {XcooBeeError}
- */
-function toEventType(type) {
-  if (!(type in TypeToEventTypeLut)) {
-    throw new XcooBeeError(`Invalid event type provided: "${type}".`);
-  }
-  return TypeToEventTypeLut[type];
-}
 
 module.exports = {
   addEventSubscription,

@@ -62,10 +62,7 @@ describe('EventSubscriptionsApi', () => {
     it('should call graphql endpoint with params', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ delete_event_subscriptions: true }));
 
-      const events = {
-        ConsentApproved: 'consent_approved_handler',
-        ConsentChanged: 'consent_changed_handler',
-      };
+      const events = ['ConsentApproved', 'ConsentChanged'];
 
       return deleteEventSubscription('apiUrlRoot', 'accessToken', events, 'campaignId')
         .then((res) => {
@@ -82,10 +79,8 @@ describe('EventSubscriptionsApi', () => {
     });
 
     it('should throw an error if invalid event type given', () => {
-      const events = { InvalidType: 'handler' };
-
       try {
-        deleteEventSubscription('apiUrlRoot', 'accessToken', events, 'campaignId');
+        deleteEventSubscription('apiUrlRoot', 'accessToken', ['InvalidType'], 'campaignId');
       } catch (e) {
         expect(e).toBeInstanceOf(XcooBeeError);
         expect(e.message).toBe('Invalid event type provided: "InvalidType".');
