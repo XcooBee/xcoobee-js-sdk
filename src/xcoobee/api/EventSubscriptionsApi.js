@@ -222,4 +222,5 @@ module.exports = {
   addEventSubscription,
   deleteEventSubscription,
   listEventSubscriptions,
+  toEventType,
 };

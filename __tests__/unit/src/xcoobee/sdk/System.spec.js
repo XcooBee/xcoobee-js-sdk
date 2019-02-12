@@ -119,6 +119,23 @@ describe('System', () => {
 
   });
 
+  describe('triggerEvent', () => {
+
+    it('should return response with events', () => {
+      EventsApi.triggerEvent.mockReturnValue(Promise.resolve({ event_type: 'consent_approved' }));
+
+      return system.triggerEvent('ConsentApproved', { campaignId: 'campaignId' })
+        .then((res) => {
+          expect(EventsApi.triggerEvent).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignId', 'ConsentApproved');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result.event_type).toBe('consent_approved');
+        });
+    });
+
+  });
+
   describe('ping', () => {
 
     it('should return ErrorResponse if user doesn\'t have pgp key', () => {

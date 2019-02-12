@@ -4,7 +4,7 @@ jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');
 
-const { getUser } = require('../../../../../src/xcoobee/api/UsersApi');
+const { getUser, getUserPublicKey } = require('../../../../../src/xcoobee/api/UsersApi');
 
 describe('UsersApi', () => {
 
@@ -31,6 +31,29 @@ describe('UsersApi', () => {
           expect(res).toBeInstanceOf(Object);
           expect(res.firstname).toBe('test');
         });
+    });
+
+  });
+
+  describe('getUserPublicKey', () => {
+
+    it('should return user\'s public key', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ users: { data: [{ pgp_public_key: 'test' }] } }));
+
+      return getUserPublicKey('apiUrlRoot', 'userAccessToken', '~xcoobeeId')
+        .then((res) => {
+          expect(res).toBe('test');
+
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
+          expect(options.xid).toBe('~xcoobeeId');
+        });
+    });
+
+    it('should return null', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ users: { data: [] } }));
+
+      return getUserPublicKey('apiUrlRoot', 'userAccessToken', '~xcoobeeId')
+        .then(res => expect(res).toBeNull());
     });
 
   });

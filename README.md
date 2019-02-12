@@ -298,7 +298,7 @@ standard response object
   - result will contain deleted subscription events data
 - status 400 if error
 
-### triggerEvent(type[, config]) // TODO
+### triggerEvent(type[, config])
 
 Trigger test event to configured campaign webhook. The structure will be the same as real event (with encrypted payload and HMAC signature).
 Also you will receive `XBEE-TEST-EVENT` header, which indicates that event is test. If campaign webhook is not configured, you'll receive an error.
@@ -999,7 +999,7 @@ standard response object
 
 ## User API
 
-### getUserPublicKey(xid[, config]) // TODO
+### getUserPublicKey(xid[, config])
 
 Retrieves a user's public PGP key as published on their public profile. If the user chose to hide it or the user is not known, it returns `null`.
 

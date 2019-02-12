@@ -1,8 +1,10 @@
 const jest = require('jest');
 
 jest.mock('../../../../../src/xcoobee/api/ConversationsApi');
+jest.mock('../../../../../src/xcoobee/api/UsersApi');
 
 const ConversationsApi = require('../../../../../src/xcoobee/api/ConversationsApi');
+const UsersApi = require('../../../../../src/xcoobee/api/UsersApi');
 const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
 const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
@@ -83,6 +85,35 @@ describe('Users', () => {
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
           expect(res.result.data.firstname).toBe('test');
+        });
+    });
+
+  });
+
+  describe('getUserPublicKey', () => {
+
+    it('should return ErrorResponse if any errors', () => {
+      UsersApi.getUserPublicKey.mockReturnValue(Promise.reject({ message: 'error' }));
+
+      return users.getUserPublicKey('~xcoobeeId')
+        .then(() => expect(false).toBe(true)) // this will never happen
+        .catch((err) => {
+          expect(err).toBeInstanceOf(ErrorResponse);
+          expect(err.code).toBe(400);
+          expect(err.error.message).toBe('error');
+        });
+    });
+
+    it('should return response with added note', () => {
+      UsersApi.getUserPublicKey.mockReturnValue(Promise.resolve('pgp_key'));
+
+      return users.getUserPublicKey('~xcoobeeId')
+        .then((res) => {
+          expect(UsersApi.getUserPublicKey).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', '~xcoobeeId');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result).toBe('pgp_key');
         });
     });
 

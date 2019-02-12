@@ -46,10 +46,44 @@ const getUser = (apiUrlRoot, apiAccessToken) => {
   return unfulfilledPromise;
 };
 
+/**
+ * Fetches user information associated with the specified API access token.
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} xid - User's xcoobee ID.
+ *
+ * @returns {Promise<string>} - The user pgp public key or `null`.
+ *
+ * @throws {XcooBeeError}
+ */
+const getUserPublicKey = (apiUrlRoot, apiAccessToken, xid) => {
+  const query = `
+    query getUserPublicKey($xid: String!) {
+      users(xcoobee_id: $xid) {
+          data {
+              pgp_public_key
+          }
+      }
+    }
+  `;
+
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, { xid })
+    .then((response) => {
+      const user = response.users.data[0];
+
+      return (user && user.pgp_public_key) || null;
+    })
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 getUser._ = {
   unfulfilledPromises: {},
 };
 
 module.exports = {
   getUser,
+  getUserPublicKey,
 };

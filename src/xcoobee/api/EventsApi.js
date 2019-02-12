@@ -1,4 +1,5 @@
 const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
+const { toEventType } = require('./EventSubscriptionsApi');
 const ApiUtils = require('./ApiUtils');
 
 /**
@@ -73,6 +74,43 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
     });
 };
 
+/**
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} [campaignId] - Campaign id.
+ * @param {string} [type] - Event type to trigger.
+ *
+ * @returns {Promise<Object>} - The result.
+ * @property {Event[]} data - A page of events.
+ * @property {Object} page_info - The page information.
+ * @property {boolean} page_info.has_next_page - Flag indicating whether there is
+ *   another page of data to may be fetched.
+ * @property {string} page_info.end_cursor - The end cursor.
+ *
+ * @throws {XcooBeeError}
+ */
+const triggerEvent = (apiUrlRoot, apiAccessToken, campaignId, type) => {
+  const query = `
+    mutation triggerEvent($type: String!) {
+      send_test_event(campaign_cursor: $campaignId, type: $type){
+        event_type
+        payload
+        hmac
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    campaignId,
+    type: toEventType(type),
+  })
+    .then(response => response.send_test_event)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 module.exports = {
   getEvents,
+  triggerEvent,
 };
