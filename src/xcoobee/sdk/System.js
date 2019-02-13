@@ -1,8 +1,11 @@
+const createHmac = require('crypto-js/hmac-sha1');
+
 const CampaignApi = require('../../xcoobee/api/CampaignApi');
 const EventsApi = require('../../xcoobee/api/EventsApi');
 const EventSubscriptionsApi = require('../../xcoobee/api/EventSubscriptionsApi');
 
 const XcooBeeError = require('../../xcoobee/core/XcooBeeError');
+const { decryptWithEncryptedPrivateKey } = require('../../xcoobee/core/EncryptionUtils');
 
 const ErrorResponse = require('./ErrorResponse');
 const SdkUtils = require('./SdkUtils');
@@ -308,6 +311,74 @@ class System {
     } catch (err) {
       throw new ErrorResponse(400, err);
     }
+  }
+
+  /**
+   * Method for hadling either incoming events or events listed by `getEvents` method
+   *
+   * @async
+   * @param {function[]} handlers - list of handlers. i.e. { myHandler: (payload) => { ... } }
+   * @param {Object[]} [events] - events listed by `getEvents` method. Should be empty array if payload and headers procided
+   * @param {string} [payload] - decrypted body of webhook event. Should be `null` if list of events provided
+   * @param {Object} [headers] - headers of webhook event. Should be `null` if list of events provided
+   *
+   * @returns {Promise}
+   *
+   * @throws {TypeError}
+   * @throws {XcooBeeError}
+   */
+  async handleEvents(handlers, events = [], payload = null, headers = null) {
+    if (!Object.keys(handlers).length) {
+      throw new TypeError('At least one handler should be passed');
+    }
+
+    if (payload !== null && headers !== null) {
+      const hmac = headers['XBEE-SIGNATURE'] || headers['xbee-signature'] || null;
+      const handler = headers['XBEE-HANDLER'] || headers['xbee-handler'] || null;
+
+      const sdkCfg = SdkUtils.resolveSdkCfg(null, this._.config);
+      const {
+        apiKey,
+        apiSecret,
+        apiUrlRoot,
+        pgpPassword,
+        pgpSecret,
+      } = sdkCfg;
+
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
+
+      const calculatedHmac = createHmac(payload, user.xcoobee_id).toString();
+
+      if (calculatedHmac !== hmac) {
+        throw new XcooBeeError('Invalid signature');
+      }
+
+      const event = {
+        payload,
+        handler,
+      };
+      try {
+        const encryptedPayload = await decryptWithEncryptedPrivateKey(
+          payload,
+          pgpSecret,
+          pgpPassword
+        );
+
+        event.payload = JSON.parse(encryptedPayload);
+      } catch (e) {
+        // Do nothing, we will pass on the payload as it is.
+      }
+
+      events.push(event);
+    }
+
+    return Promise.all(events.map((event) => {
+      if (!event.handler || typeof handlers[event.handler] !== 'function') {
+        throw new XcooBeeError(`Handler '${event.handler}' is not defined`);
+      }
+
+      return handlers[event.handler](event.payload);
+    }));
   }
 
 }

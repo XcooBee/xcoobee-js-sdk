@@ -92,7 +92,7 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
  */
 const triggerEvent = (apiUrlRoot, apiAccessToken, campaignId, type) => {
   const query = `
-    mutation triggerEvent($type: String!) {
+    mutation triggerEvent($campaignId: String!, $type: EventSubscriptionType!) {
       send_test_event(campaign_cursor: $campaignId, type: $type){
         event_type
         payload

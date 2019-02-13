@@ -53,7 +53,7 @@ describe('UsersApi', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ users: { data: [] } }));
 
       return getUserPublicKey('apiUrlRoot', 'userAccessToken', '~xcoobeeId')
-        .then(res => expect(res).toBeNull());
+        .then(res => expect(res).toBe(''));
     });
 
   });
