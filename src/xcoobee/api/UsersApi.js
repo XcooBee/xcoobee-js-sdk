@@ -72,7 +72,7 @@ const getUserPublicKey = (apiUrlRoot, apiAccessToken, xid) => {
     .then((response) => {
       const user = response.users.data[0];
 
-      return (user && user.pgp_public_key) || null;
+      return (user && user.pgp_public_key) || '';
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);

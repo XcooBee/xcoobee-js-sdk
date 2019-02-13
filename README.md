@@ -317,7 +317,7 @@ standard response object
 - status 400 if error
 
 
-### handleEvents(events) // TODO
+### handleEvents(handlers[, events, payload, headers])
 
 This function does not require a call to the XcooBee API. It is rather the handler for calls that you recceive **from** XcooBee via webhooks as outlined previously.
 
@@ -329,19 +329,23 @@ Optionally, the events data object may be passed along with the data from the HT
 
 There is two modes of operation for `handleEvents()`.
 
-a) Without function parameter `events`:
+a) With function parameter `events`:
 
-When you call `handleEvents()` without an `events` function argument, the method will look for the event data in the webhook (HTTP POST) stream. Verify the HTTP signatures against expected signatures and then process the event.
+In case where you poll for events from XcooBee seperately you can call `handleEvents(handlers, events)` directly with the events. If you supply the events specifically, the method will directly process events as provided.
 
-b) With function parameter `events`:
+b) With function parameters `payload` and `headers`:
 
-In case where you poll for events from XcooBee seperately you can call `handleEvents(events)` directly with the events. If you supply the events specifically, the method will not look for HTTP POST header variables for verification and instead will directly process events as provided.
+When you call `handleEvents()` with `payload` and `headers` function argument, the method will verify the HTTP signatures against expected signatures and then process the event.
+
+Example of server implementaition you can see in `example/server.js`.
 
 options:
 
 ```
-events => optional: array of objects with HTTP post data
-
+handlers => list of defined headers i.e. `{ handler1: (payload) => { ... }, handler2: (payload) => { ... } }`
+events   => optional: array of objects with HTTP post data
+payload  => optional: HTTP request body
+headers  => optional: list of HTTP request headers
 ```
 
 #### response
@@ -1015,7 +1019,7 @@ config => optional: the config object
 ```
 
 #### response
-public PGP or `null`
+public PGP or empty string
 
 ## Troubleshooting
 
