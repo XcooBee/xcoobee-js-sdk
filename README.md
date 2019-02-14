@@ -580,8 +580,8 @@ Fires when a consent request is approved. The consent object is returned.
 It contains:
 - consent reference
 - data types
-- consent types
-- expiration
+- consent type
+- expiration date
 
 #### ConsentDeclined
 Fires when a consent request is declined. You should remove user data and sent a XcooBee confirmation via `confirmDataDelete()`.
@@ -593,14 +593,14 @@ Fires when consent is changed. A standard consent object is returned.
 It contains:
 - consent reference
 - data types
-- consent types
-- expiration
+- consent type
+- expiration date
 
 #### ConsentNearExpiration
 Fires when an active consent is about to expire (inside 30 days). This is not exactly 30 days as the XcooBee system processes may push this slightly. You should plan ask for renewal of consent if you like to use the user data longer.
 It contains:
 - consent reference
-- expiration
+- expiration date
 
 #### ConsentExpired
 Fires when consent expired. You should remove user data and sent XcooBee confirmation via `confirmDataDelete()`.
@@ -612,6 +612,7 @@ Fires when user is making a request to extract their current data from your syst
 It contains:
 - consent reference
 - xcoobeeId
+- request reference
 
 #### UserMessage
 Fires when user is sending you a message regarding a consent request.

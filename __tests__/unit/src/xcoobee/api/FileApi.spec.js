@@ -19,7 +19,7 @@ describe('FileApi', () => {
     };
 
     it('should format and return error', () => {
-      FormData.prototype.submit = (url, cb) => cb('error');
+      FormData.prototype.submit = (url, cb) => cb('error', { statusCode: 400 });
 
       return upload_file('image.jpg', policy)
         .then(() => expect(false).toBe(true)) // this will newer happen

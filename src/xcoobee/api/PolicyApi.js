@@ -28,7 +28,12 @@ const upload_policy = (apiUrlRoot, apiAccessToken, intent, endPointCursor, files
 
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
-    const baseName = Path.basename(file);
+    let baseName;
+    if (typeof File === 'function' && file instanceof File) {
+      baseName = file.name;
+    } else {
+      baseName = Path.basename(file);
+    }
 
     /* eslint-disable-next-line max-len */
     query.push(`  policy${idx}: upload_policy(filePath: "${baseName}", intent: ${intent}, identifier: "${endPointCursor}") {`);

@@ -34,20 +34,36 @@ const upload_file = (file, policy) => {
   formData.append('X-Amz-meta-identifier', policy.identifier);
   formData.append('Policy', policy.policy);
   formData.append('X-Amz-Signature', policy.signature);
-  formData.append('file', Fs.createReadStream(file));
+  if (typeof File === 'function' && file instanceof File) {
+    formData.append('file', file);
+  } else {
+    formData.append('file', Fs.createReadStream(file));
+  }
 
   return new Promise((resolve) => {
-    formData.submit(url, (err, res) => {
+    const callback = (err, res, statusCode) => {
       if (err) {
         throw ApiUtils.transformError(err);
       }
-      const { statusCode } = res;
       if (statusCode >= 300) {
         throw new XcooBeeError(`Failed to upload file at: ${file} using policy: ${JSON.stringify(policy)}`);
       }
 
       resolve(res);
-    });
+    };
+
+    if (typeof formData.submit === 'function') {
+      formData.submit(url, (err, res) => callback(err, res, res.statusCode));
+    } else {
+      const request = new XMLHttpRequest();
+      request.onreadystatechange = () => {
+        if (request.readyState === 4) {
+          callback(null, request.responseText, request.status);
+        }
+      };
+      request.open('POST', url);
+      request.send(formData);
+    }
   });
 };
 
