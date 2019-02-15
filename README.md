@@ -6,10 +6,7 @@ implementation and show the best practices while interacting with XcooBee.
 
 Generally, all communication with XcooBee is encrypted over the wire since none
 of the XcooBee systems will accept plain traffic.  All data sent to XcooBee from
-you and vice versa can be signed using PGP protocols with the proper
-configuration.  The data packets that you will receive are signed with your
-public key and the packages that you send are signed with your private key.
-TODO: I don't believe any communication is encrypted with the private key.
+you and vice versa is going to use encryption. In addition, non-bee event communication to you is also signed using your PGP key.  
 
 If you need to generate new PGP keys you can login to your XcooBee account and
 go to the `Settings` page to do so.
@@ -46,12 +43,7 @@ All PGP data is optional to the configuration object.  If you do not supply it,
 then the SDK will skip decryption/encryption steps.  You will have to do these
 outside the SDK and supply or process the data yourself.
 
-TODO: We are not doing anything with the PGP configuration information.
-  => please see PHP SDK on the flow for decryptiong/encryption
-
-TODO: How would one do the decryption/encryption steps outside of the SDK?
-  => Any developer wishing to bypass the encryption/decryption feature will need to implement their own encryption/decryption routines outside the SDK. They can do so in any manner they chose.
-
+If you wish to handle decryption of PGP yourself you can use the open source [openPGP javascript project](https://github.com/openpgpjs/openpgpjs) or any PGP library of your choosing. The raw event message is the encrypted payload for you to process.
 
 ## Asynchronous
 
@@ -64,7 +56,7 @@ be resolved with a `Response` instance or rejected with an `ErrorResponse`
 instance.
 
 
-## Getting Started
+# Getting Started
 
 Before using the SDK, it needs to be configured.  Once created, the
 configuration can be set on the SDK instance. In this case, each function call
