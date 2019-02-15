@@ -15,30 +15,30 @@ describe('PolicyApi', () => {
   describe('upload_policy', () => {
 
     it('sohould return error if intent is invalid', () => {
-      return upload_policy('apiUrlRoot', 'accessToken', 'invalid')
-        .then(() => expect(false).toBe(true)) // this will newer happen
-        .catch((err) => {
-          expect(err).toBeInstanceOf(TypeError);
-          expect(err.message).toBe('\'intent\' must be one of bee_icon, invite_list, outbox, profile_image.');
-        });
+      try {
+        upload_policy('apiUrlRoot', 'accessToken', 'invalid');
+      } catch (err) {
+        expect(err).toBeInstanceOf(TypeError);
+        expect(err.message).toBe('\'intent\' must be one of bee_icon, invite_list, outbox, profile_image.');
+      }
     });
 
     it('sohould return error if endpoin is not cursor', () => {
-      return upload_policy('apiUrlRoot', 'accessToken', 'bee_icon', '#@^&%')
-        .then(() => expect(false).toBe(true)) // this will newer happen
-        .catch((err) => {
-          expect(err).toBeInstanceOf(TypeError);
-          expect(err.message).toBe('`endPointCursor` is required.');
-        });
+      try {
+        upload_policy('apiUrlRoot', 'accessToken', 'bee_icon', '#@^&%');
+      } catch (err) {
+        expect(err).toBeInstanceOf(TypeError);
+        expect(err.message).toBe('`endPointCursor` is required.');
+      }
     });
 
     it('sohould return error if files is not array', () => {
-      return upload_policy('apiUrlRoot', 'accessToken', 'bee_icon', 'iuurtw324jir+gfd43trf/==', 'file.jpg')
-        .then(() => expect(false).toBe(true)) // this will newer happen
-        .catch((err) => {
-          expect(err).toBeInstanceOf(TypeError);
-          expect(err.message).toBe('`files` must be an array.');
-        });
+      try {
+        upload_policy('apiUrlRoot', 'accessToken', 'bee_icon', 'iuurtw324jir+gfd43trf/==', 'file.jpg');
+      } catch (err) {
+        expect(err).toBeInstanceOf(TypeError);
+        expect(err.message).toBe('`files` must be an array.');
+      }
     });
 
     it('should return error if something went wrong on upload', () => {

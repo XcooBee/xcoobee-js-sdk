@@ -26,7 +26,6 @@ const TypeToEventTypeLut = {
 };
 
 /**
- * @private
  * @param {string} type
  *
  * @returns {string}

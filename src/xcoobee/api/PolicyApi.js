@@ -14,16 +14,17 @@ const UploadPolicyIntents = require('./UploadPolicyIntents');
  * @returns {Promise<Policy[]>} A list of policies, one for each file uploaded.
  *
  * @throws {XcooBeeError}
+ * @throws {TypeError} If arguments are invalid.
  */
 const upload_policy = (apiUrlRoot, apiAccessToken, intent, endPointCursor, files) => {
   if (!UploadPolicyIntents.values.includes(intent)) {
-    return Promise.reject(new TypeError(`'intent' must be one of ${UploadPolicyIntents.values.join(', ')}.`));
+    throw new TypeError(`'intent' must be one of ${UploadPolicyIntents.values.join(', ')}.`);
   }
   if (!ApiUtils.appearsToBeACursor(endPointCursor)) {
-    return Promise.reject(new TypeError('`endPointCursor` is required.'));
+    throw new TypeError('`endPointCursor` is required.');
   }
   if (!Array.isArray(files)) {
-    return Promise.reject(new TypeError('`files` must be an array.'));
+    throw new TypeError('`files` must be an array.');
   }
 
   let query = ['query uploadPolicy {'];

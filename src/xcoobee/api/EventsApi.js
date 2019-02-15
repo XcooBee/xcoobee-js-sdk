@@ -82,11 +82,7 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
  * @param {string} [type] - Event type to trigger.
  *
  * @returns {Promise<Object>} - The result.
- * @property {Event[]} data - A page of events.
- * @property {Object} page_info - The page information.
- * @property {boolean} page_info.has_next_page - Flag indicating whether there is
- *   another page of data to may be fetched.
- * @property {string} page_info.end_cursor - The end cursor.
+ * @property {Event} result - Test event data.
  *
  * @throws {XcooBeeError}
  */

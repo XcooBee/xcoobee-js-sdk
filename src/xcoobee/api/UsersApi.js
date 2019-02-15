@@ -47,7 +47,7 @@ const getUser = (apiUrlRoot, apiAccessToken) => {
 };
 
 /**
- * Fetches user information associated with the specified API access token.
+ * Fetches user information associated with the specified XcooBee ID.
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.

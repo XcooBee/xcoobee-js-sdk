@@ -43,22 +43,22 @@ class ApiAccessTokenCache {
    */
   get(apiUrlRoot, apiKey, apiSecret, fresh) {
     if (!apiUrlRoot) {
-      return Promise.reject(new TypeError('apiUrlRoot is required.'));
+      throw new TypeError('apiUrlRoot is required.');
     }
     if (!apiKey) {
-      return Promise.reject(new TypeError('apiKey is required.'));
+      throw new TypeError('apiKey is required.');
     }
     if (!apiSecret) {
-      return Promise.reject(new TypeError('apiSecret is required.'));
+      throw new TypeError('apiSecret is required.');
     }
     if (typeof apiUrlRoot !== 'string') {
-      return Promise.reject(new TypeError('apiUrlRoot must be a string.'));
+      throw new TypeError('apiUrlRoot must be a string.');
     }
     if (typeof apiKey !== 'string') {
-      return Promise.reject(new TypeError('apiKey must be a string.'));
+      throw new TypeError('apiKey must be a string.');
     }
     if (typeof apiSecret !== 'string') {
-      return Promise.reject(new TypeError('apiSecret must be a string.'));
+      throw new TypeError('apiSecret must be a string.');
     }
     const key = `${apiUrlRoot}:${apiKey}:${apiSecret}`;
 

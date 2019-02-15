@@ -16,57 +16,57 @@ describe('ApiAccessTokenCache', () => {
       const ApiAccessTokenCacheInstance = new ApiAccessTokenCache();
 
       it('should return TypeError if `apiUrlRoot` not provided', () => {
-        return ApiAccessTokenCacheInstance.get()
-          .then(() => expect(false).toBe(true)) // this will never happen
-          .catch((err) => {
-            expect(err).toBeInstanceOf(TypeError);
-            expect(err.message).toBe('apiUrlRoot is required.');
-          });
+        try {
+          ApiAccessTokenCacheInstance.get();
+        } catch (err) {
+          expect(err).toBeInstanceOf(TypeError);
+          expect(err.message).toBe('apiUrlRoot is required.');
+        }
       });
 
       it('should return TypeError if `apiKey` not provided', () => {
-        return ApiAccessTokenCacheInstance.get('apiUrlRoot')
-          .then(() => expect(false).toBe(true)) // this will never happen
-          .catch((err) => {
-            expect(err).toBeInstanceOf(TypeError);
-            expect(err.message).toBe('apiKey is required.');
-          });
+        try {
+          ApiAccessTokenCacheInstance.get('apiUrlRoot');
+        } catch (err) {
+          expect(err).toBeInstanceOf(TypeError);
+          expect(err.message).toBe('apiKey is required.');
+        }
       });
 
       it('should return TypeError if `apiSecret` not provided', () => {
-        return ApiAccessTokenCacheInstance.get('apiUrlRoot', 'apiKey')
-          .then(() => expect(false).toBe(true)) // this will never happen
-          .catch((err) => {
-            expect(err).toBeInstanceOf(TypeError);
-            expect(err.message).toBe('apiSecret is required.');
-          });
+        try {
+          ApiAccessTokenCacheInstance.get('apiUrlRoot', 'apiKey');
+        } catch (err) {
+          expect(err).toBeInstanceOf(TypeError);
+          expect(err.message).toBe('apiSecret is required.');
+        }
       });
 
       it('should return TypeError if `apiUrlRoot` is not string', () => {
-        return ApiAccessTokenCacheInstance.get(true, 'apiKey', 'apiSecret')
-          .then(() => expect(false).toBe(true)) // this will never happen
-          .catch((err) => {
-            expect(err).toBeInstanceOf(TypeError);
-            expect(err.message).toBe('apiUrlRoot must be a string.');
-          });
+        try {
+          ApiAccessTokenCacheInstance.get(true, 'apiKey', 'apiSecret');
+        } catch (err) {
+          expect(err).toBeInstanceOf(TypeError);
+          expect(err.message).toBe('apiUrlRoot must be a string.');
+        }
       });
 
       it('should return TypeError if `apiKey` is not string', () => {
-        return ApiAccessTokenCacheInstance.get('apiUrlRoot', true, 'apiSecret')
-          .then(() => expect(false).toBe(true)) // this will never happen
-          .catch((err) => {
-            expect(err).toBeInstanceOf(TypeError);
-            expect(err.message).toBe('apiKey must be a string.');
-          });
+        try {
+          ApiAccessTokenCacheInstance.get('apiUrlRoot', true, 'apiSecret');
+        } catch (err) {
+          expect(err).toBeInstanceOf(TypeError);
+          expect(err.message).toBe('apiKey must be a string.');
+        }
       });
 
       it('should return TypeError if `apiSecret` is not string', () => {
-        return ApiAccessTokenCacheInstance.get('apiUrlRoot', 'apiKey', true)
-          .then(() => expect(false).toBe(true)) // this will never happen
-          .catch((err) => {
-            expect(err).toBeInstanceOf(TypeError);
-            expect(err.message).toBe('apiSecret must be a string.');
-          });
+        try {
+          ApiAccessTokenCacheInstance.get('apiUrlRoot', 'apiKey', true);
+        } catch (err) {
+          expect(err).toBeInstanceOf(TypeError);
+          expect(err.message).toBe('apiSecret must be a string.');
+        }
       });
     });
 
