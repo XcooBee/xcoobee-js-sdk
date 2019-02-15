@@ -1,17 +1,17 @@
-import Path from 'path';
+const Path = require('path');
 
-import CampaignApi from '../../xcoobee/api/CampaignApi';
-import ConsentsApi from '../../xcoobee/api/ConsentsApi';
-import ConversationsApi from '../../xcoobee/api/ConversationsApi';
-import DirectiveApi from '../../xcoobee/api/DirectiveApi';
-import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
+const CampaignApi = require('../../xcoobee/api/CampaignApi');
+const ConsentsApi = require('../../xcoobee/api/ConsentsApi');
+const ConversationsApi = require('../../xcoobee/api/ConversationsApi');
+const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
+const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
 
-import XcooBeeError from '../core/XcooBeeError';
+const XcooBeeError = require('../core/XcooBeeError');
 
-import ErrorResponse from './ErrorResponse';
-import FileUtils from './FileUtils';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const FileUtils = require('./FileUtils');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Consents SDK service.
@@ -21,9 +21,9 @@ import SuccessResponse from './SuccessResponse';
  * property.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const sdk = new SdkJs.Sdk(...);
+ * const sdk = new XcooBee.Sdk(...);
  * sdk.consents.getConsentData(...).then(...);
  * ```
  *
@@ -61,14 +61,6 @@ class Consents {
       throw TypeError('Illegal State: Default config has not been set yet.');
     }
   }
-
-  // TODO: Document CampaignStruct
-  // * @returns {string} return.response.result.campaign_name
-  // * @returns {?} return.response.result.date_c
-  // * @returns {?} return.response.result.date_e
-  // * @returns {?} return.response.result.status
-  // * @returns {?} return.response.result.xcoobee_targets
-  // * @returns {?} return.response.result.xcoobee_targets.xcoobee_id
 
   /**
    * Determines whether data has been changed according to changes requested.
@@ -162,7 +154,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async getCampaignInfo(campaignId, config = null) {
+  async getCampaignInfo(campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -236,7 +228,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async getCookieConsent(xcoobeeId, campaignId, config = null) {
+  async getCookieConsent(xcoobeeId, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -244,7 +236,7 @@ class Consents {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const result = await ConsentsApi.getCookieConsent(apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, resolvedCampaignId);
       const response = new SuccessResponse(result);
@@ -258,8 +250,6 @@ class Consents {
    * Fetches a page of campaigns.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -278,31 +268,28 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async listCampaigns(after = null, limit = null, config = null) {
+  async listCampaigns(config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const campaignsPage = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after, limit);
       return campaignsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, {});
   }
 
   /**
    * Fetches a page of consents with the given status.
    *
    * @async
-   * @param {ConsentStatus} status
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
+   * @param {ConsentStatus[]} statuses
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -321,29 +308,28 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async listConsents(status, after = null, limit = null, config = null) {
+  async listConsents(statuses = [], config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, limit, status } = params;
+      const { after, limit, statuses: consentStatuses } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const consentsPage = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, status, after, limit);
+      const consentsPage = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor, consentStatuses, after, limit);
       return consentsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, status };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, { statuses });
   }
 
   /**
    * Requests consent from the specified user.
    *
    * @async
-   * @param {XcooBeeId} xcoobeeId - The XcooBee ID from which consent is being
+   * @param {XcooBeeId} xid - The XcooBee ID from which consent is being
    *   requested.
    * @param {RequestRefId} reqRefId - A request reference ID generated by you that
    *   identifies this request.  This ID will be returned in the `ConsentApproved`
@@ -366,7 +352,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async requestConsent(xcoobeeId, reqRefId, campaignId, config = null) {
+  async requestConsent(xid, reqRefId = null, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -374,7 +360,7 @@ class Consents {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const result = await ConsentsApi.requestConsent(apiUrlRoot, apiAccessToken, xcoobeeId, resolvedCampaignId, reqRefId);
+      const result = await ConsentsApi.requestConsent(apiUrlRoot, apiAccessToken, xid, resolvedCampaignId, reqRefId);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {
@@ -412,7 +398,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async setUserDataResponse(message, consentId, reqRefId, files, config = null) {
+  async setUserDataResponse(message, consentId, reqRefId = null, files = [], config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -422,7 +408,7 @@ class Consents {
     let response;
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const breachId = null;
       await ConversationsApi.sendUserMessage(
@@ -430,13 +416,13 @@ class Consents {
       );
       progress.push('successfully sent message');
 
-      let result = { progress, ref_id: null };
+      const result = { progress, ref_id: null };
       if (reqRefId && Array.isArray(files) && files.length > 0) {
         const endPointName = UploadPolicyIntents.OUTBOX;
         const fileUploadResults = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
 
         const successfullyUploadedFiles = [];
-        fileUploadResults.forEach(fileUploadResult => {
+        fileUploadResults.forEach((fileUploadResult) => {
           const { error, file, success } = fileUploadResult;
           if (success) {
             successfullyUploadedFiles.push(file);
@@ -464,6 +450,7 @@ class Consents {
     } catch (err) {
       errors.push(err.message);
     }
+
     if (errors.length > 0) {
       const err = errors.join(' ');
       throw new ErrorResponse(400, new XcooBeeError(err));
@@ -471,6 +458,47 @@ class Consents {
     return response;
   }
 
+  /**
+   * Determines whether data has been changed according to changes requested.
+   *
+   * @async
+   * @param {ConsentId} consentId - The consent ID of the data being confirmed.
+   * @param {Config} [config] - If specified, the configuration to use instead of the
+   *   default.
+   *
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @property {number} code - The response status code.
+   * @property {Error} [error] - The response error if status is not successful.
+   * @property {string} [error.message] - The error message.
+   * @property {string} request_id - The ID of the request generated by the XcooBee
+   *   system.
+   * @property {Object} [result] - The result of the response if status is successful.
+   * @property {boolean} result.confirmed - Flag indicating whether the change is
+   *   confirmed.
+   *
+   * @throws {XcooBeeError}
+   */
+  async getDataPackage(consentId, config = null) {
+    this._assertValidState();
+    const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
+    const {
+      apiKey,
+      apiSecret,
+      apiUrlRoot,
+      pgpPassword,
+      pgpSecret,
+    } = sdkCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const result = await ConsentsApi.getDataPackage(apiUrlRoot, apiAccessToken, consentId, pgpSecret, pgpPassword);
+      const response = new SuccessResponse(result);
+      return response;
+    } catch (err) {
+      throw new ErrorResponse(400, err);
+    }
+  }
+
 }// eo class Consents
 
-export default Consents;
+module.exports = Consents;

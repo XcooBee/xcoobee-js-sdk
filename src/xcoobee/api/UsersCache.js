@@ -1,4 +1,4 @@
-import UsersApi from './UsersApi';
+const UsersApi = require('./UsersApi');
 
 /**
  * A cache for user information fetched using the `xcoobee/api/UserApi.user`
@@ -34,30 +34,29 @@ class UsersCache {
    * @throws {XcooBeeError}
    */
   get(apiUrlRoot, apiKey, apiSecret, fresh) {
-    let key = `${apiKey}:${apiSecret}`;
+    const key = `${apiKey}:${apiSecret}`;
 
     if (fresh !== true && key in this._.internalCache) {
-      let user = this._.internalCache[key];
+      const user = this._.internalCache[key];
       return Promise.resolve(user);
     }
 
     return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret)
-      .then(apiAccessToken => {
+      .then((apiAccessToken) => {
         return UsersApi.getUser(apiUrlRoot, apiAccessToken)
-          .then(user => {
+          .then((user) => {
             this._.internalCache[key] = user;
             return user;
           })
-          .catch(err_unused => {
+          .catch(() => {
             // If unable to fetch the user, then it may be due to an old expired API access
             // token.
             // TODO: Only perform the following if we are sure the `err` here is due to an
             // invalid API access token.
-            const fresh = true;
-            return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret, fresh)
-              .then(apiAccessToken => {
-                return UsersApi.getUser(apiUrlRoot, apiAccessToken)
-                  .then(user => {
+            return this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret, true)
+              .then((newApiAccessToken) => {
+                return UsersApi.getUser(apiUrlRoot, newApiAccessToken)
+                  .then((user) => {
                     this._.internalCache[key] = user;
                     return user;
                   });
@@ -68,4 +67,4 @@ class UsersCache {
 
 }
 
-export default UsersCache;
+module.exports = UsersCache;

@@ -1,6 +1,7 @@
-import EndPointUtils from '../../xcoobee/api/EndPointUtils';
-import FileApi from '../../xcoobee/api/FileApi';
-import PolicyApi from '../../xcoobee/api/PolicyApi';
+const EndPointUtils = require('../../xcoobee/api/EndPointUtils');
+const FileApi = require('../../xcoobee/api/FileApi');
+const PolicyApi = require('../../xcoobee/api/PolicyApi');
+const XcooBeeError = require('../core/XcooBeeError');
 
 /**
  * @private
@@ -48,26 +49,11 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
   // Note: We don't want to upload one file, wait for the promise to resolve,
   // and then repeat.  Here we are uploading all files back-to-back so that they
   // can be processed concurrently.
-  const fileUploadPromises = policyFilePairs.map(pair => {
+  const fileUploadResults = await Promise.all(policyFilePairs.map((pair) => {
     const { file, policy } = pair;
 
-    return FileApi.upload_file(file, policy);
-  });
-
-  // Then here we resolve each promise.
-  const fileUploadResults = await new Promise(resolve => {
-    const fileUploadResults = fileUploadPromises.map(async (promise) => {
-      let fileUploadResult;
-      try {
-        fileUploadResult = await promise;
-      }
-      catch (err) {
-        fileUploadResult = err;
-      }
-      return fileUploadResult
-    });
-    resolve(fileUploadResults);
-  });
+    return FileApi.upload_file(file, policy).catch(err => err); // return error back to user
+  }));
 
   const result = policyFilePairs.map((pair, idx) => {
     const { file } = pair;
@@ -81,6 +67,6 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
   return result;
 }
 
-export default {
+module.exports = {
   upload,
 };

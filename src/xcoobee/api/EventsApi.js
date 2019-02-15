@@ -1,6 +1,6 @@
-import { decryptWithEncryptedPrivateKey } from '../core/EncryptionUtils';
-
-import ApiUtils from './ApiUtils';
+const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
+const { toEventType } = require('./EventSubscriptionsApi');
+const ApiUtils = require('./ApiUtils');
 
 /**
  *
@@ -21,7 +21,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getEvents(apiUrlRoot, apiAccessToken, userCursor, privateKey, passphrase, after = null, first = null) {
+const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphrase, after = null, first = null) => {
   const query = `
     query getEvents($userCursor: String!, $after: String, $first: Int) {
       events(user_cursor: $userCursor, after: $after, first: $first) {
@@ -47,34 +47,66 @@ export function getEvents(apiUrlRoot, apiAccessToken, userCursor, privateKey, pa
     first,
     userCursor,
   })
-    .then(response => {
-      let { events } = response;
+    .then(async (response) => {
+      const { events } = response;
 
       // If a private key and its passphrase are supplied, then decrypt payload for SDK
       // user.
       if (privateKey && passphrase) {
-        events.data = events.data.map(async event => {
+        events.data = await Promise.all(events.data.map(async (event) => {
           const payloadJson = await decryptWithEncryptedPrivateKey(
             event.payload,
             privateKey,
-            passphrase,
+            passphrase
           );
           const payload = JSON.parse(payloadJson);
-          event = {
+          return {
             ...event,
             payload,
           };
-          return event;
-        });
+        }));
       }
 
       return events;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+/**
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} [campaignId] - Campaign id.
+ * @param {string} [type] - Event type to trigger.
+ *
+ * @returns {Promise<Object>} - The result.
+ * @property {Event} result - Test event data.
+ *
+ * @throws {XcooBeeError}
+ */
+const triggerEvent = (apiUrlRoot, apiAccessToken, campaignId, type) => {
+  const query = `
+    mutation triggerEvent($campaignId: String!, $type: EventSubscriptionType!) {
+      send_test_event(campaign_cursor: $campaignId, type: $type){
+        event_type
+        payload
+        hmac
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    campaignId,
+    type: toEventType(type),
+  })
+    .then(response => response.send_test_event)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
+module.exports = {
   getEvents,
+  triggerEvent,
 };

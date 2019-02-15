@@ -1,4 +1,4 @@
-import ApiUtils from './ApiUtils';
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Deletes an item from the inbox with the specified message ID.
@@ -9,12 +9,12 @@ import ApiUtils from './ApiUtils';
  * @param {string} userCursor - The user's cursor.
  * @param {string} messageId - The ID of the inbox item.
  *
- * @returns {Promise<Object>} - The result.
+ * @returns {Promise<true>} - The result.
  * @property {string} trans_id - The transaction ID.
  *
  * @throws {XcooBeeError}
  */
-export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) {
+const deleteInboxItem = (apiUrlRoot, apiAccessToken, userCursor, messageId) => {
   const query = `
     mutation deleteInboxItem($userCursor: String!, $messageId: String!) {
       remove_inbox_item(user_cursor: $userCursor, filename: $messageId) {
@@ -24,20 +24,13 @@ export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageI
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     userCursor,
-    messageId
+    messageId,
   })
-    .then(response => {
-      const { remove_inbox_item } = response;
-      // Note: remove_inbox_item is not defined if nothing is deleted.
-      const { trans_id } = remove_inbox_item || { trans_id: null };
-
-      const result = { trans_id };
-      return result;
-    })
-    .catch(err => {
+    .then(() => true)
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetches an item from the inbox with the specified message ID.
@@ -55,7 +48,7 @@ export function deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageI
  *
  * @throws {XcooBeeError}
  */
-export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) {
+const getInboxItem = (apiUrlRoot, apiAccessToken, userCursor, messageId) => {
   const query = `
     query getInboxItem($userCursor: String!, $messageId: String!) {
       inbox_item(user_cursor: $userCursor, filename: $messageId) {
@@ -88,16 +81,15 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
     messageId,
     userCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { inbox_item } = response;
 
-      const result = { inbox_item };
-      return result;
+      return { inbox_item };
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetch a page of items from the inbox.
@@ -117,7 +109,7 @@ export function getInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId) 
  *
  * @throws {XcooBeeError}
  */
-export function listInbox(apiUrlRoot, apiAccessToken, after = null, first = null) {
+const listInbox = (apiUrlRoot, apiAccessToken, after = null, first = null) => {
   const query = `
     query listInbox($after: String, $first: Int) {
       inbox(after: $after, first: $first) {
@@ -145,35 +137,33 @@ export function listInbox(apiUrlRoot, apiAccessToken, after = null, first = null
     after,
     first,
   })
-    .then(response => {
+    .then((response) => {
       const { inbox } = response;
-      let { data, page_info } = inbox;
+      const { page_info } = inbox;
 
-      data = data.map(item => {
-        return {
-          messageId: item.filename,
-          fileName: item.original_name,
-          fileSize: item.file_size,
-          sender: {
-            ...item.sender
-          },
-          receiptDate: item.date,
-          downloadDate: item.downloaded,
-          expirationDate: item.date,
-        };
-      });
+      const data = inbox.data.map(item => ({
+        messageId: item.filename,
+        fileName: item.original_name,
+        fileSize: item.file_size,
+        sender: {
+          ...item.sender,
+        },
+        receiptDate: item.date,
+        downloadDate: item.downloaded,
+        expirationDate: item.date,
+      }));
       const result = {
         data,
         page_info,
       };
       return result;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   deleteInboxItem,
   getInboxItem,
   listInbox,

@@ -1,4 +1,4 @@
-import ApiUtils from './ApiUtils';
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Fetches the campaign information for the given campaign ID.
@@ -13,7 +13,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
+const getCampaignInfo = (apiUrlRoot, apiAccessToken, campaignId) => {
   ApiUtils.assertAppearsToBeACampaignId(campaignId);
   const query = `
     query getCampaignInfo($campaignId: String!) {
@@ -45,15 +45,15 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignId,
   })
-    .then(response => {
+    .then((response) => {
       const { campaign } = response;
 
       return { campaign };
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
 /**
  * Fetch a page of campaigns.
@@ -74,53 +74,7 @@ export function getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId) {
  *
  * @throws {XcooBeeError}
  */
-export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) {
-  /*
-  Available Campaign Data:
-    campaign_cursor
-    owner_cursor
-    campaign_name
-    date_c
-    date_u
-    date_e
-    webhook
-    webkey
-    endpoint
-    status
-    campaign_title {
-      locale
-      text
-    }
-    campaign_description {
-      locale
-      text
-    }
-    is_data_campaign
-    allow_notes
-    restrict_additional_users
-    targets {
-      recipient
-      locale
-      contract_ref
-      name
-    }
-    xcoobee_targets {
-      xcoobee_id
-      contract_ref
-    }
-    email_targets {
-      email
-      locale
-      contract_ref
-    }
-    countries
-    requests {
-      data {
-        request_cursor
-        request_name
-      }
-    }
-  */
+const getCampaigns = (apiUrlRoot, apiAccessToken, userCursor, after = null, first = null) => {
   const query = `
     query getCampaigns($userCursor: String!, $after: String, $first: Int) {
       campaigns(user_cursor: $userCursor, after: $after, first: $first) {
@@ -141,17 +95,17 @@ export function getCampaigns(apiUrlRoot, apiAccessToken, userCursor, after = nul
     first,
     userCursor,
   })
-    .then(response => {
+    .then((response) => {
       const { campaigns } = response;
 
-      return campaigns
+      return campaigns;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   getCampaignInfo,
   getCampaigns,
 };

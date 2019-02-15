@@ -1,5 +1,5 @@
-import openpgp from 'openpgp';
+const openpgp = require('openpgp');
 
 openpgp.initWorker({ path: 'openpgp.worker.js' }); // set the relative web worker path
 
-export default openpgp;
+module.exports = openpgp;

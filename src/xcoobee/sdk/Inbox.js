@@ -1,8 +1,8 @@
-import InboxApi from '../../xcoobee/api/InboxApi';
+const InboxApi = require('../../xcoobee/api/InboxApi');
 
-import ErrorResponse from './ErrorResponse';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Inbox SDK service.
@@ -11,9 +11,9 @@ import SuccessResponse from './SuccessResponse';
  * property.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const sdk = new SdkJs.Sdk(...);
+ * const sdk = new XcooBee.Sdk(...);
  * sdk.inbox.listInbox(...).then(...);
  * ```
  *
@@ -130,8 +130,6 @@ class Inbox {
    * Fetch a page of items from the inbox.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config]
    *
    * @returns {Promise<PagingResponse, ErrorResponse>} - The response.
@@ -149,7 +147,7 @@ class Inbox {
    *
    * @throws {XcooBeeError}
    */
-  async listInbox(after = null, limit = null, config = null) {
+  async listInbox(config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
@@ -160,11 +158,10 @@ class Inbox {
       return inboxPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, {});
   }
 
 }// eo class Inbox
 
-export default Inbox;
+module.exports = Inbox;

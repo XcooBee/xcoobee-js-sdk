@@ -1,8 +1,8 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import InboxApi from '../../../../../src/xcoobee/api/InboxApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const InboxApi = require('../../../../../src/xcoobee/api/InboxApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import { assertIso8601Like } from '../../../../lib/Utils';
+const { assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -10,20 +10,20 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('InboxApi', function () {
+describe('InboxApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.deleteInboxItem', function () {
+  describe('.deleteInboxItem', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and a valid user cursor', function () {
+      describe('and a valid user cursor', () => {
 
-        describe('but with an unknown message ID', function () {
+        describe('but with an unknown message ID', () => {
 
-          it('should return with a null transaction ID', async function (done) {
+          it('should return with a null transaction ID', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
@@ -43,11 +43,11 @@ describe('InboxApi', function () {
 
   });// eo describe('.deleteInboxItem')
 
-  describe('.getInboxItem', function () {
+  describe('.getInboxItem', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      xit('should fetch and return the inbox item', async function (done) {
+      xit('should fetch and return the inbox item', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
@@ -70,13 +70,13 @@ describe('InboxApi', function () {
   });// eo describe('.getInboxItem')
 
   // FIXME: TODO: Get Inbox to a known state with at least one item to search for.
-  xdescribe('.listInbox', function () {
+  xdescribe('.listInbox', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with no starting message ID', function () {
+      describe('and called with no starting message ID', () => {
 
-        it('should fetch and return with a list of inbox items', async function (done) {
+        it('should fetch and return with a list of inbox items', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const result = await InboxApi.listInbox(apiUrlRoot, apiAccessToken);
           expect(result).toBeDefined();
@@ -104,9 +104,9 @@ describe('InboxApi', function () {
 
       });// eo describe
 
-      describe('and called with a starting message ID', function () {
+      describe('and called with a starting message ID', () => {
 
-        it('should fetch and return with a list of inbox items', async function (done) {
+        it('should fetch and return with a list of inbox items', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const startId = 'tJnf+3ZKrQCKYIMpUKUt236I1xDa2E91la7vYPr8qwL+GwitmaI++y/6SxDeXFLiq2segVucQxy51tdENjtf7d0BRFnjB5tyNXE5yMPPVaY=';
           const result = await InboxApi.listInbox(apiUrlRoot, apiAccessToken, startId);

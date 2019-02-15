@@ -1,16 +1,16 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
-import System from '../../../../../src/xcoobee/sdk/System';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
+const System = require('../../../../../src/xcoobee/sdk/System');
 
-import { addTestEventSubscriptions, deleteAllEventSubscriptions } from '../../../../lib/EventSubscriptionUtils';
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const { addTestEventSubscriptions, deleteAllEventSubscriptions } = require('../../../../lib/EventSubscriptionUtils');
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -18,38 +18,38 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('System', function () {
+describe('System', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  beforeAll(async function (done) {
+  beforeAll(async (done) => {
     const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
     await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
     done();
   });
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.addEventSubscription', function () {
+    describe('.addEventSubscription', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a known campaign ID', function () {
+        describe('and a known campaign ID', () => {
 
-          describe('and a valid events mapping', function () {
+          describe('and a valid events mapping', () => {
 
-            afterEach(async function (done) {
+            afterEach(async (done) => {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
               await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
               done();
             });
 
-            describe('using default config', function () {
+            describe('using default config', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -104,9 +104,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID', function () {
+            describe('using campaign ID', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -119,14 +119,14 @@ describe('System', function () {
                 };
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
+                const response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { result } = response;
                 expect(result).toBeDefined();
                 const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
-                let eventSubscription = eventSubscriptionsPage.data[0];
+                const eventSubscription = eventSubscriptionsPage.data[0];
                 expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
@@ -140,9 +140,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID and overriding config', function () {
+            describe('using campaign ID and overriding config', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -168,7 +168,7 @@ describe('System', function () {
                 const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
-                let eventSubscription = eventSubscriptionsPage.data[0];
+                const eventSubscription = eventSubscriptionsPage.data[0];
                 expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
@@ -182,9 +182,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using overriding config', function () {
+            describe('using overriding config', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -247,9 +247,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('and an invalid events mapping', function () {
+          describe('and an invalid events mapping', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -312,11 +312,11 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('and unknown campaign ID', function () {
+        describe('and unknown campaign ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -342,7 +342,7 @@ describe('System', function () {
               }
 
               try {
-                response = await systemSdk.addEventSubscription(eventsMapping, null);
+                await systemSdk.addEventSubscription(eventsMapping, null);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -370,9 +370,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -408,9 +408,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -465,24 +465,24 @@ describe('System', function () {
 
     });// eo describe('.addEventSubscription')
 
-    describe('.deleteEventSubscription', function () {
+    describe('.deleteEventSubscription', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a known campaign ID', function () {
+        describe('and a known campaign ID', () => {
 
-          describe('and a valid events mapping', function () {
+          describe('and a valid events mapping', () => {
 
-            beforeEach(async function (done) {
+            beforeEach(async (done) => {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
               await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
               done();
             });
 
-            describe('using default config', function () {
+            describe('using default config', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -503,7 +503,7 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -533,9 +533,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID', function () {
+            describe('using campaign ID', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -557,7 +557,7 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -588,9 +588,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID and overriding config', function () {
+            describe('using campaign ID and overriding config', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -618,7 +618,7 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -655,9 +655,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using overriding config', function () {
+            describe('using overriding config', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -684,7 +684,7 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -722,9 +722,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('and an invalid events mapping', function () {
+          describe('and an invalid events mapping', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -787,11 +787,11 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('and an unknown campaign ID', async function () {
+        describe('and an unknown campaign ID', async () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -845,9 +845,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -883,9 +883,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should reject with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -940,13 +940,13 @@ describe('System', function () {
 
     });// eo describe('.deleteEventSubscription')
 
-    describe('.getEvents', function () {
+    describe('.getEvents', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -973,9 +973,9 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -1009,9 +1009,9 @@ describe('System', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -1037,29 +1037,29 @@ describe('System', function () {
 
     });// eo describe('.getEvents')
 
-    describe('.listEventSubscriptions', function () {
+    describe('.listEventSubscriptions', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and known campaign ID', function () {
+        describe('and known campaign ID', () => {
 
-          beforeEach(async function (done) {
+          beforeEach(async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
-          afterEach(async function (done) {
+          afterEach(async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1112,9 +1112,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1124,7 +1124,7 @@ describe('System', function () {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.listEventSubscriptions(campaignId);
+              const response = await systemSdk.listEventSubscriptions(campaignId);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1168,9 +1168,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1229,9 +1229,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID and overriding config', function () {
+          describe('using campaign ID and overriding config', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1293,11 +1293,11 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('and unknown campaign ID', function () {
+        describe('and unknown campaign ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should return an error response', async function (done) {
+            it('should return an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1348,9 +1348,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should return an error response', async function (done) {
+            it('should return an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1383,9 +1383,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should return an error response', async function (done) {
+            it('should return an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1437,13 +1437,13 @@ describe('System', function () {
 
     });// eo describe('.listEventSubscriptions')
 
-    describe('.ping', function () {
+    describe('.ping', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config without a campaign ID', function () {
+        describe('using default config without a campaign ID', () => {
 
-          it('should error out due to not resolving a campaign ID', async function (done) {
+          it('should error out due to not resolving a campaign ID', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -1468,9 +1468,9 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('using default config with a valid campaign ID', function () {
+        describe('using default config with a valid campaign ID', () => {
 
-          it('should be successful', async function (done) {
+          it('should be successful', async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             const defaultConfig = new Config({
               apiKey,
@@ -1491,9 +1491,9 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('using default config with an unknown campaign ID', function () {
+        describe('using default config with an unknown campaign ID', () => {
 
-          it('should error out due to not finding a campaign', async function (done) {
+          it('should error out due to not finding a campaign', async (done) => {
             const campaignId = 'unknown';
             const defaultConfig = new Config({
               apiKey,

@@ -5,7 +5,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const manifest = require('./package.json');
 
-const analyze = process.argv.includes("--analyze");
+const analyze = process.argv.includes('--analyze');
 
 // https://webpack.js.org/configuration/entry-context/#context
 const context = path.resolve(__dirname, 'src');
@@ -60,9 +60,7 @@ const output = {
   // filename: 'xcoobee-sdk-[chunkhash].web.js',
   filename: `xcoobee-sdk-${manifest.version}.web.js`,
   // Note: The following will become the name of a global variable.
-  library: ['XcooBee', 'sdk'],
-  libraryExport: 'default',
-  libraryTarget: 'umd',
+  library: 'XcooBee',
   // Note that `[hash]` in this parameter will be replaced with an hash of the
   // compilation.
   // https://webpack.js.org/configuration/output/#output-path
@@ -82,15 +80,15 @@ const resolve = undefined;
 const target = 'web';
 
 const config = {
-  context: context,
-  entry: entry,
-  externals: externals,
+  context,
+  entry,
+  externals,
   module: loaders,
-  node: node,
-  output: output,
-  plugins: plugins,
-  resolve: resolve,
-  target: target,
+  node,
+  output,
+  plugins,
+  resolve,
+  target,
 };
 
 module.exports = config;

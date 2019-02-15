@@ -1,5 +1,5 @@
-import ErrorResponse from './ErrorResponse';
-import Response from './Response';
+const ErrorResponse = require('./ErrorResponse');
+const Response = require('./Response');
 
 /**
  * A response representing a successful response that allows paging to the next
@@ -31,7 +31,13 @@ class PagingResponse extends Response {
    */
   async getNextPage() {
     if (this.hasNextPage()) {
-      const { apiCfg, currentPage, fetcher, params } = this._;
+      const {
+        apiCfg,
+        currentPage,
+        fetcher,
+        params,
+      } = this._;
+
       const nextParams = {
         ...params,
         after: currentPage.page_info.end_cursor,
@@ -39,9 +45,8 @@ class PagingResponse extends Response {
       try {
         const nextPage = await this._.fetcher(apiCfg, nextParams);
         return new PagingResponse(fetcher, nextPage, apiCfg, params);
-      }
-      catch (err) {
-        return new ErrorResponse(400, err);
+      } catch (err) {
+        throw new ErrorResponse(400, err);
       }
     }
     return null;
@@ -49,4 +54,4 @@ class PagingResponse extends Response {
 
 }
 
-export default PagingResponse;
+module.exports = PagingResponse;

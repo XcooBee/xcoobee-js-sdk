@@ -1,25 +1,25 @@
-import Config from './Config';
-import ConfigUtils from './ConfigUtils';
-import Sdk from './Sdk';
+const Config = require('./Config');
+const ConfigUtils = require('./ConfigUtils');
+const Sdk = require('./Sdk');
 
 /**
  * The XcooBee SDK JavaScript module. It may be imported with whatever name you
  * prefer. In this API documentation, we'll use `SdkJs`.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  * ```
  *
  * @module SdkJs
  */
-export default {
+module.exports = {
   /**
    * A reference to the XcooBee SDK `Config` class.
    *
    * ```js
-   * import SdkJs from '@xcoobee/sdk-js';
+   * const XcooBee = require('xcoobee-sdk');
    *
-   * const config = new SdkJs.Config({ ... });
+   * const config = new XcooBee.Config({ ... });
    * ```
    *
    * @memberof SdkJs
@@ -29,9 +29,9 @@ export default {
    * A reference to the XcooBee SDK `ConfigUtils` namespace.
    *
    * ```js
-   * import SdkJs from '@xcoobee/Sdk-js';
+   * const XcooBee = require('xcoobee-sdk');
    *
-   * SdkJs.ConfigUtils.createFromFile(...)
+   * XcooBee.ConfigUtils.createFromFile(...)
    *   .then(config => {
    *     // Do something with the config such as
    *     // pass it to the `Sdk` constuctor.
@@ -45,9 +45,9 @@ export default {
    * A reference to the XcooBee `Sdk` class.
    *
    * ```js
-   * import SdkJs from '@xcoobee/sdk-js';
+   * const XcooBee = require('xcoobee-sdk');
    *
-   * const anSdk = new SdkJs.Sdk(...);
+   * const sdk = new XcooBee.Sdk(...);
    * ```
    *
    * @memberof SdkJs

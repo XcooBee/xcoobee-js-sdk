@@ -1,14 +1,12 @@
-import ApiUtils from '../../xcoobee/api/ApiUtils';
-import BeesApi from '../../xcoobee/api/BeesApi';
-import DirectiveApi from '../../xcoobee/api/DirectiveApi';
-import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
+const ApiUtils = require('../../xcoobee/api/ApiUtils');
+const BeesApi = require('../../xcoobee/api/BeesApi');
+const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
+const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
 
-import XcooBeeError from '../core/XcooBeeError';
-
-import ErrorResponse from './ErrorResponse';
-import FileUtils from './FileUtils';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const FileUtils = require('./FileUtils');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
  * The Bees SDK service.
@@ -17,9 +15,9 @@ import SuccessResponse from './SuccessResponse';
  * reference to a `Bees` SDK instance through the {@link Sdk#bees bees} property.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const sdk = new SdkJs.Sdk(...);
+ * const sdk = new XcooBee.Sdk(...);
  * sdk.bees.listBees(...).then(...);
  * ```
  *
@@ -90,8 +88,6 @@ class Bees {
    * @async
    * @param {string} searchText - The search text.  It is a string of keywords to
    *  search for in the bee system name or label in the language of your account.
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -110,18 +106,18 @@ class Bees {
    *
    * @throws {XcooBeeError}
    */
-  async listBees(searchText, after = null, limit = null, config = null) {
+  async listBees(searchText = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, limit, searchText } = params;
+      const { after, limit, searchText: search } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, limit);
+      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, search, after, limit);
       return beesPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, searchText };
+    const params = { searchText };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -164,15 +160,16 @@ class Bees {
     };
 
     if (subscriptions) {
+      // TODO: validate subscriptions
       directiveInput.subscriptions = subscriptions;
     }
 
     if (
-      Array.isArray(options.process.destinations) &&
-      options.process.destinations.length > 0
+      Array.isArray(options.process.destinations)
+      && options.process.destinations.length > 0
     ) {
       directiveInput.destinations = options.process.destinations.map(
-        destination => {
+        (destination) => {
           if (ApiUtils.appearsToBeAnEmailAddress(destination)) {
             return { email: destination };
           }
@@ -211,9 +208,7 @@ class Bees {
    *   of 'File' objects as is available in a modern browser.
    *   TODO: Test what file paths actually work and make sure the documentation is
    *   adequate.  Be sure to show examples of various path types.
-   * @param {string} [intent] - One of the "outbox" endpoints defined in the
-   *   XcooBee UI.  If an endpoint is not specified, then be sure to call the
-   *   `takeOff` function afterwards.  TODO: Make sure this documentation is accurate.
+   * @param {string} endpoint - Endpoint type
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -228,25 +223,18 @@ class Bees {
    *   sub-result has a string `file` property and a boolean `success` property
    *   indicating whether the file was successfully uploaded. If `success` is `false`,
    *   then an error `error` property will also exist.
-   *
-   * @throws {XcooBeeError}
    */
-  async uploadFiles(files, intent, config = null) {
+  async uploadFiles(files, endpoint = UploadPolicyIntents.OUTBOX, config = null) {
     this._assertValidState();
-    const endPointName = intent || UploadPolicyIntents.OUTBOX;
-    if (endPointName !== UploadPolicyIntents.OUTBOX) {
-      throw new XcooBeeError(
-        `The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`
-      );
-    }
-    let apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
+      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endpoint, files);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {
@@ -256,4 +244,4 @@ class Bees {
 
 }// eo class Bees
 
-export default Bees;
+module.exports = Bees;

@@ -1,24 +1,22 @@
-import Path from 'path';
+const Path = require('path');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ConfigUtils from '../../../../../src/xcoobee/sdk/ConfigUtils';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ConfigUtils = require('../../../../../src/xcoobee/sdk/ConfigUtils');
 
 const assetsPath = Path.join(__dirname, '..', '..', '..', 'assets');
 
-describe('ConfigUtils', function () {
+describe('ConfigUtils', () => {
 
-  describe('.createConfigFromFile', function () {
+  describe('.createConfigFromFile', () => {
 
-    describe('called with a valid directory and valid config but not PGP info', function () {
+    describe('called with a valid directory and valid config but not PGP info', () => {
 
-      it('should result in the expected config instance', function (done) {
-        let promise = ConfigUtils.createFromFile(
-          Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-wo-pgp')
-        );
+      it('should result in the expected config instance', (done) => {
+        const promise = ConfigUtils.createFromFile(Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-wo-pgp'));
 
         expect(promise).toBeInstanceOf(Promise);
 
-        promise.then(config => {
+        promise.then((config) => {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKey');
           expect(config.apiSecret).toBe('testApiSecret');
@@ -33,16 +31,14 @@ describe('ConfigUtils', function () {
 
     });
 
-    describe('called with a valid directory, valid config, and PGP info', function () {
+    describe('called with a valid directory, valid config, and PGP info', () => {
 
-      it('should result in the expected config instance', function (done) {
-        let promise = ConfigUtils.createFromFile(
-          Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-w-pgp')
-        );
+      it('should result in the expected config instance', (done) => {
+        const promise = ConfigUtils.createFromFile(Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-w-pgp'));
 
         expect(promise).toBeInstanceOf(Promise);
 
-        promise.then(config => {
+        promise.then((config) => {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKey');
           expect(config.apiSecret).toBe('testApiSecret');
@@ -57,16 +53,14 @@ describe('ConfigUtils', function () {
 
     });
 
-    describe('called with a valid directory and valid config with comments', function () {
+    describe('called with a valid directory and valid config with comments', () => {
 
-      it('should result in the expected config instance', function (done) {
-        let promise = ConfigUtils.createFromFile(
-          Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-w-comments')
-        );
+      it('should result in the expected config instance', (done) => {
+        const promise = ConfigUtils.createFromFile(Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-w-comments'));
 
         expect(promise).toBeInstanceOf(Promise);
 
-        promise.then(config => {
+        promise.then((config) => {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKeyWithComments');
           expect(config.apiSecret).toBe('testApiSecretWithComments');
@@ -81,16 +75,14 @@ describe('ConfigUtils', function () {
 
     });
 
-    describe('called with a valid directory and valid config with blank lines', function () {
+    describe('called with a valid directory and valid config with blank lines', () => {
 
-      it('should result in the expected config instance', function (done) {
-        let promise = ConfigUtils.createFromFile(
-          Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-w-blank-lines')
-        );
+      it('should result in the expected config instance', (done) => {
+        const promise = ConfigUtils.createFromFile(Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'valid-config-w-blank-lines'));
 
         expect(promise).toBeInstanceOf(Promise);
 
-        promise.then(config => {
+        promise.then((config) => {
           expect(config).toBeInstanceOf(Config);
           expect(config.apiKey).toBe('testApiKeyWithBlankLines');
           expect(config.apiSecret).toBe('testApiSecretWithBlankLines');
@@ -105,16 +97,14 @@ describe('ConfigUtils', function () {
 
     });
 
-    describe('called with a directory with no .xcoobee sub-directory', function () {
+    describe('called with a directory with no .xcoobee sub-directory', () => {
 
-      it('should not resolve to a config instance', function (done) {
-        let promise = ConfigUtils.createFromFile(
-          Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'directory-w-no-xcoobee')
-        );
+      it('should not resolve to a config instance', (done) => {
+        const promise = ConfigUtils.createFromFile(Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'directory-w-no-xcoobee'));
 
         expect(promise).toBeInstanceOf(Promise);
 
-        promise.catch(err => {
+        promise.catch((err) => {
           expect(err.code).toBe('ENOENT');
           done();
         });
@@ -122,16 +112,14 @@ describe('ConfigUtils', function () {
 
     });
 
-    describe('called with a directory containing a .xcoobee sub-directory but no config file', function () {
+    describe('called with a directory containing a .xcoobee sub-directory but no config file', () => {
 
-      it('should not resolve to a config instance', function (done) {
-        let promise = ConfigUtils.createFromFile(
-          Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'directory-w-xcoobee-but-no-config')
-        );
+      it('should not resolve to a config instance', (done) => {
+        const promise = ConfigUtils.createFromFile(Path.join(assetsPath, 'xcoobee', 'sdk', 'config', 'directory-w-xcoobee-but-no-config'));
 
         expect(promise).toBeInstanceOf(Promise);
 
-        promise.catch(err => {
+        promise.catch((err) => {
           expect(err.code).toBe('ENOENT');
           done();
         });

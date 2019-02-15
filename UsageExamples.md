@@ -20,7 +20,7 @@ yarn add @xcoobee/sdk-js
 ## Initialization
 
 ```js
-import XcooBee from '@xcoobee/sdk-js';
+const XcooBee = require('xcoobee-sdk');
 
 const config = new XcooBee.sdk.Config({
   apiKey: 'YourApiKey',

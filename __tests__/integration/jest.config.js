@@ -1,7 +1,7 @@
 const Path = require('path');
 
 const { defaults } = require('jest-config');
-const klawSync = require('klaw-sync')
+const klawSync = require('klaw-sync');
 const mm = require('micromatch');
 
 // Note: rootDir is relative to the directory containing this file.
@@ -46,7 +46,7 @@ if (sequential) {
     .map(file => file.path)
     .map(file => file.replace(absRootDir, ''))
     .map(file => file.replace(/\\/g, '/'))
-    .map(file => '<rootDir>' + file);
+    .map(file => `<rootDir>${file}`);
   filenames = mm(filenames, testMatch);
   testPathIgnorePatterns = mm.not(filenames, sequentialTestPathMatchPatterns);
 }

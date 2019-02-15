@@ -1,17 +1,15 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import ConsentDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
-import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const ConsentDataTypes = require('../../../../../src/xcoobee/api/ConsentDataTypes');
+const ConsentStatuses = require('../../../../../src/xcoobee/api/ConsentStatuses');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import Consents from '../../../../../src/xcoobee/sdk/Consents';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
-
-// import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const Consents = require('../../../../../src/xcoobee/sdk/Consents');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -19,22 +17,22 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('Consents', function () {
+describe('Consents', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.confirmConsentChange', function () {
+    describe('.confirmConsentChange', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        xdescribe('and a known consent ID', function () {
+        xdescribe('and a known consent ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should return flag indicating if the consent change has been confirmed', async function (done) {
+            it('should return flag indicating if the consent change has been confirmed', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -54,9 +52,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should return flag indicating if the consent change has been confirmed', async function (done) {
+            it('should return flag indicating if the consent change has been confirmed', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -85,9 +83,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -114,15 +112,15 @@ describe('Consents', function () {
 
     });// eo describe('.confirmConsentChange')
 
-    describe('.confirmDataDelete', function () {
+    describe('.confirmDataDelete', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        xdescribe('and a known consent ID', function () {
+        xdescribe('and a known consent ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should return flag indicating if the data has been deleted/purged', async function (done) {
+            it('should return flag indicating if the data has been deleted/purged', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -142,9 +140,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should return flag indicating if the data has been deleted/purged', async function (done) {
+            it('should return flag indicating if the data has been deleted/purged', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -173,9 +171,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -202,15 +200,15 @@ describe('Consents', function () {
 
     });// eo describe('.confirmDataDelete')
 
-    describe('.getCampaignInfo', function () {
+    describe('.getCampaignInfo', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a known campaign ID', function () {
+        describe('and a known campaign ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with expected campaign info', async function (done) {
+            it('should fetch and return with expected campaign info', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -244,9 +242,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with expected campaign info', async function (done) {
+            it('should fetch and return with expected campaign info', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -289,9 +287,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -318,15 +316,15 @@ describe('Consents', function () {
 
     });// eo describe('.getCampaignInfo')
 
-    describe('.getConsentData', function () {
+    describe('.getConsentData', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        xdescribe('and a known consent ID', function () {
+        xdescribe('and a known consent ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with consent info', async function (done) {
+            it('should fetch and return with consent info', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -347,9 +345,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with consent info', async function (done) {
+            it('should fetch and return with consent info', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -379,9 +377,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -395,8 +393,7 @@ describe('Consents', function () {
             await consentsSdk.getConsentData(consentId);
             // This should not be called.
             expect(true).toBe(false);
-          }
-          catch (response) {
+          } catch (response) {
             expect(response).toBeInstanceOf(ErrorResponse);
             expect(response.code).toBe(400);
             expect(response.error.message).toBe('Unable to get an API access token.');
@@ -409,13 +406,13 @@ describe('Consents', function () {
 
     });// eo describe('.getConsentData')
 
-    describe('.getCookieConsent', function () {
+    describe('.getCookieConsent', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with cookie consent info', async function (done) {
+          it('should fetch and return with cookie consent info', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -441,9 +438,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with cookie consent info', async function (done) {
+          it('should fetch and return with cookie consent info', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -476,9 +473,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -506,13 +503,13 @@ describe('Consents', function () {
 
     });// eo describe('.getCookieConsent')
 
-    describe('.listCampaigns', function () {
+    describe('.listCampaigns', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -544,9 +541,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -585,9 +582,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -613,15 +610,15 @@ describe('Consents', function () {
 
     });// eo describe('.listCampaigns')
 
-    describe('.listConsents', function () {
+    describe('.listConsents', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('but no consent status', function () {
+        describe('but no consent status', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the user\'s consents of any status', async function (done) {
+            it('should fetch and return with the user\'s consents of any status', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -658,9 +655,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with the user\'s consents of any status', async function (done) {
+            it('should fetch and return with the user\'s consents of any status', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -702,11 +699,11 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('and called with a limit', function () {
+          describe('and called with a limit', () => {
 
-            describe('using default config', function () {
+            describe('using default config', () => {
 
-              it('should fetch and return with the user\'s consents of any status', async function (done) {
+              it('should fetch and return with the user\'s consents of any status', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -716,9 +713,9 @@ describe('Consents', function () {
                 const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await consentsSdk.listConsents(null, null, 25);
                 expect(response).toBeInstanceOf(PagingResponse);
-                let { result } = response;
+                const { result } = response;
                 expect(result).toBeDefined();
-                let consents = result.data;
+                const consents = result.data;
                 expect(consents).toBeInstanceOf(Array);
                 expect(consents.length).toBe(0);
                 expect(response.hasNextPage()).toBe(false);
@@ -759,11 +756,11 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('and active consent status', function () {
+        describe('and active consent status', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the user\'s active consents', async function (done) {
+            it('should fetch and return with the user\'s active consents', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -799,9 +796,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with the user\'s active consents', async function (done) {
+            it('should fetch and return with the user\'s active consents', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -846,9 +843,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -875,13 +872,13 @@ describe('Consents', function () {
 
     });// eo describe('.listConsents')
 
-    describe('.requestConsent', function () {
+    describe('.requestConsent', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should succeed and return with given reference', async function (done) {
+          it('should succeed and return with given reference', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -903,9 +900,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should succeed and return with given reference', async function (done) {
+          it('should succeed and return with given reference', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -934,9 +931,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -965,13 +962,13 @@ describe('Consents', function () {
 
     });// eo describe('.requestConsent')
 
-    describe('.setUserDataResponse', function () {
+    describe('.setUserDataResponse', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should succeed and return progress report', async function (done) {
+          it('should succeed and return progress report', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -1000,9 +997,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should succeed and return progress report', async function (done) {
+          it('should succeed and return progress report', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -1038,9 +1035,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',

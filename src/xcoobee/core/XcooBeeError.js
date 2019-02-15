@@ -23,4 +23,4 @@ class XcooBeeError extends Error {
 
 XcooBeeError.prototype.name = 'XcooBeeError';
 
-export default XcooBeeError;
+module.exports = XcooBeeError;

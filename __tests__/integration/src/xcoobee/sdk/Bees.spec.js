@@ -1,15 +1,15 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import Bees from '../../../../../src/xcoobee/sdk/Bees';
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
+const Bees = require('../../../../../src/xcoobee/sdk/Bees');
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 
-import { findBeesBySystemName } from '../../../../lib/Utils';
+const { findBeesBySystemName } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -17,20 +17,20 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('Bees', function () {
+describe('Bees', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.listBees', function () {
+    describe('.listBees', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the bees available to the user', async function (done) {
+          it('should fetch and return with the bees available to the user', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -95,9 +95,9 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the bees available to the user', async function (done) {
+          it('should fetch and return with the bees available to the user', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -159,11 +159,11 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('and called with a limit that is divisible by the total bees', function () {
+        describe('and called with a limit that is divisible by the total bees', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            xit('should fetch and return with the bees available to the user', async function (done) {
+            it('should fetch and return with the bees available to the user', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -172,15 +172,19 @@ describe('Bees', function () {
 
               const beesSdk = new Bees(defaultConfig, apiAccessTokenCache, usersCache);
               // Note: We are expecting there to be a total of 9 bees.
-              const response = await beesSdk.listBees('', null, 3);
+              const response = await beesSdk.listBees('', null, 4);
               expect(response).toBeInstanceOf(PagingResponse);
               let { result } = response;
               expect(result).toBeDefined();
               let bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(3);
+              expect(bees.length).toBe(4);
 
-              let filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
+              let filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_dropbox_uploader');
 
@@ -188,9 +192,9 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_timestamp');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_timestamp');
 
               expect(response.hasNextPage()).toBe(true);
               let nextPageResponse = await response.getNextPage();
@@ -199,7 +203,11 @@ describe('Bees', function () {
               expect(result).toBeDefined();
               bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(3);
+              expect(bees.length).toBe(4);
+
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              expect(filteredBees.length).toBe(1);
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
 
               filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
               expect(filteredBees.length).toBe(1);
@@ -209,9 +217,9 @@ describe('Bees', function () {
               expect(filteredBees.length).toBe(1);
               expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
 
               expect(nextPageResponse.hasNextPage()).toBe(true);
               nextPageResponse = await nextPageResponse.getNextPage();
@@ -220,15 +228,11 @@ describe('Bees', function () {
               expect(result).toBeDefined();
               bees = result.data;
               expect(bees).toBeInstanceOf(Array);
-              expect(bees.length).toBe(3);
+              expect(bees.length).toBe(2);
 
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
+              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact');
               expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
-
-              filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact_card');
-              expect(filteredBees.length).toBe(1);
-              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact_card');
+              expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact');
 
               filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
               expect(filteredBees.length).toBe(1);
@@ -244,11 +248,11 @@ describe('Bees', function () {
 
         });// eo describe
 
-        describe('and called with a limit that is not divisible by the total bees', function () {
+        describe('and called with a limit that is not divisible by the total bees', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the bees available to the user', async function (done) {
+            it('should fetch and return with the bees available to the user', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -324,9 +328,9 @@ describe('Bees', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should reject with an error response', async function (done) {
+        it('should reject with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -352,13 +356,13 @@ describe('Bees', function () {
 
     });// eo describe('.listBees')
 
-    describe('.takeOff', function () {
+    describe('.takeOff', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should make bees take off', async function (done) {
+          it('should make bees take off', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -389,13 +393,13 @@ describe('Bees', function () {
 
     });// eo describe('.takeOff')
 
-    describe('.uploadFiles', function () {
+    describe('.uploadFiles', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should successfully upload files', async function (done) {
+          it('should successfully upload files', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,

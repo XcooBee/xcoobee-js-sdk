@@ -1,10 +1,10 @@
-export const ACTIVE = 'active';
-export const CANCELED = 'canceled';
-export const EXPIRED = 'expired';
-export const PENDING = 'pending';
-export const OFFER = 'offer';
-export const REJECTED = 'rejected';
-export const UPDATING = 'updating';
+const ACTIVE = 'active';
+const CANCELED = 'canceled';
+const EXPIRED = 'expired';
+const PENDING = 'pending';
+const OFFER = 'offer';
+const REJECTED = 'rejected';
+const UPDATING = 'updating';
 
 const values = Object.freeze([
   ACTIVE,
@@ -27,4 +27,4 @@ const ConsentStatuses = Object.freeze({
   values,
 });
 
-export default ConsentStatuses;
+module.exports = ConsentStatuses;

@@ -1,5 +1,5 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import DirectiveApi from '../../../../../src/xcoobee/api/DirectiveApi';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const DirectiveApi = require('../../../../../src/xcoobee/api/DirectiveApi');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -7,17 +7,17 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('DirectiveApi', function () {
+describe('DirectiveApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
 
-  describe('.addDirective', function () {
+  describe('.addDirective', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with a valid directive input', function () {
+      describe('and called with a valid directive input', () => {
 
-        it('should return a reference ID', async function (done) {
+        it('should return a reference ID', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const directiveInput = {
             filenames: [],

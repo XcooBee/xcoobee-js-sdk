@@ -1,19 +1,19 @@
-import ApiAccessTokenCache from '../../xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../xcoobee/api/UsersCache');
 
-import Bees from './Bees';
-import Consents from './Consents';
-import Inbox from './Inbox';
-import System from './System';
-import Users from './Users';
+const Bees = require('./Bees');
+const Consents = require('./Consents');
+const Inbox = require('./Inbox');
+const System = require('./System');
+const Users = require('./Users');
 
 /**
  * The SDK class.
  *
  * ```js
- * import SdkJs from '@xcoobee/sdk-js';
+ * const XcooBee = require('xcoobee-sdk');
  *
- * const config = new SdkJs.Config({
+ * const config = new XcooBee.Config({
  *   apiKey: '...',
  *   apiSecret: '...',
  *   apiUrlRoot: '...',
@@ -22,11 +22,11 @@ import Users from './Users';
  *   pgpPassword: null,
  *   pgpSecret: null,
  * });
- * const sdk = new SdkJs.Sdk(config);
+ * const sdk = new XcooBee.Sdk(config);
  * ```
  *
  * ```js
- * import { Config, Sdk } from '@xcoobee/sdk-js';
+ * const { Config, Sdk } = require('xcoobee-sdk');
  *
  * const config = new Config({
  *   apiKey: '...',
@@ -50,9 +50,9 @@ class Sdk {
    * Constructs an Sdk instance.
    */
   constructor(config) {
-    let cfg = config || null;
-    let apiAccessTokenCache = new ApiAccessTokenCache();
-    let usersCache = new UsersCache(apiAccessTokenCache);
+    const cfg = config || null;
+    const apiAccessTokenCache = new ApiAccessTokenCache();
+    const usersCache = new UsersCache(apiAccessTokenCache);
     this._ = {
       bees: new Bees(cfg, apiAccessTokenCache, usersCache),
       config: cfg,
@@ -139,4 +139,4 @@ class Sdk {
 
 }// eo class Sdk
 
-export default Sdk;
+module.exports = Sdk;

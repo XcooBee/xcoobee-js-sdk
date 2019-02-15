@@ -1,4 +1,4 @@
-import Response from './Response';
+const Response = require('./Response');
 
 /**
  * A response representing an error response, meaning the requested operation
@@ -20,4 +20,4 @@ class ErrorResponse extends Response {
 
 }
 
-export default ErrorResponse;
+module.exports = ErrorResponse;

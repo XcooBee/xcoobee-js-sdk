@@ -1,10 +1,7 @@
-import Fs from 'fs';
-
-import FormData from 'form-data';
-
-import XcooBeeError from '../core/XcooBeeError';
-
-import ApiUtils from './ApiUtils';
+const Fs = require('fs');
+const FormData = require('form-data');
+const XcooBeeError = require('../core/XcooBeeError');
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Uploads the specified file to the system.
@@ -25,7 +22,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function upload_file(file, policy) {
+const upload_file = (file, policy) => {
   const url = policy.upload_url;
   // See https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
   const formData = new FormData();
@@ -37,35 +34,39 @@ export function upload_file(file, policy) {
   formData.append('X-Amz-meta-identifier', policy.identifier);
   formData.append('Policy', policy.policy);
   formData.append('X-Amz-Signature', policy.signature);
-  if (file instanceof File) {
+  if (typeof File === 'function' && file instanceof File) {
     formData.append('file', file);
-  }
-  else {
+  } else {
     formData.append('file', Fs.createReadStream(file));
   }
 
-  return new Promise((resolve, reject_unused) => {
-    formData.submit(url, (err, res /*: IncomingMessage */) => {
+  return new Promise((resolve) => {
+    const callback = (err, res, statusCode) => {
       if (err) {
         throw ApiUtils.transformError(err);
       }
-      const { statusCode } = res;
       if (statusCode >= 300) {
-        let filePath;
-        if (file instanceof File) {
-          filePath = file.name;
-        }
-        else {
-          filePath = file;
-        }
-        throw new XcooBeeError(`Failed to upload file at: ${filePath} using policy: ${JSON.stringify(policy)}`);
+        throw new XcooBeeError(`Failed to upload file at: ${file} using policy: ${JSON.stringify(policy)}`);
       }
 
       resolve(res);
-    });
-  });
-}
+    };
 
-export default {
+    if (typeof formData.submit === 'function') {
+      formData.submit(url, (err, res) => callback(err, res, res.statusCode));
+    } else {
+      const request = new XMLHttpRequest();
+      request.onreadystatechange = () => {
+        if (request.readyState === 4) {
+          callback(null, request.responseText, request.status);
+        }
+      };
+      request.open('POST', url);
+      request.send(formData);
+    }
+  });
+};
+
+module.exports = {
   upload_file,
 };

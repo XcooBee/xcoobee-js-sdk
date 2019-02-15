@@ -1,13 +1,13 @@
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-describe('XcooBeeError', function () {
+describe('XcooBeeError', () => {
 
-  describe('constructor', function () {
+  describe('constructor', () => {
 
-    describe('called with no arguments', function () {
+    describe('called with no arguments', () => {
 
-      it('should construct the expected instance', function () {
-        let error = new XcooBeeError();
+      it('should construct the expected instance', () => {
+        const error = new XcooBeeError();
 
         expect(error).toBeInstanceOf(XcooBeeError);
         expect(error.message).toBe('');
@@ -16,10 +16,10 @@ describe('XcooBeeError', function () {
 
     });
 
-    describe('called with one argument', function () {
+    describe('called with one argument', () => {
 
-      it('should construct the expected instance', function () {
-        let error = new XcooBeeError('Something bad happened.');
+      it('should construct the expected instance', () => {
+        const error = new XcooBeeError('Something bad happened.');
 
         expect(error).toBeInstanceOf(XcooBeeError);
         expect(error.message).toBe('Something bad happened.');

@@ -23,8 +23,7 @@ class Response {
       if (info.result === null || info.result === undefined) {
         throw TypeError('`result` is required for successful responses.');
       }
-    }
-    else {
+    } else {
       if (info.error === null || info.error === undefined) {
         throw TypeError('`error` is required for non-successful responses.');
       }
@@ -86,4 +85,4 @@ class Response {
 
 }
 
-export default Response;
+module.exports = Response;
