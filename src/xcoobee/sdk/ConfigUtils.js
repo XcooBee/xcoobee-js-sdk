@@ -6,6 +6,9 @@ const { toBool } = require('qc-to_bool');
 
 const Config = require('./Config');
 
+const API_URL = 'https://api.xcoobee.net';
+const TEST_API_URL = 'https://testapi.xcoobee.net/Test';
+
 /**
  * Creates a {@link Config Config} instance from the given XcooBee path.
  *
@@ -23,16 +26,19 @@ const createConfigFromFile = (xcoobPath) => {
   // Home Environment Variable:
   // On Windows: %USERPROFILE%
   // On Linux: $HOME
-  if (xcoobPath === undefined) {
-    xcoobPath = process.env.HOME;
-    if (!xcoobPath) {
-      xcoobPath = process.env.USERPROFILE;
+  let homePath = xcoobPath;
+  if (homePath === undefined) {
+    homePath = process.env.HOME;
+    if (!homePath) {
+      homePath = process.env.USERPROFILE;
     }
   }
-  const cfgFilename = Path.join(xcoobPath, '.xcoobee', 'config');
+  const cfgFilename = Path.join(homePath, '.xcoobee', 'config');
 
   return new Promise((resolve, reject) => {
-    const configData = {};
+    const apiUrlRoot = process.env.XBEE_STATE === 'test' ? TEST_API_URL : API_URL;
+
+    const configData = { apiUrlRoot };
     try {
       const configReadStream = Fs.createReadStream(cfgFilename);
 

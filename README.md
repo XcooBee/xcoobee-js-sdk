@@ -6,7 +6,7 @@ implementation and show the best practices while interacting with XcooBee.
 
 Generally, all communication with XcooBee is encrypted over the wire since none
 of the XcooBee systems will accept plain traffic.  All data sent to XcooBee from
-you and vice versa is going to use encryption. In addition, non-bee event communication to you is also signed using your PGP key.  
+you and vice versa is going to use encryption. In addition, non-bee event communication to you is also signed using your PGP key.
 
 If you need to generate new PGP keys you can login to your XcooBee account and
 go to the `Settings` page to do so.
@@ -80,8 +80,9 @@ const XcooBee = require('xcoobee-sdk');
 const config = new XcooBee.sdk.Config({
   apiKey: 'YourApiKey',
   apiSecret: 'YourApiSecret',
-  apiUrlRoot: 'https://api.xcoobee.net',
   campaignId: 'TheIdOfOneOfYourCampaigns',
+  pgpSecret: 'YourPGPSecret',
+  pgpPassword: 'YourPGPPassphrase',
 });
 ```
 
@@ -100,10 +101,39 @@ XcooBee.sdk.ConfigUtils.createFromFile()
 The `createFromFile` function will search for a XcooBee config file in the
 user's home directory. See the API docs for details.
 
-Regardless of which way you choose to instantiate a config instance, it needs to
-be made available to the SDK functions. One way is to let the SDK transparently
-handle it by passing the SDK instance a reference. The other way is to pass a
-reference to each SDK function call.
+We recommend that you also look into how to encrypt the contents of these files with OS specific encryption for use only by the process that uses the XcooBee SDK.
+
+The files will be located inside your `home` directory in the `.xcoobee` subdirectory. Thus the full path to config are:
+
+`/[home]/.xcoobee/config` => the configuration options
+
+`/[home]/.xcoobee/pgp.secret` => the pgp secret key in separate file
+
+
+on Windows it is in the root of your user directory
+
+`/Users/MyUserDir/.xcoobee/config` => the configuration option
+
+`/Users/MyUserDir/.xcoobee/pgp.secret` => the pgp secret key in separate file
+
+The initial content of the config file is plain text, with each option on a separate line.
+
+**example file**:
+```
+apiKey=8sihfsd89f7
+apiSecret=8937438hf
+campaignId=ifddb4cd9-d6ea-4005-9c7a-aeb104bc30be
+pgpPassword=somethingsecret
+```
+
+options:
+
+```
+apiKey      => the api-key
+apiSecret   => the api-secret
+campaignId  => the default campaign id
+pgpPassword => the password for your pgp key
+```
 
 **Passing a Reference to SDK Instance**
 
@@ -543,7 +573,7 @@ standard response object
 - status 400 if error
 
 
-### setUserDataResponse(message, consentId[, requestRef, filename, config])
+### setUserDataResponse(message, consentId, requestRef, filename[, config])
 
 Companies can respond to user data requested via this call. Standard hiring points will be deducted for this. The call will send a `message` to user's communication center. You also need to send a file with user's data in order to close data request.
 
