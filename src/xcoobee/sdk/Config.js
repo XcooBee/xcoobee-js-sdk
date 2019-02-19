@@ -29,7 +29,10 @@ class Config {
     if (!values) {
       throw TypeError('Config `data` is required.');
     }
-    const { apiKey, apiSecret, apiUrlRoot } = values;
+    const { apiKey, apiSecret } = values;
+
+    const apiUrlRoot = values.apiUrlRoot || 'https://api.xcoobee.net'; // use link to beta by default
+
     let {
       campaignId,
       encrypt,

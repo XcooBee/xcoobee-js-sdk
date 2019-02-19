@@ -190,28 +190,13 @@ describe('Consents', () => {
         });
     });
 
-    it('should send user message and return progress', () => {
-      ConversationsApi.sendUserMessage.mockReturnValue(Promise.resolve());
-
-      return consents.setUserDataResponse('message', 'consentId')
-        .then((res) => {
-          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'userId', 'consentId', null);
-
-          expect(res).toBeInstanceOf(SuccessResponse);
-          expect(res.code).toBe(200);
-          expect(res.result.progress).toBeInstanceOf(Array);
-          expect(res.result.progress[0]).toBe('successfully sent message');
-          expect(res.result.ref_id).toBeNull();
-        });
-    });
-
     it('should send user message, upload, send file and return progress', () => {
       ConversationsApi.sendUserMessage.mockReturnValue(Promise.resolve());
       FileUtils.upload.mockReturnValue(Promise.resolve([{ file: 'test.png', success: true }]));
       ConsentsApi.resolveXcoobeeId.mockReturnValue(Promise.resolve('~xcoobee_id'));
       DirectiveApi.addDirective.mockReturnValue(Promise.resolve('referenceId'));
 
-      return consents.setUserDataResponse('message', 'consentId', 'refId', ['test.png'])
+      return consents.setUserDataResponse('message', 'consentId', 'refId', 'test.png')
         .then((res) => {
           expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'userId', 'consentId', null);
           expect(FileUtils.upload).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', ['test.png']);
