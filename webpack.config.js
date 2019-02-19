@@ -13,7 +13,7 @@ const context = path.resolve(__dirname, 'src');
 // https://webpack.js.org/configuration/entry-context/#entry
 const entry = [
   'regenerator-runtime/runtime',
-  './xcoobee/sdk/index.js',
+  './xcoobee/sdk/browser.js',
 ];
 
 // https://webpack.js.org/configuration/externals/#externals

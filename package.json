@@ -30,6 +30,7 @@
     "npm": ">=3.8.6"
   },
   "main": "index.js",
+  "browser": "browser.js",
   "bugs": {
     "url": "https://github.com/XcooBee/xcoobee-js-sdk/issues"
   },
