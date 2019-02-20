@@ -120,8 +120,8 @@ const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaig
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {Array} arrayOfEventNames - A mapping between event subscription type and
- *   handler.  The handler is not important here.
+ * @param {Array<string>} arrayOfEventNames - An array of event subscription types to be
+ *   deleted.
  * @param {CampaignId} campaignId - The campaign cursor.
  *
  * @returns {Promise<Object>} - The result.

@@ -108,7 +108,8 @@ class System {
    * Deletes any event subscriptions from the specified campaign.
    *
    * @async
-   * @param {WebHookName[]|Map<WebHookName, *>|Object<WebHookName, *>|Set<WebHookName>} events - The event
+   * @param {Array<string>} arrayOfEventNames - An array of event subscription types to be
+   *   deleted.
    * @param {CampaignId} [campaignId] - The ID of the campaign for which to delete
    *   the event subscriptions.  If `null` or `undefined`, then the default campaign
    *   ID will be used from the config.
@@ -126,7 +127,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async deleteEventSubscription(events, campaignId = null, config = null) {
+  async deleteEventSubscription(arrayOfEventNames, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -135,7 +136,7 @@ class System {
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const result = await EventSubscriptionsApi.deleteEventSubscription(
-        apiUrlRoot, apiAccessToken, events, resolvedCampaignId
+        apiUrlRoot, apiAccessToken, arrayOfEventNames, resolvedCampaignId
       );
       const response = new SuccessResponse(result);
       return response;

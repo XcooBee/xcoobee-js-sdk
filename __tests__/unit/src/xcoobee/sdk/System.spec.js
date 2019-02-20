@@ -62,7 +62,7 @@ describe('System', () => {
     it('should return ErrorResponse if any errors', () => {
       EventSubscriptionsApi.deleteEventSubscription.mockReturnValue(Promise.reject({ message: 'error' }));
 
-      return system.deleteEventSubscription({ ConsentApproved: 'test' }, 'campaignId')
+      return system.deleteEventSubscription(['ConsentApproved'], 'campaignId')
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
           expect(err).toBeInstanceOf(ErrorResponse);
@@ -74,9 +74,9 @@ describe('System', () => {
     it('should return response with deleted number', () => {
       EventSubscriptionsApi.deleteEventSubscription.mockReturnValue(Promise.resolve({ deleted_number: 1 }));
 
-      return system.deleteEventSubscription({ ConsentApproved: 'test' }, 'campaignId')
+      return system.deleteEventSubscription(['ConsentApproved'], 'campaignId')
         .then((res) => {
-          expect(EventSubscriptionsApi.deleteEventSubscription).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', { ConsentApproved: 'test' }, 'campaignId');
+          expect(EventSubscriptionsApi.deleteEventSubscription).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', ['ConsentApproved'], 'campaignId');
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
