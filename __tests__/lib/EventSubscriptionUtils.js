@@ -38,11 +38,11 @@ const addTestEventSubscriptions = async (apiAccessTokenCache, apiUrlRoot, apiKey
 const deleteAllEventSubscriptions = async (apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId) => {
   const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
   const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId);
-  const eventsMapping = {};
+  const eventTypes = [];
   eventSubscriptionsPage.data.forEach(async (eventSubscription) => {
-    eventsMapping[toEventType(eventSubscription.event_type)] = eventSubscription.handler;
+    eventTypes.push(toEventType(eventSubscription.event_type));
   });
-  await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+  await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventTypes, campaignId);
 };
 
 module.exports = {

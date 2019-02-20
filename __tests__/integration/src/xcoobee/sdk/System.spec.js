@@ -489,13 +489,10 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping);
+                const response = await systemSdk.deleteEventSubscription(eventTypes);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -510,20 +507,16 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping);
+                let response = await systemSdk.deleteEventSubscription(eventTypes);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -542,14 +535,11 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                const response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -564,21 +554,17 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                let response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -604,13 +590,10 @@ describe('System', () => {
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                const response = await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -632,20 +615,16 @@ describe('System', () => {
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                let response = await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -670,13 +649,10 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                const response = await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -697,20 +673,16 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                let response = await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -737,15 +709,13 @@ describe('System', () => {
                 apiUrlRoot,
                 campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
-              const eventsMapping = {
-                Invalid: 'invalid',
-              };
+              const eventTypes = ['Invalid'];
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping);
+                await systemSdk.deleteEventSubscription(eventTypes);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -757,7 +727,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -769,7 +739,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -798,14 +768,12 @@ describe('System', () => {
                 apiUrlRoot,
                 campaignId: 'unknown',
               });
-              const eventsMapping = {
-                ConsentApproved: 'OnConsentApproved',
-              };
+              const eventTypes = ['ConsentApproved'];
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping);
+                await systemSdk.deleteEventSubscription(eventTypes);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -817,7 +785,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, null);
+                await systemSdk.deleteEventSubscription(eventTypes, null);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -829,7 +797,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, null, { apiKey, apiSecret });
+                await systemSdk.deleteEventSubscription(eventTypes, null, { apiKey, apiSecret });
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -860,14 +828,12 @@ describe('System', () => {
                 apiUrlRoot,
                 campaignId: 'unknown',
               });
-              const eventsMapping = {
-                ConsentApproved: 'OnConsentApproved',
-              };
+              const eventTypes = ['ConsentApproved'];
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -899,14 +865,12 @@ describe('System', () => {
                 campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
               const campaignId = 'unknown';
-              const eventsMapping = {
-                ConsentApproved: 'OnConsentApproved',
-              };
+              const eventTypes = ['ConsentApproved'];
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -918,7 +882,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -988,7 +952,7 @@ describe('System', () => {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.getEvents(null, null, overridingConfig);
+            const response = await systemSdk.getEvents(overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -1185,7 +1149,7 @@ describe('System', () => {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1247,7 +1211,7 @@ describe('System', () => {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1332,7 +1296,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.listEventSubscriptions(null, null, null, { apiKey, apiSecret });
+                await systemSdk.listEventSubscriptions(null, { apiKey, apiSecret });
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -1367,7 +1331,7 @@ describe('System', () => {
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
               try {
-                await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
+                await systemSdk.listEventSubscriptions(null, overridingConfig);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -1415,7 +1379,7 @@ describe('System', () => {
               }
 
               try {
-                await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
+                await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
                 // This should not be called.
                 expect(true).toBe(false);
               } catch (response) {
@@ -1483,8 +1447,7 @@ describe('System', () => {
             const response = await systemSdk.ping();
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
-            expect(result).toBeDefined();
-            expect(result.ponged).toBe(true);
+            expect(result).toBe(true);
 
             done();
           });// eo it

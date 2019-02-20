@@ -223,7 +223,7 @@ const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
  *
  * @throws {XcooBeeError}
  */
-const listConsents = (apiUrlRoot, apiAccessToken, userCursor, statuses, after = null, first = null) => {
+const listConsents = (apiUrlRoot, apiAccessToken, userCursor, statuses = [], after = null, first = null) => {
   if (!Array.isArray(statuses)) {
     throw TypeError('`statuses` should be array');
   }

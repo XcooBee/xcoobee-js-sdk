@@ -136,7 +136,7 @@ describe('ConsentsApi', () => {
             expect(result.page_info.has_next_page).toBeNull();
             const consents = result.data;
             expect(consents).toBeInstanceOf(Array);
-            expect(consents.length).toBe(0);
+            expect(consents.length).toBe(100);
             // expect(consents.length).toBeGreaterThan(0);
             // let consent = consents[0];
             // expect('consent_cursor' in consent).toBe(true);
@@ -160,7 +160,7 @@ describe('ConsentsApi', () => {
             const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
             const userCursor = user.cursor;
             const result = await ConsentsApi.listConsents(
-              apiUrlRoot, apiAccessToken, userCursor, ConsentStatuses.ACTIVE
+              apiUrlRoot, apiAccessToken, userCursor, [ConsentStatuses.ACTIVE]
             );
             // TODO: Find a way to get consents back.
             expect(result).toBeDefined();

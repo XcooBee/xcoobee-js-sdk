@@ -308,7 +308,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async listConsents(statuses = [], config = null) {
+  async listConsents(statuses, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
@@ -322,7 +322,7 @@ class Consents {
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, { statuses });
+    return SdkUtils.startPaging(fetchPage, apiCfg, { statuses: statuses || [] });
   }
 
   /**
@@ -442,7 +442,7 @@ class Consents {
             user_reference: requestRef,
           };
           const refId = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
-          progress.push('successfully sent successfully uploaded files to destination');
+          progress.push(`successfully sent successfully uploaded file${successfullyUploadedFiles.length === 1 ? '' : 's'} to destination`);
           result.ref_id = refId;
         }
       }

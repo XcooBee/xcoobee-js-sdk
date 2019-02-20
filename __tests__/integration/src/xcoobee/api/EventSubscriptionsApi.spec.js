@@ -181,13 +181,10 @@ describe('EventSubscriptionsApi', () => {
 
           it('should delete both of the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            const eventsMapping = {
-              ConsentApproved: 'OnConsentApproved',
-              DataDeclined: 'OnDataDeclined',
-            };
+            const eventTypes = ['ConsentApproved', 'DataDeclined'];
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             const result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
             expect(result).toBeDefined();
             expect(result.deleted_number).toBe(2);
@@ -197,21 +194,17 @@ describe('EventSubscriptionsApi', () => {
 
           it('should delete each of the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            let eventsMapping = {
-              ConsentApproved: 'OnConsentApproved',
-            };
+            let eventTypes = ['ConsentApproved'];
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             let result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
             expect(result).toBeDefined();
             expect(result.deleted_number).toBe(1);
 
-            eventsMapping = {
-              DataDeclined: 'OnDataDeclined',
-            };
+            eventTypes = ['DataDeclined'];
             result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
             expect(result).toBeDefined();
             expect(result.deleted_number).toBe(1);
@@ -224,13 +217,11 @@ describe('EventSubscriptionsApi', () => {
 
           it('should throw an error', async (done) => {
             const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
-            const eventsMapping = {
-              Invalid: 'invalid',
-            };
+            const eventTypes = ['Invalid'];
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             try {
               await EventSubscriptionsApi.deleteEventSubscription(
-                apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+                apiUrlRoot, apiAccessToken, eventTypes, campaignId
               );
               // This should not be called.
               expect(true).toBe(false);
@@ -251,12 +242,10 @@ describe('EventSubscriptionsApi', () => {
 
         it('should throw an error', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const eventsMapping = {
-            ConsentApproved: 'OnConsentApproved',
-          };
+          const eventTypes = ['ConsentApproved'];
           const campaignId = 'unknown';
           try {
-            await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+            await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventTypes, campaignId);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {

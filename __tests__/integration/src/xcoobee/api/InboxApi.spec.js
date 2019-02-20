@@ -29,8 +29,7 @@ describe('InboxApi', () => {
             const userCursor = user.cursor;
             const messageId = 'unknown';
             const result = await InboxApi.deleteInboxItem(apiUrlRoot, apiAccessToken, userCursor, messageId);
-            expect(result).toBeDefined();
-            expect(result.trans_id).toBeNull();
+            expect(result).toBe(true);
             done();
           });// eo it
 

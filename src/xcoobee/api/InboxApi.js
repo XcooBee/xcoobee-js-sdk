@@ -10,7 +10,6 @@ const ApiUtils = require('./ApiUtils');
  * @param {string} messageId - The ID of the inbox item.
  *
  * @returns {Promise<true>} - The result.
- * @property {string} trans_id - The transaction ID.
  *
  * @throws {XcooBeeError}
  */

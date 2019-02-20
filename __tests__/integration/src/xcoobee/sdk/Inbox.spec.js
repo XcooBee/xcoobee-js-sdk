@@ -44,8 +44,7 @@ describe('Inbox', () => {
                 const response = await inboxSdk.deleteInboxItem(messageId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { result } = response;
-                expect(result).toBeDefined();
-                expect(result.trans_id).toBeNull();
+                expect(result).toBe(true);
                 done();
               });// eo it
 
@@ -75,8 +74,7 @@ describe('Inbox', () => {
             const response = await inboxSdk.deleteInboxItem(messageId, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
-            expect(result).toBeDefined();
-            expect(result.trans_id).toBeNull();
+            expect(result).toBe(true);
             done();
           });// eo it
 

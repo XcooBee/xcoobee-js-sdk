@@ -556,7 +556,7 @@ describe('Consents', () => {
             });
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await consentsSdk.listCampaigns(null, null, overridingConfig);
+            const response = await consentsSdk.listCampaigns(overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -638,7 +638,7 @@ describe('Consents', () => {
               expect(result.page_info.has_next_page).toBeNull();
               const consents = result.data;
               expect(consents).toBeInstanceOf(Array);
-              expect(consents.length).toBe(0);
+              expect(consents.length).toBe(100);
               // expect(consents.length).toBeGreaterThan(0);
               // let consent = consents[0];
               // expect('consent_cursor' in consent).toBe(true);
@@ -670,7 +670,7 @@ describe('Consents', () => {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(null, null, null, overridingConfig);
+              const response = await consentsSdk.listConsents(null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -682,7 +682,7 @@ describe('Consents', () => {
               expect(result.page_info.has_next_page).toBeNull();
               const consents = result.data;
               expect(consents).toBeInstanceOf(Array);
-              expect(consents.length).toBe(0);
+              expect(consents.length).toBe(100);
               // expect(consents.length).toBeGreaterThan(0);
               // let consent = consents[0];
               // expect('consent_cursor' in consent).toBe(true);
@@ -696,61 +696,6 @@ describe('Consents', () => {
 
               done();
             });// eo it
-
-          });// eo describe
-
-          describe('and called with a limit', () => {
-
-            describe('using default config', () => {
-
-              it('should fetch and return with the user\'s consents of any status', async (done) => {
-                const defaultConfig = new Config({
-                  apiKey,
-                  apiSecret,
-                  apiUrlRoot,
-                });
-
-                const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await consentsSdk.listConsents(null, null, 25);
-                expect(response).toBeInstanceOf(PagingResponse);
-                const { result } = response;
-                expect(result).toBeDefined();
-                const consents = result.data;
-                expect(consents).toBeInstanceOf(Array);
-                expect(consents.length).toBe(0);
-                expect(response.hasNextPage()).toBe(false);
-                // let consent = consents[0];
-                // expect('consent_cursor' in consent).toBe(true);
-                // assertIsCursorLike(consent.consent_cursor);
-                // expect('consent_status' in consent).toBe(true);
-                // expect('date_c' in consent).toBe(true);
-                // assertIso8601Like(consent.date_c)
-                // expect('date_e' in consent).toBe(true);
-                // assertIso8601Like(consent.date_e)
-                // expect('user_xcoobee_id' in consent).toBe(true);
-
-                // expect(response.hasNextPage()).toBe(true);
-                // let nextPageResponse = await response.getNextPage();
-                // expect(nextPageResponse).toBeInstanceOf(PagingResponse);
-                // result = nextPageResponse.result;
-                // expect(result).toBeDefined();
-                // consents = result.data;
-                // expect(consents).toBeInstanceOf(Array);
-                // expect(consents.length).toBe(25);
-
-                // expect(nextPageResponse.hasNextPage()).toBe(true);
-                // nextPageResponse = await nextPageResponse.getNextPage();
-                // expect(nextPageResponse).toBeInstanceOf(PagingResponse);
-                // result = nextPageResponse.result;
-                // expect(result).toBeDefined();
-                // consents = result.data;
-                // expect(consents).toBeInstanceOf(Array);
-                // expect(consents.length).toBeGreaterThan(0);
-
-                done();
-              });// eo it
-
-            });// eo describe
 
           });// eo describe
 
@@ -768,7 +713,7 @@ describe('Consents', () => {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE);
+              const response = await consentsSdk.listConsents([ConsentStatuses.ACTIVE]);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -811,7 +756,7 @@ describe('Consents', () => {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, null, null, overridingConfig);
+              const response = await consentsSdk.listConsents([ConsentStatuses.ACTIVE], overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -980,8 +925,7 @@ describe('Consents', () => {
             const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
             const referenceId = 'someUniqueReferenceId';
             const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.txt');
-            const files = [file];
-            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
+            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, file);
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
             expect(result).toBeDefined();
@@ -989,7 +933,7 @@ describe('Consents', () => {
             expect(result.progress.length).toBe(3);
             expect(result.progress[0]).toBe('successfully sent message');
             expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.txt/);
-            expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
             expect(result.ref_id).toBeDefined();
 
             done();
@@ -1016,8 +960,7 @@ describe('Consents', () => {
             const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
             const referenceId = 'someUniqueReferenceId';
             const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.dat');
-            const files = [file];
-            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files, overridingConfig);
+            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, file, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
             expect(result).toBeDefined();
@@ -1025,7 +968,7 @@ describe('Consents', () => {
             expect(result.progress.length).toBe(3);
             expect(result.progress[0]).toBe('successfully sent message');
             expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.dat/);
-            expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
             expect(result.ref_id).toBeDefined();
 
             done();
@@ -1048,10 +991,10 @@ describe('Consents', () => {
           const message = 'does not matter';
           const consentId = 'does not matter';
           const referenceId = 'does not matter';
-          const files = [];
+          const file = null;
 
           try {
-            await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
+            await consentsSdk.setUserDataResponse(message, consentId, referenceId, file);
             // This should not be called.
             expect(true).toBe(false);
           } catch (response) {
