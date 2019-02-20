@@ -212,7 +212,7 @@ describe('Consents', () => {
           expect(res.result.progress).toBeInstanceOf(Array);
           expect(res.result.progress[0]).toBe('successfully sent message');
           expect(res.result.progress[1]).toBe('successfully uploaded test.png');
-          expect(res.result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+          expect(res.result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
           expect(res.result.ref_id).toBe('referenceId');
         });
     });
