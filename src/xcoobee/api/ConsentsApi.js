@@ -355,7 +355,7 @@ const resolveXcoobeeId = (apiUrlRoot, apiAccessToken, consentCursor) => {
  * @param {string} passphrase
  *
  * @returns {Promise<Object>} - The result.
- * @property {boolean} confirmed - Flag indicating whether the change is confirmed.
+ * @property {Object|string} payload - The data package.
  *
  * @throws {XcooBeeError}
  */
