@@ -1,8 +1,8 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import CampaignApi from '../../../../../src/xcoobee/api/CampaignApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const CampaignApi = require('../../../../../src/xcoobee/api/CampaignApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -10,18 +10,18 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('CampaignApi', function () {
+describe('CampaignApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.getCampaignInfo', function () {
+  describe('.getCampaignInfo', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with a known campaign cursor', function () {
+      describe('and called with a known campaign cursor', () => {
 
-        it('should return with expected campaign info', async function (done) {
+        it('should return with expected campaign info', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignCursor = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
           const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
@@ -48,9 +48,9 @@ describe('CampaignApi', function () {
 
       });// eo describe
 
-      describe('and called with an unknown campaign cursor', function () {
+      describe('and called with an unknown campaign cursor', () => {
 
-        it('should return with no data', async function (done) {
+        it('should return with no data', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignCursor = 'unknown';
           try {
@@ -72,11 +72,11 @@ describe('CampaignApi', function () {
 
   });// eo describe('.getCampaignInfo')
 
-  describe('.getCampaigns', function () {
+  describe('.getCampaigns', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      it('should return the user\'s campaigns', async function (done) {
+      it('should return the user\'s campaigns', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
@@ -84,7 +84,7 @@ describe('CampaignApi', function () {
         expect(result).toBeDefined();
         expect(result.data).toBeInstanceOf(Array);
         expect(result.page_info).toBeDefined();
-        expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+        expect(result.page_info.end_cursor).toBeNull();
         expect(result.page_info.has_next_page).toBeNull();
         const campaigns = result.data;
         expect(campaigns.length).toBe(1);

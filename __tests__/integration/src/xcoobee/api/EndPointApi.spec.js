@@ -1,10 +1,10 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import EndPointApi from '../../../../../src/xcoobee/api/EndPointApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const EndPointApi = require('../../../../../src/xcoobee/api/EndPointApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -12,18 +12,18 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('EndPointApi', function () {
+describe('EndPointApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.outbox_endpoints', function () {
+  describe('.outbox_endpoints', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with a known user ID', function () {
+      describe('and called with a known user ID', () => {
 
-        it('should return the user\'s outbox endpoints', async function (done) {
+        it('should return the user\'s outbox endpoints', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
@@ -42,7 +42,7 @@ describe('EndPointApi', function () {
           expect('cursor' in endPoint).toBe(true);
           assertIsCursorLike(endPoint.cursor);
           expect('date_c' in endPoint).toBe(true);
-          assertIso8601Like(endPoint.date_c)
+          assertIso8601Like(endPoint.date_c);
           expect('name' in endPoint).toBe(true);
           expect(endPoint.name).toBe('flex');
           done();
@@ -50,9 +50,9 @@ describe('EndPointApi', function () {
 
       });// eo describe
 
-      describe('and called with an unknown user ID', function () {
+      describe('and called with an unknown user ID', () => {
 
-        it('should return with no data', async function (done) {
+        it('should return with no data', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = 'unknown';
           try {

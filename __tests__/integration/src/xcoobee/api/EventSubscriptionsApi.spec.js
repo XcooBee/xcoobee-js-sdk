@@ -1,10 +1,10 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import EventSubscriptionsApi from '../../../../../src/xcoobee/api/EventSubscriptionsApi';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const EventSubscriptionsApi = require('../../../../../src/xcoobee/api/EventSubscriptionsApi');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-import { addTestEventSubscriptions, deleteAllEventSubscriptions } from '../../../../lib/EventSubscriptionUtils';
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const { addTestEventSubscriptions, deleteAllEventSubscriptions } = require('../../../../lib/EventSubscriptionUtils');
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -12,33 +12,33 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('EventSubscriptionsApi', function () {
+describe('EventSubscriptionsApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
 
-  beforeAll(async function (done) {
+  beforeAll(async (done) => {
     const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
     await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
     done();
   });
 
-  describe('.addEventSubscription', function () {
+  describe('.addEventSubscription', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and a known campaign ID', function () {
+      describe('and a known campaign ID', () => {
 
-        describe('and a valid events mapping', function () {
+        describe('and a valid events mapping', () => {
 
-          afterEach(async function (done) {
+          afterEach(async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
-          it('should add the event subscriptions', async function (done) {
+          it('should add the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const eventsMapping = {
               ConsentApproved: 'OnConsentApproved',
@@ -84,7 +84,7 @@ describe('EventSubscriptionsApi', function () {
             done();
           });// eo it
 
-          it('should throw an error when trying to add an existing event subscription type', async function (done) {
+          it('should throw an error when trying to add an existing event subscription type', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const eventsMapping = {
               ConsentApproved: 'OnConsentApproved',
@@ -110,9 +110,9 @@ describe('EventSubscriptionsApi', function () {
 
         });// eo describe
 
-        describe('and an invalid events mapping', function () {
+        describe('and an invalid events mapping', () => {
 
-          it('should throw an error', async function (done) {
+          it('should throw an error', async (done) => {
             const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
             const eventsMapping = {
               Invalid: 'invalid',
@@ -137,9 +137,9 @@ describe('EventSubscriptionsApi', function () {
 
       });// eo describe
 
-      describe('and an unknown campaign ID', async function () {
+      describe('and an unknown campaign ID', async () => {
 
-        it('should throw an error', async function (done) {
+        it('should throw an error', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const eventsMapping = {
             ConsentApproved: 'OnConsentApproved',
@@ -164,30 +164,27 @@ describe('EventSubscriptionsApi', function () {
 
   });// eo describe('.addEventSubscription')
 
-  describe('.deleteEventSubscription', function () {
+  describe('.deleteEventSubscription', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and a known campaign ID', function () {
+      describe('and a known campaign ID', () => {
 
-        describe('and a valid events mapping', function () {
+        describe('and a valid events mapping', () => {
 
-          beforeEach(async function (done) {
+          beforeEach(async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
-          it('should delete both of the event subscriptions', async function (done) {
+          it('should delete both of the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            const eventsMapping = {
-              ConsentApproved: 'OnConsentApproved',
-              DataDeclined: 'OnDataDeclined',
-            };
+            const eventTypes = ['ConsentApproved', 'DataDeclined'];
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             const result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
             expect(result).toBeDefined();
             expect(result.deleted_number).toBe(2);
@@ -195,23 +192,19 @@ describe('EventSubscriptionsApi', function () {
             done();
           });// eo it
 
-          it('should delete each of the event subscriptions', async function (done) {
+          it('should delete each of the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            let eventsMapping = {
-              ConsentApproved: 'OnConsentApproved',
-            };
+            let eventTypes = ['ConsentApproved'];
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             let result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
             expect(result).toBeDefined();
             expect(result.deleted_number).toBe(1);
 
-            eventsMapping = {
-              DataDeclined: 'OnDataDeclined',
-            };
+            eventTypes = ['DataDeclined'];
             result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+              apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
             expect(result).toBeDefined();
             expect(result.deleted_number).toBe(1);
@@ -220,17 +213,15 @@ describe('EventSubscriptionsApi', function () {
           });// eo it
         });// eo describe
 
-        describe('and an invalid events mapping', function () {
+        describe('and an invalid events mapping', () => {
 
-          it('should throw an error', async function (done) {
+          it('should throw an error', async (done) => {
             const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
-            const eventsMapping = {
-              Invalid: 'invalid',
-            };
+            const eventTypes = ['Invalid'];
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             try {
               await EventSubscriptionsApi.deleteEventSubscription(
-                apiUrlRoot, apiAccessToken, eventsMapping, campaignId
+                apiUrlRoot, apiAccessToken, eventTypes, campaignId
               );
               // This should not be called.
               expect(true).toBe(false);
@@ -247,16 +238,14 @@ describe('EventSubscriptionsApi', function () {
 
       });// eo describe
 
-      describe('and an unknown campaign ID', async function () {
+      describe('and an unknown campaign ID', async () => {
 
-        it('should throw an error', async function (done) {
+        it('should throw an error', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const eventsMapping = {
-            ConsentApproved: 'OnConsentApproved',
-          };
+          const eventTypes = ['ConsentApproved'];
           const campaignId = 'unknown';
           try {
-            await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+            await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventTypes, campaignId);
             // This should not be called.
             expect(true).toBe(false);
           } catch (err) {
@@ -274,27 +263,27 @@ describe('EventSubscriptionsApi', function () {
 
   });// eo describe('.deleteEventSubscription')
 
-  describe('.listEventSubscriptions', function () {
+  describe('.listEventSubscriptions', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with a known campaign ID', function () {
+      describe('and called with a known campaign ID', () => {
 
-        beforeEach(async function (done) {
+        beforeEach(async (done) => {
           const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
           await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
           done();
         });
 
-        afterEach(async function (done) {
+        afterEach(async (done) => {
           const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
           await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
           done();
         });
 
-        it('should return with a list of event subscriptions', async function (done) {
+        it('should return with a list of event subscriptions', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
           const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
@@ -335,9 +324,9 @@ describe('EventSubscriptionsApi', function () {
 
       });// eo describe
 
-      describe('and called with an unknown campaign ID', async function () {
+      describe('and called with an unknown campaign ID', async () => {
 
-        it('should throw an error', async function (done) {
+        it('should throw an error', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const campaignId = 'unknown';
           try {

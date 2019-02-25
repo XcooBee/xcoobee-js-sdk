@@ -1,7 +1,16 @@
-import Response from './Response';
+const Response = require('./Response');
 
+/**
+ * A response representing an error response, meaning the requested operation
+ * did not fully complete successfully.
+ */
 class ErrorResponse extends Response {
 
+  /**
+   * @param {number} code
+   * @param {Object} error
+   * @param {string} error.message
+   */
   constructor(code, error) {
     super({
       code,
@@ -11,4 +20,4 @@ class ErrorResponse extends Response {
 
 }
 
-export default ErrorResponse;
+module.exports = ErrorResponse;

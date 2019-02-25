@@ -1,7 +1,14 @@
-import Response from './Response';
+const Response = require('./Response');
 
+/**
+ * A response representing a successful response. That is, the SDK function call
+ * completed successfully.
+ */
 class SuccessResponse extends Response {
 
+  /**
+   * @param {*} result
+   */
   constructor(result) {
     super({
       code: 200,
@@ -12,4 +19,4 @@ class SuccessResponse extends Response {
 
 }
 
-export default SuccessResponse;
+module.exports = SuccessResponse;

@@ -1,14 +1,33 @@
-import ConversationsApi from '../../xcoobee/api/ConversationsApi';
+const UsersApi = require('../../xcoobee/api/UsersApi');
+const ConversationsApi = require('../../xcoobee/api/ConversationsApi');
 
-import ErrorResponse from './ErrorResponse';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
- * The Users service.
+ * The Users SDK service.
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to an `Users` SDK instance through the {@link Sdk#users users}
+ * property.
+ *
+ * ```js
+ * const XcooBee = require('xcoobee-sdk');
+ *
+ * const sdk = new XcooBee.Sdk(...);
+ * sdk.users.getUser(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class Users {
 
+  /* eslint-disable-next-line valid-jsdoc */
+  /**
+   * Constructs an `Users` SDK service instance.
+   */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
       apiAccessTokenCache,
@@ -17,10 +36,17 @@ class Users {
     };
   }
 
+  /**
+   * @protected
+   * @param {Config} config
+   */
   set config(config) {
     this._.config = config;
   }
 
+  /**
+   * @protected
+   */
   _assertValidState() {
     if (!this._.config) {
       throw TypeError('Illegal State: Default config has not been set yet.');
@@ -31,12 +57,10 @@ class Users {
    * Fetches a page of conversations with the given target cursor.
    *
    * @async
-   * @param {string} targetCursor
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
+   * @param {string} userId
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -51,7 +75,7 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async getConversation(targetCursor, after = null, limit = null, config = null) {
+  async getConversation(userId, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
@@ -64,20 +88,17 @@ class Users {
       return conversationsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, targetCursor };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, { targetCursor: userId });
   }
 
   /**
    * Fetches a page of the user's conversations.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -92,14 +113,14 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async getConversations(after = null, limit = null, config = null) {
+  async getConversations(config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const conversationsPage = await ConversationsApi.getConversations(
         apiUrlRoot, apiAccessToken, userCursor, after, limit
@@ -107,9 +128,8 @@ class Users {
       return conversationsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit };
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, apiCfg, {});
   }
 
   /**
@@ -118,7 +138,7 @@ class Users {
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -142,7 +162,39 @@ class Users {
       const response = new SuccessResponse({ data: userInfo });
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
+    }
+  }
+
+  /**
+   * Fetches the user's pgp public key.
+   *
+   * @async
+   * @param {string} xid - User's xcoobee ID.
+   * @param {Config} [config] - The configuration to use instead of the default.
+   *
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @property {number} code - The response status code.
+   * @property {Error} [error] - The response error if status is not successful.
+   * @property {string} [error.message] - The error message.
+   * @property {string} request_id - The ID of the request generated by the XcooBee
+   *   system.
+   * @property {string} result - User's PGP public key or empty string.
+   *
+   * @throws {XcooBeeError}
+   */
+  async getUserPublicKey(xid, config = null) {
+    this._assertValidState();
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const pgpKey = await UsersApi.getUserPublicKey(apiUrlRoot, apiAccessToken, xid);
+      const response = new SuccessResponse(pgpKey);
+      return response;
+    } catch (err) {
+      throw new ErrorResponse(400, err);
     }
   }
 
@@ -155,7 +207,7 @@ class Users {
    * @param {*} breachId
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -167,14 +219,14 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async sendUserMessage(message, consentId, breachId, config = null) {
+  async sendUserMessage(message, consentId, breachId = null, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
       const note = await ConversationsApi.sendUserMessage(
         apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId
@@ -182,10 +234,10 @@ class Users {
       const response = new SuccessResponse({ data: note });
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
 }// eo class Users
 
-export default Users;
+module.exports = Users;

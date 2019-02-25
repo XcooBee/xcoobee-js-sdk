@@ -1,12 +1,19 @@
 const path = require('path');
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+const manifest = require('./package.json');
+
+const analyze = process.argv.includes('--analyze');
+
 // https://webpack.js.org/configuration/entry-context/#context
 const context = path.resolve(__dirname, 'src');
 
 // https://webpack.js.org/configuration/entry-context/#entry
 const entry = [
   'regenerator-runtime/runtime',
-  './index.js',
+  './xcoobee/sdk/browser.js',
 ];
 
 // https://webpack.js.org/configuration/externals/#externals
@@ -50,7 +57,8 @@ const output = {
   // TODO: Use the package version number in the filename.
   //
   // https://webpack.js.org/configuration/output/#output-filename
-  filename: 'xcoobee-sdk-[chunkhash].web.js',
+  // filename: 'xcoobee-sdk-[chunkhash].web.js',
+  filename: `xcoobee-sdk-${manifest.version}.web.js`,
   // Note: The following will become the name of a global variable.
   library: 'XcooBee',
   // Note that `[hash]` in this parameter will be replaced with an hash of the
@@ -61,7 +69,9 @@ const output = {
 };
 
 // https://webpack.js.org/configuration/plugins/
-const plugins = [];
+const plugins = [
+  analyze && new BundleAnalyzerPlugin(),
+].filter(Boolean);
 
 // https://webpack.js.org/configuration/resolve/
 const resolve = undefined;
@@ -70,15 +80,15 @@ const resolve = undefined;
 const target = 'web';
 
 const config = {
-  context: context,
-  entry: entry,
-  externals: externals,
+  context,
+  entry,
+  externals,
   module: loaders,
-  node: node,
-  output: output,
-  plugins: plugins,
-  resolve: resolve,
-  target: target,
+  node,
+  output,
+  plugins,
+  resolve,
+  target,
 };
 
 module.exports = config;

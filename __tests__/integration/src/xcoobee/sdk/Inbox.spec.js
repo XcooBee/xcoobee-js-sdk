@@ -1,13 +1,13 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import Inbox from '../../../../../src/xcoobee/sdk/Inbox';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const Inbox = require('../../../../../src/xcoobee/sdk/Inbox');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 
-import { assertIso8601Like } from '../../../../lib/Utils';
+const { assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -15,24 +15,24 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('Inbox', function () {
+describe('Inbox', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.deleteInboxItem', function () {
+    describe('.deleteInboxItem', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a valid user cursor', function () {
+        describe('and a valid user cursor', () => {
 
-          describe('but with an unknown message ID', function () {
+          describe('but with an unknown message ID', () => {
 
-            describe('using default config', function () {
+            describe('using default config', () => {
 
-              it('should return with a null transaction ID', async function (done) {
+              it('should return with a null transaction ID', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -44,8 +44,7 @@ describe('Inbox', function () {
                 const response = await inboxSdk.deleteInboxItem(messageId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { result } = response;
-                expect(result).toBeDefined();
-                expect(result.trans_id).toBeNull();
+                expect(result).toBe(true);
                 done();
               });// eo it
 
@@ -56,9 +55,9 @@ describe('Inbox', function () {
           // TODO: Test with a known message ID.
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should delete the inbox item', async function (done) {
+          it('should delete the inbox item', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -75,8 +74,7 @@ describe('Inbox', function () {
             const response = await inboxSdk.deleteInboxItem(messageId, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
-            expect(result).toBeDefined();
-            expect(result.trans_id).toBeNull();
+            expect(result).toBe(true);
             done();
           });// eo it
 
@@ -86,13 +84,13 @@ describe('Inbox', function () {
 
     });// eo describe('.deleteInboxItem')
 
-    describe('.getInboxItem', function () {
+    describe('.getInboxItem', () => {
 
-      xdescribe('called with a valid API key/secret pair', function () {
+      xdescribe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the inbox item', async function (done) {
+          it('should fetch and return with the inbox item', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -118,9 +116,9 @@ describe('Inbox', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the inbox item', async function (done) {
+          it('should fetch and return with the inbox item', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -153,9 +151,9 @@ describe('Inbox', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', async function () {
+      describe('called with an invalid API key/secret pair', async () => {
 
-        it('should return with an error response', async function (done) {
+        it('should reject with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -164,10 +162,17 @@ describe('Inbox', function () {
 
           const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
           const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b'; // FIXME: TODO: Get a legit message ID.
-          const response = await inboxSdk.getInboxItem(messageId);
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await inboxSdk.getInboxItem(messageId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -175,14 +180,14 @@ describe('Inbox', function () {
 
     });// eo describe('.getInboxItem')
 
-    describe('.listInbox', function () {
+    describe('.listInbox', () => {
 
       // FIXME: TODO: Get Inbox to a known state with at least one item to search for.
-      xdescribe('called with a valid API key/secret pair', function () {
+      xdescribe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s inbox items', async function (done) {
+          it('should fetch and return with the user\'s inbox items', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -219,9 +224,9 @@ describe('Inbox', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the user\'s inbox items', async function (done) {
+          it('should fetch and return with the user\'s inbox items', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -265,9 +270,9 @@ describe('Inbox', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -275,10 +280,17 @@ describe('Inbox', function () {
           });
 
           const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await inboxSdk.listInbox();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await inboxSdk.listInbox();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 

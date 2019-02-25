@@ -1,8 +1,13 @@
 /**
  * A XcooBee specific error.
+ *
+ * @memberof module:core
  */
 class XcooBeeError extends Error {
 
+  /**
+   * @param  {...any} args
+   */
   constructor(...args) {
     // See https://medium.com/@xjamundx/custom-javascript-errors-in-es6-aa891b173f87
     super(...args);
@@ -18,4 +23,4 @@ class XcooBeeError extends Error {
 
 XcooBeeError.prototype.name = 'XcooBeeError';
 
-export default XcooBeeError;
+module.exports = XcooBeeError;

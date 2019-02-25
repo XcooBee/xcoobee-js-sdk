@@ -1,20 +1,36 @@
-import ApiUtils from '../../xcoobee/api/ApiUtils';
-import BeesApi from '../../xcoobee/api/BeesApi';
-import DirectiveApi from '../../xcoobee/api/DirectiveApi';
-import UploadPolicyIntents from '../../xcoobee/api/UploadPolicyIntents';
+const ApiUtils = require('../../xcoobee/api/ApiUtils');
+const BeesApi = require('../../xcoobee/api/BeesApi');
+const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
+const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
 
-import XcooBeeError from '../core/XcooBeeError';
-
-import ErrorResponse from './ErrorResponse';
-import FileUtils from './FileUtils';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const ErrorResponse = require('./ErrorResponse');
+const FileUtils = require('./FileUtils');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
- * The Bees service.
+ * The Bees SDK service.
+ *
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to a `Bees` SDK instance through the {@link Sdk#bees bees} property.
+ *
+ * ```js
+ * const XcooBee = require('xcoobee-sdk');
+ *
+ * const sdk = new XcooBee.Sdk(...);
+ * sdk.bees.listBees(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class Bees {
 
+  /* eslint-disable-next-line valid-jsdoc */
+  /**
+   * Constructs a Bees SDK service instance.
+   */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
       apiAccessTokenCache,
@@ -23,10 +39,17 @@ class Bees {
     };
   }
 
+  /**
+   * @protected
+   * @param {Config} config
+   */
   set config(config) {
     this._.config = config;
   }
 
+  /**
+   * @protected
+   */
   _assertValidState() {
     if (!this._.config) {
       throw TypeError('Illegal State: Default config has not been set yet.');
@@ -38,38 +61,37 @@ class Bees {
    * match the specified search text.
    *
    * ```js
-   * listBees('social')
-   *   .then(res => {
-   *     const { code, result, error, time } = res;
-   *     if (code >= 300 || error) {
-   *       if (error) {
-   *         console.error(error);
-   *       }
-   *       return;
-   *     }
-   *     const bees = result.data;
-   *     bees.forEach(bee => {
+   * let socialBees = [];
+   *
+   * function collectSocialBees(pagingResponse) {
+   *   const { result } = pagingResponse;
+   *   const pageOfBees = result.data;
+   *   socialBees = socialBees.concat(pageOfBees);
+   *   if (pagingResponse.hasNextPage()) {
+   *     pagingResponse.getNextPage().then(collectSocialBees);
+   *   } else {
+   *     socialBees.forEach(bee => {
    *       const { bee_system_name, description, bee_icon, ...etc } = bee;
    *       // DO something with this data.
    *     });
-   *     if (bees.hasNextPage()) {
-   *       bees.getNextPage()
-   *         .then(res => {
-   *           ...
-   *         });
-   *     }
-   *   })
+   *   }
+   * }
+   *
+   * sdk.bees.listBees('social')
+   *   .then(collectSocialBees)
+   *   .catch(res => {
+   *     const { error } = res;
+   *     console.error(error);
+   *   });
    * ```
    *
    * @async
    * @param {string} searchText - The search text.  It is a string of keywords to
    *  search for in the bee system name or label in the language of your account.
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<PagingResponse|ErrorResponse, undefined>} - The response.
+   * @returns {Promise<PagingResponse, ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -84,18 +106,18 @@ class Bees {
    *
    * @throws {XcooBeeError}
    */
-  async listBees(searchText, after = null, limit = null, config = null) {
+  async listBees(searchText = null, config = null) {
     this._assertValidState();
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
-      const { after, limit, searchText } = params;
+      const { after, limit, searchText: search } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, searchText, after, limit);
+      const beesPage = await BeesApi.bees(apiUrlRoot, apiAccessToken, search, after, limit);
       return beesPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, searchText };
+    const params = { searchText };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -103,9 +125,9 @@ class Bees {
   /**
    *
    * @async
-   * @param {string[]} bees - A mapping of bee names to bee parameters.
-   * @param {string} bees<key> - The bee name.  A 'transfer' bee will be ignored.
-   * @param {Object} bees<value> - The bee parameters.
+   * @param {Array<Object<string, Object>>} bees - A mapping of bee names to bee parameters.
+   * @param {string} bees[].key - The bee name.  A 'transfer' bee will be ignored.
+   * @param {Object} bees[].value - The bee parameters.
    * @param {Object} options - The bee take off options.
    * @param {Object} options.process -
    * @param {Array<email|XcooBeeId>} [options.process.destinations] -
@@ -115,7 +137,7 @@ class Bees {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>} - The response.
+   * @returns {Promise<SuccessResponse, ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -138,15 +160,16 @@ class Bees {
     };
 
     if (subscriptions) {
+      // TODO: validate subscriptions
       directiveInput.subscriptions = subscriptions;
     }
 
     if (
-      Array.isArray(options.process.destinations) &&
-      options.process.destinations.length > 0
+      Array.isArray(options.process.destinations)
+      && options.process.destinations.length > 0
     ) {
       directiveInput.destinations = options.process.destinations.map(
-        destination => {
+        (destination) => {
           if (ApiUtils.appearsToBeAnEmailAddress(destination)) {
             return { email: destination };
           }
@@ -172,7 +195,7 @@ class Bees {
       const response = new SuccessResponse({ ref_id });
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
@@ -185,13 +208,11 @@ class Bees {
    *   of 'File' objects as is available in a modern browser.
    *   TODO: Test what file paths actually work and make sure the documentation is
    *   adequate.  Be sure to show examples of various path types.
-   * @param {string} [intent] - One of the "outbox" endpoints defined in the
-   *   XcooBee UI.  If an endpoint is not specified, then be sure to call the
-   *   `takeOff` function afterwards.  TODO: Make sure this documentation is accurate.
+   * @param {string} endpoint - Endpoint type
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -202,32 +223,25 @@ class Bees {
    *   sub-result has a string `file` property and a boolean `success` property
    *   indicating whether the file was successfully uploaded. If `success` is `false`,
    *   then an error `error` property will also exist.
-   *
-   * @throws {XcooBeeError}
    */
-  async uploadFiles(files, intent, config = null) {
+  async uploadFiles(files, endpoint = UploadPolicyIntents.OUTBOX, config = null) {
     this._assertValidState();
-    const endPointName = intent || UploadPolicyIntents.OUTBOX;
-    if (endPointName !== UploadPolicyIntents.OUTBOX) {
-      throw new XcooBeeError(
-        `The "intent" argument must be one of: null, undefined, or "${UploadPolicyIntents.OUTBOX}".`
-      );
-    }
-    let apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, files);
+      const result = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endpoint, files);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
 }// eo class Bees
 
-export default Bees;
+module.exports = Bees;

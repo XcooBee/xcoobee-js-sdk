@@ -1,18 +1,39 @@
-import CampaignApi from '../../xcoobee/api/CampaignApi';
-import EventsApi from '../../xcoobee/api/EventsApi';
-import EventSubscriptionsApi from '../../xcoobee/api/EventSubscriptionsApi';
+const createHmac = require('crypto-js/hmac-sha1');
 
-import XcooBeeError from '../../xcoobee/core/XcooBeeError';
+const CampaignApi = require('../../xcoobee/api/CampaignApi');
+const EventsApi = require('../../xcoobee/api/EventsApi');
+const EventSubscriptionsApi = require('../../xcoobee/api/EventSubscriptionsApi');
 
-import ErrorResponse from './ErrorResponse';
-import SdkUtils from './SdkUtils';
-import SuccessResponse from './SuccessResponse';
+const XcooBeeError = require('../../xcoobee/core/XcooBeeError');
+const { decryptWithEncryptedPrivateKey } = require('../../xcoobee/core/EncryptionUtils');
+
+const ErrorResponse = require('./ErrorResponse');
+const SdkUtils = require('./SdkUtils');
+const SuccessResponse = require('./SuccessResponse');
 
 /**
- * The System service.
+ * The System SDK service.
+ * Instances are not created directly. An {@link Sdk} instance will have a
+ * reference to a `System` SDK instance through the {@link Sdk#system system}
+ * property.
+ *
+ * ```js
+ * const XcooBee = require('xcoobee-sdk');
+ *
+ * const sdk = new XcooBee.Sdk(...);
+ * sdk.system.ping(...).then(...);
+ * ```
+ *
+ * @param {Config} config
+ * @param {ApiAccessTokenCache} apiAccessTokenCache
+ * @param {UsersCache} usersCache
  */
 class System {
 
+  /* eslint-disable-next-line valid-jsdoc */
+  /**
+   * Constructs a `System` SDK service instance.
+   */
   constructor(config, apiAccessTokenCache, usersCache) {
     this._ = {
       apiAccessTokenCache,
@@ -21,10 +42,17 @@ class System {
     };
   }
 
+  /**
+   * @protected
+   * @param {Config} config
+   */
   set config(config) {
     this._.config = config;
   }
 
+  /**
+   * @protected
+   */
   _assertValidState() {
     if (!this._.config) {
       throw TypeError('Illegal State: Default config has not been set yet.');
@@ -42,7 +70,7 @@ class System {
    *   from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -58,7 +86,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async addEventSubscription(events, campaignId, config = null) {
+  async addEventSubscription(events, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -72,7 +100,7 @@ class System {
       const response = new SuccessResponse(eventSubscriptionsPage);
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
@@ -80,13 +108,14 @@ class System {
    * Deletes any event subscriptions from the specified campaign.
    *
    * @async
-   * @param {WebHookName[]|Map<WebHookName, *>|Object<WebHookName, *>|Set<WebHookName>} events - The event
+   * @param {Array<string>} arrayOfEventNames - An array of event subscription types to be
+   *   deleted.
    * @param {CampaignId} [campaignId] - The ID of the campaign for which to delete
    *   the event subscriptions.  If `null` or `undefined`, then the default campaign
    *   ID will be used from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -98,7 +127,7 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async deleteEventSubscription(events, campaignId, config = null) {
+  async deleteEventSubscription(arrayOfEventNames, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
@@ -107,12 +136,12 @@ class System {
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const result = await EventSubscriptionsApi.deleteEventSubscription(
-        apiUrlRoot, apiAccessToken, events, resolvedCampaignId
+        apiUrlRoot, apiAccessToken, arrayOfEventNames, resolvedCampaignId
       );
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
@@ -120,12 +149,10 @@ class System {
    * Fetches a page of the user's events.
    *
    * @async
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -140,22 +167,61 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async getEvents(after = null, limit = null, config = null) {
+  async getEvents(config = null) {
     this._assertValidState();
 
-    const fetchPage = async (apiCfg, params) => {
-      const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+    const fetchPage = async (sdkCfg, params) => {
+      const {
+        apiKey,
+        apiSecret,
+        apiUrlRoot,
+        pgpPassword,
+        pgpSecret,
+      } = sdkCfg;
       const { after, limit } = params;
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, after, limit);
+      const eventsPage = await EventsApi.getEvents(apiUrlRoot, apiAccessToken, userCursor, pgpSecret, pgpPassword, after, limit);
       return eventsPage;
     };
-    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit };
+    const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
 
-    return SdkUtils.startPaging(fetchPage, apiCfg, params);
+    return SdkUtils.startPaging(fetchPage, sdkCfg, {});
+  }
+
+  /**
+   * Triggers test event to webhook of campaign.
+   *
+   * @async
+   * @param {string} type - event type to trigger
+   * @param {Config} [config] - If specified, the configuration to use instead of the
+   *   default.
+   *
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @property {number} code - The response status code.
+   * @property {Error} [error] - The response error if status is not successful.
+   * @property {string} [error.message] - The error message.
+   * @property {string} request_id - The ID of the request generated by the XcooBee
+   *   system.
+   * @property {Object} [result] - The result of the response if status is successful.
+   * @property {Event} result - Event data.
+   */
+  async triggerEvent(type, config = null) {
+    this._assertValidState();
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(null, config, this._.config);
+    const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
+    const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+
+      const result = await EventsApi.triggerEvent(apiUrlRoot, apiAccessToken, resolvedCampaignId, type);
+
+      return new SuccessResponse(result);
+    } catch (err) {
+      throw new ErrorResponse(400, err);
+    }
   }
 
   /**
@@ -166,11 +232,9 @@ class System {
    *   event subscriptions.  If `null` or `undefined`, then the campaign ID from the
    *   overriding config will be used.  If `config.campaignId` is `null` or
    *   `undefined`, then the campaign ID from the default config will be used.
-   * @param {string} [after] - Fetch data after this cursor.
-   * @param {number} [limit] - The maximum count to fetch.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<PagingResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -186,9 +250,8 @@ class System {
    *
    * @throws {XcooBeeError}
    */
-  async listEventSubscriptions(campaignId, after = null, limit = null, config = null) {
+  async listEventSubscriptions(campaignId = null, config = null) {
     this._assertValidState();
-    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
 
     const fetchPage = async (apiCfg, params) => {
       const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -200,7 +263,7 @@ class System {
       return eventSubscriptionsPage;
     };
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
-    const params = { after, limit, resolvedCampaignId };
+    const params = { resolvedCampaignId: SdkUtils.resolveCampaignId(campaignId, config, this._.config) };
 
     return SdkUtils.startPaging(fetchPage, apiCfg, params);
   }
@@ -214,14 +277,13 @@ class System {
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse|ErrorResponse, undefined>}
+   * @returns {Promise<SuccessResponse, ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
    * @property {string} request_id - The ID of the request generated by the XcooBee
    *   system.
-   * @property {Object} [result] - The result of the response if status is successful.
-   * @property {boolean} result.ponged - Flag indicating that the ping was successful.
+   * @property {true} result - Flag indicating that the ping was successful.
    *
    * @throws {XcooBeeError}
    */
@@ -233,27 +295,92 @@ class System {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret)
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const pgpPublicKey = user.pgp_public_key;
 
-      let err = null;
       if (pgpPublicKey) {
         const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
         if (result && result.campaign) {
-          const response = new SuccessResponse({ ponged: true });
-          return response;
+          return new SuccessResponse(true);
         }
-        err = new XcooBeeError('Campaign not found.');
+
+        throw new XcooBeeError('Campaign not found.');
       }
-      else {
-        err = new XcooBeeError('PGP key not found.');
-      }
-      return new ErrorResponse(400, err);
+
+      throw new XcooBeeError('PGP key not found.');
     } catch (err) {
-      return new ErrorResponse(400, err);
+      throw new ErrorResponse(400, err);
     }
   }
 
-}// eo class System
+  /**
+   * Method for hadling either incoming events or events listed by `getEvents` method
+   *
+   * @async
+   * @param {function[]} handlers - list of handlers. i.e. { myHandler: (payload) => { ... } }
+   * @param {Object[]} [events] - events listed by `getEvents` method. Should be empty array if payload and headers procided
+   * @param {string} [payload] - decrypted body of webhook event. Should be `null` if list of events provided
+   * @param {Object} [headers] - headers of webhook event. Should be `null` if list of events provided
+   *
+   * @returns {Promise}
+   *
+   * @throws {TypeError}
+   * @throws {XcooBeeError}
+   */
+  async handleEvents(handlers, events = [], payload = null, headers = null) {
+    if (!Object.keys(handlers).length) {
+      throw new TypeError('At least one handler should be passed');
+    }
 
-export default System;
+    if (payload !== null && headers !== null) {
+      const hmac = headers['XBEE-SIGNATURE'] || headers['xbee-signature'] || null;
+      const handler = headers['XBEE-HANDLER'] || headers['xbee-handler'] || null;
+
+      const sdkCfg = SdkUtils.resolveSdkCfg(null, this._.config);
+      const {
+        apiKey,
+        apiSecret,
+        apiUrlRoot,
+        pgpPassword,
+        pgpSecret,
+      } = sdkCfg;
+
+      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
+
+      const calculatedHmac = createHmac(payload, user.xcoobee_id).toString();
+
+      if (calculatedHmac !== hmac) {
+        throw new XcooBeeError('Invalid signature');
+      }
+
+      const event = {
+        payload,
+        handler,
+      };
+      try {
+        const encryptedPayload = await decryptWithEncryptedPrivateKey(
+          payload,
+          pgpSecret,
+          pgpPassword
+        );
+
+        event.payload = JSON.parse(encryptedPayload);
+      } catch (e) {
+        // Do nothing, we will pass on the payload as it is.
+      }
+
+      events.push(event);
+    }
+
+    return Promise.all(events.map((event) => {
+      if (!event.handler || typeof handlers[event.handler] !== 'function') {
+        throw new XcooBeeError(`Handler '${event.handler}' is not defined`);
+      }
+
+      return handlers[event.handler](event.payload);
+    }));
+  }
+
+}
+
+module.exports = System;

@@ -1,0 +1,7 @@
+{
+  "name": "cross-openpgp",
+  "version": "0.0.0",
+  "private": true,
+  "browser": "./browser",
+  "main": "./node"
+}

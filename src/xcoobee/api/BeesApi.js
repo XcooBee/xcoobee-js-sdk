@@ -1,4 +1,4 @@
-import ApiUtils from './ApiUtils';
+const ApiUtils = require('./ApiUtils');
 
 /**
  * Fetch a page of bees.
@@ -19,7 +19,7 @@ import ApiUtils from './ApiUtils';
  *
  * @throws {XcooBeeError}
  */
-export function bees(apiUrlRoot, apiAccessToken, searchText, after = null, first = null) {
+const bees = (apiUrlRoot, apiAccessToken, searchText, after = null, first = null) => {
   const query = `
     query getBees($searchText: String, $after: String, $first: Int) {
       bees(search: $searchText, after: $after, first: $first) {
@@ -52,16 +52,12 @@ export function bees(apiUrlRoot, apiAccessToken, searchText, after = null, first
     first,
     searchText,
   })
-    .then(response => {
-      const { bees } = response;
-
-      return bees;
-    })
-    .catch(err => {
+    .then(response => response.bees)
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   bees,
 };

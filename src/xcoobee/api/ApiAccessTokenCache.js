@@ -1,6 +1,5 @@
-import jwtDecode from 'jwt-decode';
-
-import TokenApi from './TokenApi';
+const jwtDecode = require('jwt-decode');
+const TokenApi = require('./TokenApi');
 
 const EXPIRATION_TOLERANCE_IN_MS__DEFAULT = 10000;
 
@@ -44,22 +43,22 @@ class ApiAccessTokenCache {
    */
   get(apiUrlRoot, apiKey, apiSecret, fresh) {
     if (!apiUrlRoot) {
-      throw TypeError('apiUrlRoot is required.');
+      throw new TypeError('apiUrlRoot is required.');
     }
     if (!apiKey) {
-      throw TypeError('apiKey is required.');
+      throw new TypeError('apiKey is required.');
     }
     if (!apiSecret) {
-      throw TypeError('apiSecret is required.');
+      throw new TypeError('apiSecret is required.');
     }
     if (typeof apiUrlRoot !== 'string') {
-      throw TypeError('apiUrlRoot must be a string.');
+      throw new TypeError('apiUrlRoot must be a string.');
     }
     if (typeof apiKey !== 'string') {
-      throw TypeError('apiKey must be a string.');
+      throw new TypeError('apiKey must be a string.');
     }
     if (typeof apiSecret !== 'string') {
-      throw TypeError('apiSecret must be a string.');
+      throw new TypeError('apiSecret must be a string.');
     }
     const key = `${apiUrlRoot}:${apiKey}:${apiSecret}`;
 
@@ -70,7 +69,7 @@ class ApiAccessTokenCache {
       const jwtTokenPayload = jwtDecode(apiAccessToken);
       const { exp } = jwtTokenPayload;
       const now = Date.now();
-      const expInMs = typeof exp === 'number' && exp === exp ? exp * 1000 : now;
+      const expInMs = typeof exp === 'number' ? exp * 1000 : now;
       const msTilExp = expInMs - now;
       const tolerance = this._.cfg.expTol || EXPIRATION_TOLERANCE_IN_MS__DEFAULT;
 
@@ -83,7 +82,7 @@ class ApiAccessTokenCache {
       apiKey,
       apiSecret,
       apiUrlRoot,
-    }).then(apiAccessToken => {
+    }).then((apiAccessToken) => {
       this._.internalCache[key] = apiAccessToken;
       return apiAccessToken;
     });
@@ -91,4 +90,4 @@ class ApiAccessTokenCache {
 
 }
 
-export default ApiAccessTokenCache;
+module.exports = ApiAccessTokenCache;

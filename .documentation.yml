@@ -1,0 +1,27 @@
+toc:
+  - name: XcooBee SDK - JavaScript
+    description: |
+      This is the JavaScript version of the XcooBee SDK. This version is very similar
+      to other versions of the SDK. However, instead of using synchrous, blocking
+      calls, the JavaScript version returns {@link Promise}s from each SDK call.
+  - SdkJs
+  - name: Configuration
+  - Config
+  - ConfigUtils
+  - createConfigFromFile
+  - name: SDK
+  - Sdk
+  - Bees
+  - Consents
+  - Inbox
+  - System
+  - Users
+  - name: Responses
+    description: |
+      Each of the SDK function calls returns a {@link Promise} that resolves with a
+      {@link PagingResponse} or a {@link SuccessResponse}. The promise may reject
+      with an {@link ErrorResponse}.
+  - Response
+  - PagingResponse
+  - SuccessResponse
+  - ErrorResponse

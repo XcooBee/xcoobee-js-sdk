@@ -1,7 +1,7 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiUtils, { appearsToBeACursor } from './ApiUtils';
-import UploadPolicyIntents from './UploadPolicyIntents';
+const ApiUtils = require('./ApiUtils');
+const UploadPolicyIntents = require('./UploadPolicyIntents');
 
 /**
  *
@@ -14,25 +14,25 @@ import UploadPolicyIntents from './UploadPolicyIntents';
  * @returns {Promise<Policy[]>} A list of policies, one for each file uploaded.
  *
  * @throws {XcooBeeError}
+ * @throws {TypeError} If arguments are invalid.
  */
-export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor, files) {
+const upload_policy = (apiUrlRoot, apiAccessToken, intent, endPointCursor, files) => {
   if (!UploadPolicyIntents.values.includes(intent)) {
-    throw TypeError('`intent`' + ` must be one of ${UploadPolicyIntents.values.join(', ')}.`);
+    throw new TypeError(`'intent' must be one of ${UploadPolicyIntents.values.join(', ')}.`);
   }
-  if (!appearsToBeACursor(endPointCursor)) {
-    throw TypeError('`endPointCursor` is required.');
+  if (!ApiUtils.appearsToBeACursor(endPointCursor)) {
+    throw new TypeError('`endPointCursor` is required.');
   }
   if (!Array.isArray(files)) {
-    throw TypeError('`files` must be an array.');
+    throw new TypeError('`files` must be an array.');
   }
 
   let query = ['query uploadPolicy {'];
   files.forEach((file, idx) => {
     let baseName;
-    if (file instanceof File) {
+    if (typeof File === 'function' && file instanceof File) {
       baseName = file.name;
-    }
-    else {
+    } else {
       baseName = Path.basename(file);
     }
 
@@ -48,17 +48,17 @@ export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor
     query.push('  }');
   });
   query.push('}');
-  query = query.join('\n')
+  query = query.join('\n');
 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query)
-    .then(response => {
+    .then((response) => {
       const policies = [];
 
       for (let i = 0, iLen = files.length; i < iLen; ++i) {
         let policy = null;
         const key = `policy${i}`;
 
-        if (key in response) {
+        if (response[key]) {
           policy = response[key];
         }
         policies.push(policy);
@@ -66,11 +66,11 @@ export function upload_policy(apiUrlRoot, apiAccessToken, intent, endPointCursor
 
       return policies;
     })
-    .catch(err => {
+    .catch((err) => {
       throw ApiUtils.transformError(err);
     });
-}
+};
 
-export default {
+module.exports = {
   upload_policy,
 };

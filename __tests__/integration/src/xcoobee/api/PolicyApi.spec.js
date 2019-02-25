@@ -1,11 +1,11 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import EndPointApi from '../../../../../src/xcoobee/api/EndPointApi';
-import PolicyApi from '../../../../../src/xcoobee/api/PolicyApi';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const EndPointApi = require('../../../../../src/xcoobee/api/EndPointApi');
+const PolicyApi = require('../../../../../src/xcoobee/api/PolicyApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import { assertIsCursorLike, assertCompactIso8601Like } from '../../../../lib/Utils';
+const { assertIsCursorLike, assertCompactIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -13,18 +13,18 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('PolicyApi', function () {
+describe('PolicyApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.upload_policy', function () {
+  describe('.upload_policy', () => {
 
-    describe('called with a valid API access token', function () {
+    describe('called with a valid API access token', () => {
 
-      describe('and called with an "outbox" upload policy intent ', function () {
+      describe('and called with an "outbox" upload policy intent ', () => {
 
-        it('should return an upload policy for each file', async function (done) {
+        it('should return an upload policy for each file', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
           const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
           const userCursor = user.cursor;
@@ -38,12 +38,12 @@ describe('PolicyApi', function () {
           const endPoints = data;
           const endPointName = 'outbox';
           expect(endPoints).toBeInstanceOf(Array);
-          let candidateEndPoints = endPoints.filter(endPoint => {
+          let candidateEndPoints = endPoints.filter((endPoint) => {
             return endPoint.name === endPointName;
           });
           expect(candidateEndPoints.length).toBeLessThanOrEqual(1);
           if (candidateEndPoints.length === 0) {
-            candidateEndPoints = endPoints.filter(endPoint => {
+            candidateEndPoints = endPoints.filter((endPoint) => {
               return endPoint.name === 'flex';
             });
           }

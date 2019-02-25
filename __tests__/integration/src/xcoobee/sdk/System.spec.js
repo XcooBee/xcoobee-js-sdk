@@ -1,16 +1,16 @@
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import XcooBeeError from '../../../../../src/xcoobee/core/XcooBeeError';
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
-import System from '../../../../../src/xcoobee/sdk/System';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
+const System = require('../../../../../src/xcoobee/sdk/System');
 
-import { addTestEventSubscriptions, deleteAllEventSubscriptions } from '../../../../lib/EventSubscriptionUtils';
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const { addTestEventSubscriptions, deleteAllEventSubscriptions } = require('../../../../lib/EventSubscriptionUtils');
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -18,38 +18,38 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('System', function () {
+describe('System', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  beforeAll(async function (done) {
+  beforeAll(async (done) => {
     const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
     await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
     done();
   });
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.addEventSubscription', function () {
+    describe('.addEventSubscription', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a known campaign ID', function () {
+        describe('and a known campaign ID', () => {
 
-          describe('and a valid events mapping', function () {
+          describe('and a valid events mapping', () => {
 
-            afterEach(async function (done) {
+            afterEach(async (done) => {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
               await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
               done();
             });
 
-            describe('using default config', function () {
+            describe('using default config', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -104,9 +104,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID', function () {
+            describe('using campaign ID', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -119,14 +119,14 @@ describe('System', function () {
                 };
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
+                const response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { result } = response;
                 expect(result).toBeDefined();
                 const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
-                let eventSubscription = eventSubscriptionsPage.data[0];
+                const eventSubscription = eventSubscriptionsPage.data[0];
                 expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
@@ -140,9 +140,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID and overriding config', function () {
+            describe('using campaign ID and overriding config', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -168,7 +168,7 @@ describe('System', function () {
                 const eventSubscriptionsPage = result;
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
-                let eventSubscription = eventSubscriptionsPage.data[0];
+                const eventSubscription = eventSubscriptionsPage.data[0];
                 expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
@@ -182,9 +182,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using overriding config', function () {
+            describe('using overriding config', () => {
 
-              it('should add the event subscriptions for the campaign', async function (done) {
+              it('should add the event subscriptions for the campaign', async (done) => {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -247,9 +247,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('and an invalid events mapping', function () {
+          describe('and an invalid events mapping', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -269,26 +269,41 @@ describe('System', function () {
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
-              let response = await systemSdk.addEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -297,11 +312,11 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('and unknown campaign ID', function () {
+        describe('and unknown campaign ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -313,35 +328,51 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.addEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.addEventSubscription(eventsMapping, null);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.addEventSubscription(eventsMapping, null, { apiKey, apiSecret });
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, null);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, null, { apiKey, apiSecret });
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -359,21 +390,27 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              const { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -392,19 +429,30 @@ describe('System', function () {
               };
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.addEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.addEventSubscription(eventsMapping, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -417,37 +465,34 @@ describe('System', function () {
 
     });// eo describe('.addEventSubscription')
 
-    describe('.deleteEventSubscription', function () {
+    describe('.deleteEventSubscription', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a known campaign ID', function () {
+        describe('and a known campaign ID', () => {
 
-          describe('and a valid events mapping', function () {
+          describe('and a valid events mapping', () => {
 
-            beforeEach(async function (done) {
+            beforeEach(async (done) => {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
               await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
               done();
             });
 
-            describe('using default config', function () {
+            describe('using default config', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping);
+                const response = await systemSdk.deleteEventSubscription(eventTypes);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -455,27 +500,23 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping);
+                let response = await systemSdk.deleteEventSubscription(eventTypes);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -485,23 +526,20 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID', function () {
+            describe('using campaign ID', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                const response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -509,28 +547,24 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                let response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -540,9 +574,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using campaign ID and overriding config', function () {
+            describe('using campaign ID and overriding config', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -556,13 +590,10 @@ describe('System', function () {
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                const response = await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -570,7 +601,7 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
@@ -584,20 +615,16 @@ describe('System', function () {
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                let response = await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -607,9 +634,9 @@ describe('System', function () {
 
             });// eo describe
 
-            describe('using overriding config', function () {
+            describe('using overriding config', () => {
 
-              it('should delete both of the event subscriptions', async function (done) {
+              it('should delete both of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -622,13 +649,10 @@ describe('System', function () {
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                const eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                  DataDeclined: 'OnDataDeclined',
-                };
+                const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                const response = await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 const { deleted_number } = response.result;
                 expect(deleted_number).toBe(2);
@@ -636,7 +660,7 @@ describe('System', function () {
                 done();
               });// eo it
 
-              it('should delete each of the event subscriptions', async function (done) {
+              it('should delete each of the event subscriptions', async (done) => {
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -649,20 +673,16 @@ describe('System', function () {
                   apiUrlRoot,
                   campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
                 });
-                let eventsMapping = {
-                  ConsentApproved: 'OnConsentApproved',
-                };
+                let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-                let response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                let response = await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 let { deleted_number } = response.result;
                 expect(deleted_number).toBe(1);
 
-                eventsMapping = {
-                  DataDeclined: 'OnDataDeclined',
-                };
-                response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
+                eventTypes = ['DataDeclined'];
+                response = await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
                 expect(response).toBeInstanceOf(SuccessResponse);
                 deleted_number = response.result.deleted_number;
                 expect(deleted_number).toBe(1);
@@ -674,9 +694,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('and an invalid events mapping', function () {
+          describe('and an invalid events mapping', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -689,33 +709,46 @@ describe('System', function () {
                 apiUrlRoot,
                 campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
-              const eventsMapping = {
-                Invalid: 'invalid',
-              };
+              const eventTypes = ['Invalid'];
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
-              let response = await systemSdk.deleteEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Invalid event type provided: "Invalid".');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Invalid event type provided: "Invalid".');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -724,51 +757,65 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('and an unknown campaign ID', async function () {
+        describe('and an unknown campaign ID', async () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
                 campaignId: 'unknown',
               });
-              const eventsMapping = {
-                ConsentApproved: 'OnConsentApproved',
-              };
+              const eventTypes = ['ConsentApproved'];
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.deleteEventSubscription(eventsMapping);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, null);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, null, { apiKey, apiSecret });
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, null);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, null, { apiKey, apiSecret });
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -781,26 +828,30 @@ describe('System', function () {
                 apiUrlRoot,
                 campaignId: 'unknown',
               });
-              const eventsMapping = {
-                ConsentApproved: 'OnConsentApproved',
-              };
+              const eventTypes = ['ConsentApproved'];
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.deleteEventSubscription(eventsMapping, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              const { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should resolve with an error response', async function (done) {
+            it('should reject with an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -814,24 +865,33 @@ describe('System', function () {
                 campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
               });
               const campaignId = 'unknown';
-              const eventsMapping = {
-                ConsentApproved: 'OnConsentApproved',
-              };
+              const eventTypes = ['ConsentApproved'];
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.deleteEventSubscription(eventsMapping, campaignId, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.deleteEventSubscription(eventTypes, campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -844,13 +904,13 @@ describe('System', function () {
 
     });// eo describe('.deleteEventSubscription')
 
-    describe('.getEvents', function () {
+    describe('.getEvents', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -877,9 +937,9 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -892,7 +952,7 @@ describe('System', function () {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.getEvents(null, null, overridingConfig);
+            const response = await systemSdk.getEvents(overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -913,9 +973,9 @@ describe('System', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -923,11 +983,17 @@ describe('System', function () {
           });
 
           const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await systemSdk.getEvents();
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await systemSdk.getEvents();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -935,29 +1001,29 @@ describe('System', function () {
 
     });// eo describe('.getEvents')
 
-    describe('.listEventSubscriptions', function () {
+    describe('.listEventSubscriptions', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and known campaign ID', function () {
+        describe('and known campaign ID', () => {
 
-          beforeEach(async function (done) {
+          beforeEach(async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
-          afterEach(async function (done) {
+          afterEach(async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1010,9 +1076,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1022,7 +1088,7 @@ describe('System', function () {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.listEventSubscriptions(campaignId);
+              const response = await systemSdk.listEventSubscriptions(campaignId);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1066,9 +1132,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1083,7 +1149,7 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1127,9 +1193,9 @@ describe('System', function () {
 
           });// eo describe
 
-          describe('using campaign ID and overriding config', function () {
+          describe('using campaign ID and overriding config', () => {
 
-            it('should fetch and return with the event subscriptions for the campaign', async function (done) {
+            it('should fetch and return with the event subscriptions for the campaign', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1145,7 +1211,7 @@ describe('System', function () {
               const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
+              const response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -1191,11 +1257,11 @@ describe('System', function () {
 
         });// eo describe
 
-        describe('and unknown campaign ID', function () {
+        describe('and unknown campaign ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should return an error response', async function (done) {
+            it('should return an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1204,35 +1270,51 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.listEventSubscriptions();
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.listEventSubscriptions(null);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.listEventSubscriptions();
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
-              response = await systemSdk.listEventSubscriptions(null, null, null, { apiKey, apiSecret });
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.listEventSubscriptions(null);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.listEventSubscriptions(null, { apiKey, apiSecret });
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should return an error response', async function (done) {
+            it('should return an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1247,21 +1329,27 @@ describe('System', function () {
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await systemSdk.listEventSubscriptions(null, null, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              const { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+
+              try {
+                await systemSdk.listEventSubscriptions(null, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('using campaign ID', function () {
+          describe('using campaign ID', () => {
 
-            it('should return an error response', async function (done) {
+            it('should return an error response', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -1277,19 +1365,30 @@ describe('System', function () {
               const campaignId = 'unknown';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-              let response = await systemSdk.listEventSubscriptions(campaignId);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              let { error } = response;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
 
-              response = await systemSdk.listEventSubscriptions(campaignId, null, null, overridingConfig);
-              expect(response).toBeInstanceOf(ErrorResponse);
-              error = response.error;
-              expect(error).toBeInstanceOf(XcooBeeError);
-              expect(error.message).toBe('Wrong key at line: 3, column: 7');
-              expect(error.name).toBe('XcooBeeError');
+              try {
+                await systemSdk.listEventSubscriptions(campaignId);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
+
+              try {
+                await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
+                // This should not be called.
+                expect(true).toBe(false);
+              } catch (response) {
+                expect(response).toBeInstanceOf(ErrorResponse);
+                const { error } = response;
+                expect(error).toBeInstanceOf(XcooBeeError);
+                expect(error.message).toBe('Wrong key at line: 3, column: 7');
+                expect(error.name).toBe('XcooBeeError');
+              }
 
               done();
             });// eo it
@@ -1302,13 +1401,13 @@ describe('System', function () {
 
     });// eo describe('.listEventSubscriptions')
 
-    describe('.ping', function () {
+    describe('.ping', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config without a campaign ID', function () {
+        describe('using default config without a campaign ID', () => {
 
-          it('should error out due to not resolving a campaign ID', async function (done) {
+          it('should error out due to not resolving a campaign ID', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -1316,21 +1415,26 @@ describe('System', function () {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.ping();
-            expect(response).toBeInstanceOf(ErrorResponse);
-            let { error } = response;
-            expect(error).toBeInstanceOf(XcooBeeError);
-            expect(error.message).toBe('Campaign ID is required');
-            expect(error.name).toBe('XcooBeeError');
+            try {
+              await systemSdk.ping();
+              // This should not be called.
+              expect(true).toBe(false);
+            } catch (response) {
+              expect(response).toBeInstanceOf(ErrorResponse);
+              const { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message).toBe('Campaign ID is required');
+              expect(error.name).toBe('XcooBeeError');
+            }
 
             done();
           });// eo it
 
         });// eo describe
 
-        describe('using default config with a valid campaign ID', function () {
+        describe('using default config with a valid campaign ID', () => {
 
-          it('should be successful', async function (done) {
+          it('should be successful', async (done) => {
             const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
             const defaultConfig = new Config({
               apiKey,
@@ -1343,17 +1447,16 @@ describe('System', function () {
             const response = await systemSdk.ping();
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
-            expect(result).toBeDefined();
-            expect(result.ponged).toBe(true);
+            expect(result).toBe(true);
 
             done();
           });// eo it
 
         });// eo describe
 
-        describe('using default config with an unknown campaign ID', function () {
+        describe('using default config with an unknown campaign ID', () => {
 
-          it('should error out due to not finding a campaign', async function (done) {
+          it('should error out due to not finding a campaign', async (done) => {
             const campaignId = 'unknown';
             const defaultConfig = new Config({
               apiKey,
@@ -1363,12 +1466,17 @@ describe('System', function () {
             });
 
             const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await systemSdk.ping();
-            expect(response).toBeInstanceOf(ErrorResponse);
-            let { error } = response;
-            expect(error).toBeInstanceOf(XcooBeeError);
-            expect(error.message === 'Wrong key at line: 3, column: 7' || error.message === 'Campaign not found.').toBe(true);
-            expect(error.name).toBe('XcooBeeError');
+            try {
+              await systemSdk.ping();
+              // This should not be called.
+              expect(true).toBe(false);
+            } catch (response) {
+              expect(response).toBeInstanceOf(ErrorResponse);
+              const { error } = response;
+              expect(error).toBeInstanceOf(XcooBeeError);
+              expect(error.message === 'Wrong key at line: 3, column: 7' || error.message === 'Campaign not found.').toBe(true);
+              expect(error.name).toBe('XcooBeeError');
+            }
 
             done();
           });// eo it

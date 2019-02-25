@@ -1,38 +1,58 @@
-import ApiAccessTokenCache from '../../xcoobee/api/ApiAccessTokenCache';
-import UsersCache from '../../xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../xcoobee/api/ApiAccessTokenCache');
+const UsersCache = require('../../xcoobee/api/UsersCache');
 
-import Bees from './Bees';
-import Consents from './Consents';
-import Inbox from './Inbox';
-import System from './System';
-import Users from './Users';
+const Bees = require('./Bees');
+const Consents = require('./Consents');
+const Inbox = require('./Inbox');
+const System = require('./System');
+const Users = require('./Users');
 
 /**
- * The SDK entry point.
+ * The SDK class.
  *
  * ```js
- * const config = {
+ * const XcooBee = require('xcoobee-sdk');
+ *
+ * const config = new XcooBee.Config({
  *   apiKey: '...',
  *   apiSecret: '...',
+ *   apiUrlRoot: '...',
  *   campaignId: null,
- *   encrypt: true,
+ *   encrypt: false,
  *   pgpPassword: null,
  *   pgpSecret: null,
- * };
- * const xcooBeeSdk = new Sdk(config);
+ * });
+ * const sdk = new XcooBee.Sdk(config);
  * ```
+ *
+ * ```js
+ * const { Config, Sdk } = require('xcoobee-sdk');
+ *
+ * const config = new Config({
+ *   apiKey: '...',
+ *   apiSecret: '...',
+ *   apiUrlRoot: '...',
+ *   campaignId: null,
+ *   encrypt: false,
+ *   pgpPassword: null,
+ *   pgpSecret: null,
+ * });
+ * const sdk = new Sdk(config);
+ * ```
+ *
+ * @param {Config?} config The default configuration to use when a configuration
+ *   is not specified with individual SDK calls.
  */
 class Sdk {
 
+  /* eslint-disable-next-line valid-jsdoc */
   /**
-   *
-   * @param {Object} [config] The default configuration to use when a configuration
-   *   is not specified with individual SDK calls.
+   * Constructs an Sdk instance.
    */
   constructor(config) {
-    let cfg = config || null;
-    let apiAccessTokenCache = new ApiAccessTokenCache();
-    let usersCache = new UsersCache(apiAccessTokenCache);
+    const cfg = config || null;
+    const apiAccessTokenCache = new ApiAccessTokenCache();
+    const usersCache = new UsersCache(apiAccessTokenCache);
     this._ = {
       bees: new Bees(cfg, apiAccessTokenCache, usersCache),
       config: cfg,
@@ -43,14 +63,30 @@ class Sdk {
     };
   }
 
+  /**
+   * Returns a reference to a bees SDK instance.
+   *
+   * @readonly
+   * @returns {Bees}
+   */
   get bees() {
     return this._.bees;
   }
 
+  /**
+   * Returns a reference to the current configuration.
+   *
+   * @returns {Config}
+   */
   get config() {
     return this._.config;
   }
 
+  /**
+   * Sets the current configuration to the given configuration.
+   *
+   * @param {Config} config
+   */
   set config(config) {
     // TODO: Validate config.
     this._.bees.config = config;
@@ -61,22 +97,46 @@ class Sdk {
     this._.config = config;
   }
 
+  /**
+   * Returns a reference to a consents SDK instance.
+   *
+   * @readonly
+   * @returns {Consents}
+   */
   get consents() {
     return this._.consents;
   }
 
+  /**
+   * Returns a reference to a inbox SDK instance.
+   *
+   * @readonly
+   * @returns {Inbox}
+   */
   get inbox() {
     return this._.inbox;
   }
 
+  /**
+   * Returns a reference to a system SDK instance.
+   *
+   * @readonly
+   * @returns {System}
+   */
   get system() {
     return this._.system;
   }
 
+  /**
+   * Returns a reference to an users SDK instance.
+   *
+   * @readonly
+   * @returns {Users}
+   */
   get users() {
     return this._.users;
   }
 
 }// eo class Sdk
 
-export default Sdk;
+module.exports = Sdk;

@@ -1,4 +1,5 @@
-import EventSubscriptionsApi from '../../src/xcoobee/api/EventSubscriptionsApi';
+const EventSubscriptionsApi = require('../../src/xcoobee/api/EventSubscriptionsApi');
+const XcooBeeError = require('../../src/xcoobee/core/XcooBeeError');
 
 const TypeToEventTypeLut = {
   breach_bee_used: 'BreachBeeUsed',
@@ -17,35 +18,34 @@ const TypeToEventTypeLut = {
   user_message: 'UserMessage',
 };
 
-function toEventType(type) {
+const toEventType = (type) => {
   if (!(type in TypeToEventTypeLut)) {
     throw new XcooBeeError(`Invalid event type provided: "${type}".`);
   }
-  let eventType = TypeToEventTypeLut[type];
+  const eventType = TypeToEventTypeLut[type];
   return eventType;
-}
+};
 
-export async function addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId) {
+const addTestEventSubscriptions = async (apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId) => {
   const eventsMapping = {
     ConsentApproved: 'OnConsentApproved',
     DataDeclined: 'OnDataDeclined',
   };
   const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-  await EventSubscriptionsApi.addEventSubscription(
-    apiUrlRoot, apiAccessToken, eventsMapping, campaignId
-  );
-}
+  await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
+};
 
-export async function deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId) {
+const deleteAllEventSubscriptions = async (apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId) => {
   const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-  const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
-    apiUrlRoot, apiAccessToken, campaignId
-  );
-  const eventsMapping = {};
+  const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId);
+  const eventTypes = [];
   eventSubscriptionsPage.data.forEach(async (eventSubscription) => {
-    eventsMapping[toEventType(eventSubscription.event_type)] = eventSubscription.handler;
+    eventTypes.push(toEventType(eventSubscription.event_type));
   });
-  await EventSubscriptionsApi.deleteEventSubscription(
-    apiUrlRoot, apiAccessToken, eventsMapping, campaignId
-  );
-}
+  await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventTypes, campaignId);
+};
+
+module.exports = {
+  addTestEventSubscriptions,
+  deleteAllEventSubscriptions,
+};

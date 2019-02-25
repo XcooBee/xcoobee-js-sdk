@@ -1,17 +1,15 @@
-import Path from 'path';
+const Path = require('path');
 
-import ApiAccessTokenCache from '../../../../../src/xcoobee/api/ApiAccessTokenCache';
-import ConsentDataTypes from '../../../../../src/xcoobee/api/ConsentDataTypes';
-import ConsentStatuses from '../../../../../src/xcoobee/api/ConsentStatuses';
-import UsersCache from '../../../../../src/xcoobee/api/UsersCache';
+const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
+const ConsentDataTypes = require('../../../../../src/xcoobee/api/ConsentDataTypes');
+const ConsentStatuses = require('../../../../../src/xcoobee/api/ConsentStatuses');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
-import Config from '../../../../../src/xcoobee/sdk/Config';
-import Consents from '../../../../../src/xcoobee/sdk/Consents';
-import ErrorResponse from '../../../../../src/xcoobee/sdk/ErrorResponse';
-import PagingResponse from '../../../../../src/xcoobee/sdk/PagingResponse';
-import SuccessResponse from '../../../../../src/xcoobee/sdk/SuccessResponse';
-
-import { assertIsCursorLike, assertIso8601Like } from '../../../../lib/Utils';
+const Config = require('../../../../../src/xcoobee/sdk/Config');
+const Consents = require('../../../../../src/xcoobee/sdk/Consents');
+const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
+const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
+const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -19,22 +17,22 @@ const apiSecret = process.env.XCOOBEE__API_SECRET;
 
 jest.setTimeout(60000);
 
-describe('Consents', function () {
+describe('Consents', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('instance', function () {
+  describe('instance', () => {
 
-    describe('.confirmConsentChange', function () {
+    describe('.confirmConsentChange', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        xdescribe('and a known consent ID', function () {
+        xdescribe('and a known consent ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should return flag indicating if the consent change has been confirmed', async function (done) {
+            it('should return flag indicating if the consent change has been confirmed', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -54,9 +52,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should return flag indicating if the consent change has been confirmed', async function (done) {
+            it('should return flag indicating if the consent change has been confirmed', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -85,9 +83,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -96,11 +94,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentId = 'does not matter';
-          const response = await consentsSdk.confirmConsentChange(consentId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.confirmConsentChange(consentId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -108,15 +112,15 @@ describe('Consents', function () {
 
     });// eo describe('.confirmConsentChange')
 
-    describe('.confirmDataDelete', function () {
+    describe('.confirmDataDelete', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        xdescribe('and a known consent ID', function () {
+        xdescribe('and a known consent ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should return flag indicating if the data has been deleted/purged', async function (done) {
+            it('should return flag indicating if the data has been deleted/purged', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -136,9 +140,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should return flag indicating if the data has been deleted/purged', async function (done) {
+            it('should return flag indicating if the data has been deleted/purged', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -167,9 +171,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -178,11 +182,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentId = 'does not matter';
-          const response = await consentsSdk.confirmDataDelete(consentId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.confirmDataDelete(consentId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -190,15 +200,15 @@ describe('Consents', function () {
 
     });// eo describe('.confirmDataDelete')
 
-    describe('.getCampaignInfo', function () {
+    describe('.getCampaignInfo', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('and a known campaign ID', function () {
+        describe('and a known campaign ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with expected campaign info', async function (done) {
+            it('should fetch and return with expected campaign info', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -232,9 +242,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with expected campaign info', async function (done) {
+            it('should fetch and return with expected campaign info', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -277,9 +287,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -288,11 +298,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const campaignId = 'does not matter';
-          const response = await consentsSdk.getCampaignInfo(campaignId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.getCampaignInfo(campaignId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -300,15 +316,15 @@ describe('Consents', function () {
 
     });// eo describe('.getCampaignInfo')
 
-    describe('.getConsentData', function () {
+    describe('.getConsentData', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        xdescribe('and a known consent ID', function () {
+        xdescribe('and a known consent ID', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with consent info', async function (done) {
+            it('should fetch and return with consent info', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -329,9 +345,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with consent info', async function (done) {
+            it('should fetch and return with consent info', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -361,9 +377,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -372,11 +388,17 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentId = 'does not matter';
-          const response = await consentsSdk.getConsentData(consentId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.getConsentData(consentId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -384,13 +406,13 @@ describe('Consents', function () {
 
     });// eo describe('.getConsentData')
 
-    describe('.getCookieConsent', function () {
+    describe('.getCookieConsent', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with cookie consent info', async function (done) {
+          it('should fetch and return with cookie consent info', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -416,9 +438,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with cookie consent info', async function (done) {
+          it('should fetch and return with cookie consent info', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -451,9 +473,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -463,11 +485,17 @@ describe('Consents', function () {
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const xcoobeeId = 'does not matter';
           const campaignId = 'does not matter';
-          const response = await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -475,13 +503,13 @@ describe('Consents', function () {
 
     });// eo describe('.getCookieConsent')
 
-    describe('.listCampaigns', function () {
+    describe('.listCampaigns', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -497,7 +525,7 @@ describe('Consents', function () {
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.page_info).toBeDefined();
-            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            expect(result.page_info.end_cursor).toBeNull();
             expect(result.page_info.has_next_page).toBeNull();
             const campaigns = result.data;
             expect(campaigns).toBeInstanceOf(Array);
@@ -513,9 +541,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should fetch and return with the user\'s events', async function (done) {
+          it('should fetch and return with the user\'s events', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -528,7 +556,7 @@ describe('Consents', function () {
             });
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-            const response = await consentsSdk.listCampaigns(null, null, overridingConfig);
+            const response = await consentsSdk.listCampaigns(overridingConfig);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
             const nextPageResponse = await response.getNextPage();
@@ -536,7 +564,7 @@ describe('Consents', function () {
             const { result } = response;
             expect(result).toBeDefined();
             expect(result.page_info).toBeDefined();
-            expect(result.page_info.end_cursor).toBe('KGyAdqa9//owg9NvMGdRlTNrkAet748qYDRsNXlFtGtmWL/kfZ0+ep2MoZ1UKSpSOigHASNIf3iMOlb+bp1RGE9Xct534ynXaUqDDK9Mc8w=');
+            expect(result.page_info.end_cursor).toBeNull();
             expect(result.page_info.has_next_page).toBeNull();
             const campaigns = result.data;
             expect(campaigns).toBeInstanceOf(Array);
@@ -554,9 +582,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -564,11 +592,16 @@ describe('Consents', function () {
           });
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const response = await consentsSdk.listCampaigns();
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.listCampaigns();
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
 
           done();
         });// eo it
@@ -577,15 +610,15 @@ describe('Consents', function () {
 
     });// eo describe('.listCampaigns')
 
-    describe('.listConsents', function () {
+    describe('.listConsents', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('but no consent status', function () {
+        describe('but no consent status', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the user\'s consents of any status', async function (done) {
+            it('should fetch and return with the user\'s consents of any status', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -601,29 +634,30 @@ describe('Consents', function () {
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
-              assertIsCursorLike(result.page_info.end_cursor);
+              expect(result.page_info.end_cursor).toBeNull();
               expect(result.page_info.has_next_page).toBeNull();
               const consents = result.data;
               expect(consents).toBeInstanceOf(Array);
-              expect(consents.length).toBeGreaterThan(0);
-              let consent = consents[0];
-              expect('consent_cursor' in consent).toBe(true);
-              assertIsCursorLike(consent.consent_cursor);
-              expect('consent_status' in consent).toBe(true);
-              expect('date_c' in consent).toBe(true);
-              assertIso8601Like(consent.date_c)
-              expect('date_e' in consent).toBe(true);
-              assertIso8601Like(consent.date_e)
-              expect('user_xcoobee_id' in consent).toBe(true);
+              expect(consents.length).toBe(100);
+              // expect(consents.length).toBeGreaterThan(0);
+              // let consent = consents[0];
+              // expect('consent_cursor' in consent).toBe(true);
+              // assertIsCursorLike(consent.consent_cursor);
+              // expect('consent_status' in consent).toBe(true);
+              // expect('date_c' in consent).toBe(true);
+              // assertIso8601Like(consent.date_c)
+              // expect('date_e' in consent).toBe(true);
+              // assertIso8601Like(consent.date_e)
+              // expect('user_xcoobee_id' in consent).toBe(true);
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with the user\'s consents of any status', async function (done) {
+            it('should fetch and return with the user\'s consents of any status', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -636,7 +670,7 @@ describe('Consents', function () {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(null, null, null, overridingConfig);
+              const response = await consentsSdk.listConsents(null, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -644,87 +678,34 @@ describe('Consents', function () {
               const { result } = response;
               expect(result).toBeDefined();
               expect(result.page_info).toBeDefined();
-              assertIsCursorLike(result.page_info.end_cursor);
+              expect(result.page_info.end_cursor).toBeNull();
               expect(result.page_info.has_next_page).toBeNull();
               const consents = result.data;
               expect(consents).toBeInstanceOf(Array);
-              expect(consents.length).toBeGreaterThan(0);
-              let consent = consents[0];
-              expect('consent_cursor' in consent).toBe(true);
-              assertIsCursorLike(consent.consent_cursor);
-              expect('consent_status' in consent).toBe(true);
-              expect('date_c' in consent).toBe(true);
-              assertIso8601Like(consent.date_c)
-              expect('date_e' in consent).toBe(true);
-              assertIso8601Like(consent.date_e)
-              expect('user_xcoobee_id' in consent).toBe(true);
+              expect(consents.length).toBe(100);
+              // expect(consents.length).toBeGreaterThan(0);
+              // let consent = consents[0];
+              // expect('consent_cursor' in consent).toBe(true);
+              // assertIsCursorLike(consent.consent_cursor);
+              // expect('consent_status' in consent).toBe(true);
+              // expect('date_c' in consent).toBe(true);
+              // assertIso8601Like(consent.date_c)
+              // expect('date_e' in consent).toBe(true);
+              // assertIso8601Like(consent.date_e)
+              // expect('user_xcoobee_id' in consent).toBe(true);
 
               done();
             });// eo it
 
           });// eo describe
 
-          describe('and called with a limit', function () {
-
-            describe('using default config', function () {
-
-              it('should fetch and return with the user\'s consents of any status', async function (done) {
-                const defaultConfig = new Config({
-                  apiKey,
-                  apiSecret,
-                  apiUrlRoot,
-                });
-
-                const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-                const response = await consentsSdk.listConsents(null, null, 25);
-                expect(response).toBeInstanceOf(PagingResponse);
-                let { result } = response;
-                expect(result).toBeDefined();
-                let consents = result.data;
-                expect(consents).toBeInstanceOf(Array);
-                expect(consents.length).toBe(25);
-                let consent = consents[0];
-                expect('consent_cursor' in consent).toBe(true);
-                assertIsCursorLike(consent.consent_cursor);
-                expect('consent_status' in consent).toBe(true);
-                expect('date_c' in consent).toBe(true);
-                assertIso8601Like(consent.date_c)
-                expect('date_e' in consent).toBe(true);
-                assertIso8601Like(consent.date_e)
-                expect('user_xcoobee_id' in consent).toBe(true);
-
-                expect(response.hasNextPage()).toBe(true);
-                let nextPageResponse = await response.getNextPage();
-                expect(nextPageResponse).toBeInstanceOf(PagingResponse);
-                result = nextPageResponse.result;
-                expect(result).toBeDefined();
-                consents = result.data;
-                expect(consents).toBeInstanceOf(Array);
-                expect(consents.length).toBe(25);
-
-                expect(nextPageResponse.hasNextPage()).toBe(true);
-                nextPageResponse = await nextPageResponse.getNextPage();
-                expect(nextPageResponse).toBeInstanceOf(PagingResponse);
-                result = nextPageResponse.result;
-                expect(result).toBeDefined();
-                consents = result.data;
-                expect(consents).toBeInstanceOf(Array);
-                expect(consents.length).toBeGreaterThan(0);
-
-                done();
-              });// eo it
-
-            });// eo describe
-
-          });// eo describe
-
         });// eo describe
 
-        describe('and active consent status', function () {
+        describe('and active consent status', () => {
 
-          describe('using default config', function () {
+          describe('using default config', () => {
 
-            it('should fetch and return with the user\'s active consents', async function (done) {
+            it('should fetch and return with the user\'s active consents', async (done) => {
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
@@ -732,7 +713,7 @@ describe('Consents', function () {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE);
+              const response = await consentsSdk.listConsents([ConsentStatuses.ACTIVE]);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -760,9 +741,9 @@ describe('Consents', function () {
 
           });// eo describe
 
-          describe('using overriding config', function () {
+          describe('using overriding config', () => {
 
-            it('should fetch and return with the user\'s active consents', async function (done) {
+            it('should fetch and return with the user\'s active consents', async (done) => {
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -775,7 +756,7 @@ describe('Consents', function () {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(ConsentStatuses.ACTIVE, null, null, overridingConfig);
+              const response = await consentsSdk.listConsents([ConsentStatuses.ACTIVE], overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -807,9 +788,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -818,11 +799,16 @@ describe('Consents', function () {
 
           const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
           const consentStatus = 'does not matter';
-          const response = await consentsSdk.listConsents(consentStatus);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.listConsents(consentStatus);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
 
           done();
         });// eo it
@@ -831,13 +817,13 @@ describe('Consents', function () {
 
     });// eo describe('.listConsents')
 
-    describe('.requestConsent', function () {
+    describe('.requestConsent', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should succeed and return with given reference', async function (done) {
+          it('should succeed and return with given reference', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -859,9 +845,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should succeed and return with given reference', async function (done) {
+          it('should succeed and return with given reference', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -890,9 +876,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -903,10 +889,17 @@ describe('Consents', function () {
           const xcoobeeId = 'does not matter';
           const campaignId = 'does not matter';
           const referenceId = 'does not matter';
-          const response = await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+
+          try {
+            await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 
@@ -914,13 +907,13 @@ describe('Consents', function () {
 
     });// eo describe('.requestConsent')
 
-    describe('.setUserDataResponse', function () {
+    describe('.setUserDataResponse', () => {
 
-      describe('called with a valid API key/secret pair', function () {
+      describe('called with a valid API key/secret pair', () => {
 
-        describe('using default config', function () {
+        describe('using default config', () => {
 
-          it('should succeed and return progress report', async function (done) {
+          it('should succeed and return progress report', async (done) => {
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
@@ -932,8 +925,7 @@ describe('Consents', function () {
             const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
             const referenceId = 'someUniqueReferenceId';
             const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.txt');
-            const files = [file];
-            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
+            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, file);
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
             expect(result).toBeDefined();
@@ -941,7 +933,7 @@ describe('Consents', function () {
             expect(result.progress.length).toBe(3);
             expect(result.progress[0]).toBe('successfully sent message');
             expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.txt/);
-            expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
             expect(result.ref_id).toBeDefined();
 
             done();
@@ -949,9 +941,9 @@ describe('Consents', function () {
 
         });// eo describe
 
-        describe('using overriding config', function () {
+        describe('using overriding config', () => {
 
-          it('should succeed and return progress report', async function (done) {
+          it('should succeed and return progress report', async (done) => {
             const defaultConfig = new Config({
               apiKey: 'should_be_unused',
               apiSecret: 'should_be_unused',
@@ -968,8 +960,7 @@ describe('Consents', function () {
             const consentId = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
             const referenceId = 'someUniqueReferenceId';
             const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.dat');
-            const files = [file];
-            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files, overridingConfig);
+            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, file, overridingConfig);
             expect(response).toBeInstanceOf(SuccessResponse);
             const { result } = response;
             expect(result).toBeDefined();
@@ -977,7 +968,7 @@ describe('Consents', function () {
             expect(result.progress.length).toBe(3);
             expect(result.progress[0]).toBe('successfully sent message');
             expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.dat/);
-            expect(result.progress[2]).toBe('successfully sent successfully uploaded files to destination');
+            expect(result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
             expect(result.ref_id).toBeDefined();
 
             done();
@@ -987,9 +978,9 @@ describe('Consents', function () {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', function () {
+      describe('called with an invalid API key/secret pair', () => {
 
-        it('should return with an error response', async function (done) {
+        it('should return with an error response', async (done) => {
           const defaultConfig = new Config({
             apiKey: 'invalid',
             apiSecret: 'invalid',
@@ -1000,12 +991,18 @@ describe('Consents', function () {
           const message = 'does not matter';
           const consentId = 'does not matter';
           const referenceId = 'does not matter';
-          const files = [];
-          const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, files);
-          expect(response).toBeDefined();
-          expect(response).toBeInstanceOf(ErrorResponse);
-          expect(response.code).toBe(400);
-          expect(response.error.message).toBe('Unable to get an API access token.');
+          const file = null;
+
+          try {
+            await consentsSdk.setUserDataResponse(message, consentId, referenceId, file);
+            // This should not be called.
+            expect(true).toBe(false);
+          } catch (response) {
+            expect(response).toBeInstanceOf(ErrorResponse);
+            expect(response.code).toBe(400);
+            expect(response.error.message).toBe('Unable to get an API access token.');
+          }
+
           done();
         });// eo it
 

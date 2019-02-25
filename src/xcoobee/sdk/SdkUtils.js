@@ -1,5 +1,5 @@
-import ErrorResponse from './ErrorResponse';
-import PagingResponse from './PagingResponse';
+const ErrorResponse = require('./ErrorResponse');
+const PagingResponse = require('./PagingResponse');
 
 /**
  * Resolves the API config to use based on given input.
@@ -10,11 +10,10 @@ import PagingResponse from './PagingResponse';
  * @returns {ApiCfg}
  */
 function resolveApiCfg(overridingConfig, defaultConfig) {
-  if (
-    overridingConfig &&
-    'apiKey' in overridingConfig &&
-    'apiSecret' in overridingConfig &&
-    'apiUrlRoot' in overridingConfig
+  if (overridingConfig
+    && 'apiKey' in overridingConfig
+    && 'apiSecret' in overridingConfig
+    && 'apiUrlRoot' in overridingConfig
   ) {
     return {
       apiKey: overridingConfig.apiKey,
@@ -22,11 +21,10 @@ function resolveApiCfg(overridingConfig, defaultConfig) {
       apiUrlRoot: overridingConfig.apiUrlRoot,
     };
   }
-  if (
-    defaultConfig &&
-    'apiKey' in defaultConfig &&
-    'apiSecret' in defaultConfig &&
-    'apiUrlRoot' in defaultConfig
+  if (defaultConfig
+    && 'apiKey' in defaultConfig
+    && 'apiSecret' in defaultConfig
+    && 'apiUrlRoot' in defaultConfig
   ) {
     return {
       apiKey: defaultConfig.apiKey,
@@ -43,6 +41,8 @@ function resolveApiCfg(overridingConfig, defaultConfig) {
  * @param {string} [campaignId]
  * @param {Config} [overridingConfig]
  * @param {Config} [defaultConfig]
+ *
+ * @returns {string} The resolved campaign ID.
  */
 function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
   if (campaignId && typeof campaignId === 'string') {
@@ -53,6 +53,44 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
   }
   if (defaultConfig && typeof defaultConfig.campaignId === 'string') {
     return defaultConfig.campaignId;
+  }
+  return null;
+}
+
+/**
+ * Resolves the SDK config to use based on given input.
+ *
+ * @param {Config} [overridingConfig]
+ * @param {Config} [defaultConfig]
+ *
+ * @returns {ApiCfg}
+ */
+function resolveSdkCfg(overridingConfig, defaultConfig) {
+  if (overridingConfig
+    && 'apiKey' in overridingConfig
+    && 'apiSecret' in overridingConfig
+    && 'apiUrlRoot' in overridingConfig
+  ) {
+    return {
+      apiKey: overridingConfig.apiKey,
+      apiSecret: overridingConfig.apiSecret,
+      apiUrlRoot: overridingConfig.apiUrlRoot,
+      pgpPassword: overridingConfig.pgpPassword,
+      pgpSecret: overridingConfig.pgpSecret,
+    };
+  }
+  if (defaultConfig
+    && 'apiKey' in defaultConfig
+    && 'apiSecret' in defaultConfig
+    && 'apiUrlRoot' in defaultConfig
+  ) {
+    return {
+      apiKey: defaultConfig.apiKey,
+      apiSecret: defaultConfig.apiSecret,
+      apiUrlRoot: defaultConfig.apiUrlRoot,
+      pgpPassword: defaultConfig.pgpPassword,
+      pgpSecret: defaultConfig.pgpSecret,
+    };
   }
   return null;
 }
@@ -72,15 +110,17 @@ function resolveCampaignId(campaignId, overridingConfig, defaultConfig) {
 async function startPaging(fetchPage, apiCfg, params) {
   try {
     const firstPage = await fetchPage(apiCfg, { ...params, after: null });
+
     const response = new PagingResponse(fetchPage, firstPage, apiCfg, params);
     return response;
   } catch (err) {
-    return new ErrorResponse(400, err);
+    throw new ErrorResponse(400, err);
   }
 }
 
-export default {
+module.exports = {
   resolveApiCfg,
   resolveCampaignId,
+  resolveSdkCfg,
   startPaging,
 };
