@@ -17,6 +17,41 @@ connecting you to your regional endpoint automatically.
 There is detailed and extensive API documentation available on our
 [documentation site](https://www.xcoobee.com/docs).
 
+## Installation and Use
+
+### For Node JS projects:
+
+- `npm install xcoobee-sdk --save`
+
+### For browser projects:
+
+Clone repo from GitHub.
+
+`git clone https://github.com/XcooBee/xcoobee-js-sdk.git`
+
+then run the following node commands
+
+```
+npm install
+npm run build
+```
+
+You should have a minified js file like `xcoobee-sdk-0.9.5.web.js` in the `/dist` directory. You can use it in your web project via script tags. 
+
+```
+<script src='xcoobee-sdk-0.9.5.web.js' />
+```
+
+Don't forget that if you need to use the openpgp to decrypt payloads you need to load the OpenPGP library files as well. Either via the openpgp CDN or from your own site. You can use cdnjs via `https://cdnjs.com/libraries/openpgp`.
+
+Example of load with openpgp library all from your own source:
+
+```
+<script src='openpgp.min.js' />
+<script src='openpgp.worker.js' />
+<script src='xcoobee-sdk-0.9.5.web.js' />
+
+```
 
 ## call limits
 
@@ -220,7 +255,7 @@ You can use the following command line to run unit test to validate the project
 When your initial developer account is created it will be populated with data so that you can test the project against actual data and system.
 You will have to configure your `__tests__\integration\.env.local` file prior to running the integration tests.
 
-You can use the following command line to run the integration tests for this project.
+You can use a command line to run the integration tests for this project. You will need to **clone the repo** from GitHub and run the following command line:
 
 `npm run test:integration`
 
