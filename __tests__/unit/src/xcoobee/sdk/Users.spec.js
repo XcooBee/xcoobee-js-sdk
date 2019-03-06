@@ -124,7 +124,7 @@ describe('Users', () => {
     it('should return ErrorResponse if any errors', () => {
       ConversationsApi.sendUserMessage.mockReturnValue(Promise.reject({ message: 'error' }));
 
-      return users.sendUserMessage('message', 'consentId')
+      return users.sendUserMessage('message', { consentId: 'consentId' })
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
           expect(err).toBeInstanceOf(ErrorResponse);
@@ -136,9 +136,9 @@ describe('Users', () => {
     it('should return response with added note', () => {
       ConversationsApi.sendUserMessage.mockReturnValue(Promise.resolve({ note_text: 'message' }));
 
-      return users.sendUserMessage('message', 'consentId')
+      return users.sendUserMessage('message', { consentId: 'consentId' })
         .then((res) => {
-          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'userId', 'consentId', null);
+          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', { consentId: 'consentId' });
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
