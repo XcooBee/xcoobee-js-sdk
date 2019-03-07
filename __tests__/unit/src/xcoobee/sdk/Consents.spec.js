@@ -182,7 +182,7 @@ describe('Consents', () => {
       return consents.setUserDataResponse('message', 'consentId')
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
-          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'userId', 'consentId', null);
+          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', { consentId: 'consentId' });
 
           expect(err).toBeInstanceOf(ErrorResponse);
           expect(err.code).toBe(400);
@@ -198,7 +198,7 @@ describe('Consents', () => {
 
       return consents.setUserDataResponse('message', 'consentId', 'refId', 'test.png')
         .then((res) => {
-          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'userId', 'consentId', null);
+          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', { consentId: 'consentId' });
           expect(FileUtils.upload).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', ['test.png']);
           expect(ConsentsApi.resolveXcoobeeId).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'consentId');
           expect(DirectiveApi.addDirective).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', {
@@ -225,7 +225,7 @@ describe('Consents', () => {
       return consents.setUserDataResponse('message', 'consentId', 'refId', ['test'])
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
-          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'userId', 'consentId', null);
+          expect(ConversationsApi.sendUserMessage).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', { consentId: 'consentId' });
           expect(FileUtils.upload).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', ['test.png']);
           expect(ConsentsApi.resolveXcoobeeId).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'consentId');
 

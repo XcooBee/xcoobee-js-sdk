@@ -203,8 +203,10 @@ class Users {
    *
    * @async
    * @param {string} message
-   * @param {*} consentId
-   * @param {*} breachId
+   * @param {Reference} reference - at least one of following keys should be provided
+   * @property {string} consentId
+   * @property {string} ticketId
+   * @property {string} requestRef - data request reference
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse, ErrorResponse>}
@@ -219,18 +221,14 @@ class Users {
    *
    * @throws {XcooBeeError}
    */
-  async sendUserMessage(message, consentId, breachId = null, config = null) {
+  async sendUserMessage(message, reference, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
-      const userCursor = user.cursor;
-      const note = await ConversationsApi.sendUserMessage(
-        apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId
-      );
+      const note = await ConversationsApi.sendUserMessage(apiUrlRoot, apiAccessToken, message, reference);
       const response = new SuccessResponse({ data: note });
       return response;
     } catch (err) {
