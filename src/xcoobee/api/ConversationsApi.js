@@ -149,8 +149,10 @@ const getTargetId = (apiUrlRoot, apiAccessToken, referenceId, type) => {
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} message
- * @param {object} reference
- *
+ * @param {Object} reference
+ * @param {string} [reference.consentId]
+ * @param {string} [reference.ticketId]
+ * @param {string} [reference.requestRef]
  *
  * @returns {Promise<Note>}
  *

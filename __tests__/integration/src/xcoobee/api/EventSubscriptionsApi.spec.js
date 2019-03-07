@@ -1,6 +1,9 @@
 const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
 const EventSubscriptionsApi = require('../../../../../src/xcoobee/api/EventSubscriptionsApi');
 
+const CampaignApi = require('../../../../../src/xcoobee/api/CampaignApi');
+const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
+
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
 const { addTestEventSubscriptions, deleteAllEventSubscriptions } = require('../../../../lib/EventSubscriptionUtils');
@@ -15,9 +18,18 @@ jest.setTimeout(60000);
 describe('EventSubscriptionsApi', () => {
 
   const apiAccessTokenCache = new ApiAccessTokenCache();
+  const usersCache = new UsersCache(apiAccessTokenCache);
+
+  const getCampaignId = async () => {
+    const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+    const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+    const userCursor = user.cursor;
+    const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
+    return campaigns.data[0].campaign_cursor;
+  };
 
   beforeAll(async (done) => {
-    const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+    const campaignId = await getCampaignId();
     await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
     done();
@@ -32,7 +44,7 @@ describe('EventSubscriptionsApi', () => {
         describe('and a valid events mapping', () => {
 
           afterEach(async (done) => {
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
@@ -44,7 +56,7 @@ describe('EventSubscriptionsApi', () => {
               ConsentApproved: 'OnConsentApproved',
               DataDeclined: 'OnDataDeclined',
             };
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             const eventSubscriptionsPage = await EventSubscriptionsApi.addEventSubscription(
               apiUrlRoot, apiAccessToken, eventsMapping, campaignId
             );
@@ -52,7 +64,7 @@ describe('EventSubscriptionsApi', () => {
             expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
             expect(eventSubscriptionsPage.data.length).toBe(2);
             let eventSubscription = eventSubscriptionsPage.data[0];
-            expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+            expect(eventSubscription.campaign_cursor).toBe(campaignId);
             // assertIso8601Like(eventSubscription.date_c);
             expect(eventSubscription.date_c).toBe(null);
             if (eventSubscription.event_type === 'consent_approved') {
@@ -67,7 +79,7 @@ describe('EventSubscriptionsApi', () => {
             expect(eventSubscriptionsPage.page_info).toBe(null);
 
             eventSubscription = eventSubscriptionsPage.data[1];
-            expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+            expect(eventSubscription.campaign_cursor).toBe(campaignId);
             // assertIso8601Like(eventSubscription.date_c);
             expect(eventSubscription.date_c).toBe(null);
             if (eventSubscription.event_type === 'consent_approved') {
@@ -89,7 +101,7 @@ describe('EventSubscriptionsApi', () => {
             const eventsMapping = {
               ConsentApproved: 'OnConsentApproved',
             };
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             await EventSubscriptionsApi.addEventSubscription(
               apiUrlRoot, apiAccessToken, eventsMapping, campaignId
             );
@@ -117,7 +129,7 @@ describe('EventSubscriptionsApi', () => {
             const eventsMapping = {
               Invalid: 'invalid',
             };
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             try {
               await EventSubscriptionsApi.addEventSubscription(
                 apiUrlRoot, apiAccessToken, eventsMapping, campaignId
@@ -173,7 +185,7 @@ describe('EventSubscriptionsApi', () => {
         describe('and a valid events mapping', () => {
 
           beforeEach(async (done) => {
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
@@ -182,7 +194,7 @@ describe('EventSubscriptionsApi', () => {
           it('should delete both of the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             const eventTypes = ['ConsentApproved', 'DataDeclined'];
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             const result = await EventSubscriptionsApi.deleteEventSubscription(
               apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
@@ -195,7 +207,7 @@ describe('EventSubscriptionsApi', () => {
           it('should delete each of the event subscriptions', async (done) => {
             const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
             let eventTypes = ['ConsentApproved'];
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             let result = await EventSubscriptionsApi.deleteEventSubscription(
               apiUrlRoot, apiAccessToken, eventTypes, campaignId
             );
@@ -218,7 +230,7 @@ describe('EventSubscriptionsApi', () => {
           it('should throw an error', async (done) => {
             const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
             const eventTypes = ['Invalid'];
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             try {
               await EventSubscriptionsApi.deleteEventSubscription(
                 apiUrlRoot, apiAccessToken, eventTypes, campaignId
@@ -270,14 +282,14 @@ describe('EventSubscriptionsApi', () => {
       describe('and called with a known campaign ID', () => {
 
         beforeEach(async (done) => {
-          const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+          const campaignId = await getCampaignId();
           await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
           done();
         });
 
         afterEach(async (done) => {
-          const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+          const campaignId = await getCampaignId();
           await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
           done();
@@ -285,7 +297,7 @@ describe('EventSubscriptionsApi', () => {
 
         it('should return with a list of event subscriptions', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+          const campaignId = await getCampaignId();
           const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
             apiUrlRoot, apiAccessToken, campaignId
           );
@@ -294,7 +306,7 @@ describe('EventSubscriptionsApi', () => {
           expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
           expect(eventSubscriptionsPage.data.length).toBe(2);
           let eventSubscription = eventSubscriptionsPage.data[0];
-          expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+          expect(eventSubscription.campaign_cursor).toBe(campaignId);
           assertIso8601Like(eventSubscription.date_c);
           if (eventSubscription.event_type === 'consent_approved') {
             expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -307,7 +319,7 @@ describe('EventSubscriptionsApi', () => {
           assertIsCursorLike(eventSubscription.owner_cursor);
 
           eventSubscription = eventSubscriptionsPage.data[1];
-          expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+          expect(eventSubscription.campaign_cursor).toBe(campaignId);
           assertIso8601Like(eventSubscription.date_c);
           if (eventSubscription.event_type === 'consent_approved') {
             expect(eventSubscription.handler).toBe('OnConsentApproved');

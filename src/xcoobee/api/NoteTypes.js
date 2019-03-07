@@ -1,26 +1,26 @@
 const BREACH = 'breach';
 const BROADCAST = 'broadcast';
-const CONSENT = 'consent';
-const TICKET = 'ticket';
-const DATA_REQUEST = 'data_request';
 const COMPLAINT = 'complaint';
+const CONSENT = 'consent';
+const DATA_REQUEST = 'data_request';
+const TICKET = 'ticket';
 
 const values = Object.freeze([
   BREACH,
   BROADCAST,
-  CONSENT,
-  TICKET,
-  DATA_REQUEST,
   COMPLAINT,
+  CONSENT,
+  DATA_REQUEST,
+  TICKET,
 ]);
 
 const NoteTypes = Object.freeze({
   BREACH,
   BROADCAST,
-  CONSENT,
-  TICKET,
-  DATA_REQUEST,
   COMPLAINT,
+  CONSENT,
+  DATA_REQUEST,
+  TICKET,
   values,
 });
 

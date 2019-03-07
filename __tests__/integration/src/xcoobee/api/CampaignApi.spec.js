@@ -1,6 +1,7 @@
 const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
 const CampaignApi = require('../../../../../src/xcoobee/api/CampaignApi');
 const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
@@ -23,17 +24,21 @@ describe('CampaignApi', () => {
 
         it('should return with expected campaign info', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const campaignCursor = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+          const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+          const userCursor = user.cursor;
+          const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
+          const campaignCursor = campaigns.data[0].campaign_cursor;
           const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, campaignCursor);
           expect(result).toBeDefined();
           expect(result.campaign).toBeDefined();
           const { campaign } = result;
           expect(campaign).toBeDefined();
           expect(campaign.campaign_description.text).toBe(undefined);
-          expect(campaign.campaign_name).toBe('xcoobee test campaign');
+          expect(campaign.campaign_name).toBe('Test campaign');
           expect(campaign.campaign_title.text).toBe(undefined);
           expect(campaign.date_c).toBeDefined();
           expect(campaign.date_e).toBeDefined();
+          assertIso8601Like(campaign.date_c);
           expect(campaign.email_targets).toBeInstanceOf(Array);
           expect(campaign.email_targets.length).toBe(0);
           expect(campaign.endpoint).toBe(null);
@@ -90,8 +95,8 @@ describe('CampaignApi', () => {
         expect(campaigns.length).toBe(1);
         const campaign = campaigns[0];
         expect(campaign).toBeDefined();
-        expect(campaign.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
-        expect(campaign.campaign_name).toBe('xcoobee test campaign');
+        assertIsCursorLike(campaign.campaign_cursor);
+        expect(campaign.campaign_name).toBe('Test campaign');
         expect(campaign.status).toBe('active');
 
         done();

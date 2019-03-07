@@ -410,10 +410,7 @@ class Consents {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
-      const breachId = null;
-      await ConversationsApi.sendUserMessage(
-        apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId
-      );
+      await ConversationsApi.sendUserMessage(apiUrlRoot, apiAccessToken, message, { consentId });
       progress.push('successfully sent message');
 
       const result = { progress, ref_id: null };

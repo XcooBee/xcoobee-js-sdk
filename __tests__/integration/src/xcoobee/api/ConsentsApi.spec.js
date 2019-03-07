@@ -1,8 +1,9 @@
 const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
 const ConsentsApi = require('../../../../../src/xcoobee/api/ConsentsApi');
+const CampaignApi = require('../../../../../src/xcoobee/api/CampaignApi');
 const ConsentDataTypes = require('../../../../../src/xcoobee/api/ConsentDataTypes');
-const ConsentStatuses = require('../../../../../src/xcoobee/api/ConsentStatuses');
 const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
+const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
 const apiKey = process.env.XCOOBEE__API_KEY;
@@ -15,13 +16,16 @@ describe('ConsentsApi', () => {
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  xdescribe('.confirmConsentChange', () => {
+  describe('.confirmConsentChange', () => {
 
     describe('called with a valid API access token', () => {
 
       it('should return flag indicating if the consent change has been confirmed', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+        const consentCursor = consents.data[0].consent_cursor;
         const result = await ConsentsApi.confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor);
         expect(result).toBeDefined();
         expect(result.confirmed).toBe(true);
@@ -33,13 +37,16 @@ describe('ConsentsApi', () => {
 
   });// eo describe('.confirmConsentChange')
 
-  xdescribe('.confirmDataDelete', () => {
+  describe('.confirmDataDelete', () => {
 
     describe('called with a valid API access token', () => {
 
       it('should return flag indicating if the data has been deleted/purged', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+        const consentCursor = consents.data[0].consent_cursor;
         const result = await ConsentsApi.confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor);
         expect(result).toBeDefined();
         expect(result.confirmed).toBe(true);
@@ -57,20 +64,21 @@ describe('ConsentsApi', () => {
 
       it('should fetch and return with cookie consent info', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const xcoobeeId = '~SDKTester_Developer';
         const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
         const userCursor = user.cursor;
-        const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+        const xcoobeeId = user.xcoobee_id;
+        const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
+        const campaignCursor = campaigns.data[0].campaign_cursor;
         const result = await ConsentsApi.getCookieConsent(
-          apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignId
+          apiUrlRoot, apiAccessToken, xcoobeeId, userCursor, campaignCursor
         );
         expect(result).toBeDefined();
         expect(result.cookie_consents).toBeDefined();
         const { cookie_consents } = result;
-        expect(typeof cookie_consents[ConsentDataTypes.ADVERTISING_COOKIE]).toBe('boolean');
-        expect(typeof cookie_consents[ConsentDataTypes.APPLICATION_COOKIE]).toBe('boolean');
-        expect(typeof cookie_consents[ConsentDataTypes.STATISTICS_COOKIE]).toBe('boolean');
-        expect(typeof cookie_consents[ConsentDataTypes.USAGE_COOKIE]).toBe('boolean');
+        expect(cookie_consents[ConsentDataTypes.ADVERTISING_COOKIE]).toBe(false);
+        expect(cookie_consents[ConsentDataTypes.APPLICATION_COOKIE]).toBe(false);
+        expect(cookie_consents[ConsentDataTypes.STATISTICS_COOKIE]).toBe(false);
+        expect(cookie_consents[ConsentDataTypes.USAGE_COOKIE]).toBe(false);
 
         done();
       });// eo it
@@ -79,36 +87,35 @@ describe('ConsentsApi', () => {
 
   });// eo describe('.getCookieConsent')
 
-  xdescribe('.getConsentData', () => {
+  describe('.getConsentData', () => {
 
     describe('called with a valid API access token', () => {
 
       it('should fetch and return with consent info', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const consentCursor = 'known'; // FIXME: TODO: Get a legit consent cursor.
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+        const consentCursor = consents.data[0].consent_cursor;
         const result = await ConsentsApi.getConsentData(apiUrlRoot, apiAccessToken, consentCursor);
         expect(result).toBeDefined();
         const { consent } = result;
         expect(consent).toBeDefined();
-        // expect('consent_description' in consent).toBe(true);
-        // expect('consent_details' in consent).toBe(true);
-        // expect('datatype' in consent.consent_details).toBe(true);
-        // expect('consent_name' in consent).toBe(true);
-        // expect('consent_status' in consent).toBe(true);
-        // expect('consent_type' in consent).toBe(true);
-        // expect('date_c' in consent).toBe(true);
-        // assertIso8601Like(consent.date_c)
-        // expect('date_e' in consent).toBe(true);
-        // assertIso8601Like(consent.date_e)
-        // expect(consent.request_data_types).toBeInstanceOf(Array);
-        // expect(consent.request_data_types.length).toBe(0)
-        // expect('request_owner' in consent).toBe(true);
-        // expect(consent.required_data_types).toBeInstanceOf(Array);
-        // expect(consent.required_data_types.length).toBe(0)
-        // expect('user_cursor' in consent).toBe(true);
-        // assertIsCursorLike(consent.user_cursor);
-        // expect('user_display_name' in consent).toBe(true);
-        // expect('user_xcoobee_id' in consent).toBe(true);
+        expect(consent.consent_description).toBe('Test campaign description');
+        expect('consent_details' in consent).toBe(true);
+        expect('consent_name' in consent).toBe(true);
+        expect('consent_status' in consent).toBe(true);
+        expect('consent_type' in consent).toBe(true);
+        expect('date_c' in consent).toBe(true);
+        assertIso8601Like(consent.date_c);
+        expect('date_e' in consent).toBe(true);
+        expect(consent.request_data_types).toBeInstanceOf(Array);
+        expect('request_owner' in consent).toBe(true);
+        expect(consent.required_data_types).toBeInstanceOf(Array);
+        expect('user_cursor' in consent).toBe(true);
+        assertIsCursorLike(consent.user_cursor);
+        expect('user_display_name' in consent).toBe(true);
+        expect(consent.user_xcoobee_id).toBe(user.xcoobee_id);
         done();
       });// eo it
 
@@ -136,50 +143,15 @@ describe('ConsentsApi', () => {
             expect(result.page_info.has_next_page).toBeNull();
             const consents = result.data;
             expect(consents).toBeInstanceOf(Array);
-            expect(consents.length).toBe(100);
-            // expect(consents.length).toBeGreaterThan(0);
-            // let consent = consents[0];
-            // expect('consent_cursor' in consent).toBe(true);
-            // assertIsCursorLike(consent.consent_cursor);
-            // expect('consent_status' in consent).toBe(true);
-            // expect('date_c' in consent).toBe(true);
-            // assertIso8601Like(consent.date_c)
-            // expect('date_e' in consent).toBe(true);
-            // assertIso8601Like(consent.date_e)
-            // expect('user_xcoobee_id' in consent).toBe(true);
+            expect(consents.length).toBeGreaterThan(0);
+            const consent = consents[0];
+            expect('consent_cursor' in consent).toBe(true);
+            assertIsCursorLike(consent.consent_cursor);
+            expect('consent_status' in consent).toBe(true);
+            expect('date_c' in consent).toBe(true);
+            assertIso8601Like(consent.date_c);
+            expect(consent.user_xcoobee_id).toBe(user.xcoobee_id);
 
-            done();
-          });// eo it
-
-        });// eo describe
-
-        describe('and active consent status', () => {
-
-          it('should fetch and return with the user\'s active consents', async (done) => {
-            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
-            const userCursor = user.cursor;
-            const result = await ConsentsApi.listConsents(
-              apiUrlRoot, apiAccessToken, userCursor, [ConsentStatuses.ACTIVE]
-            );
-            // TODO: Find a way to get consents back.
-            expect(result).toBeDefined();
-            expect(result.data).toBeInstanceOf(Array);
-            expect(result.page_info).toBeDefined();
-            expect(result.page_info.end_cursor).toBe(null);
-            expect(result.page_info.has_next_page).toBe(null);
-            const consents = result.data;
-            expect(consents).toBeInstanceOf(Array);
-            expect(consents.length).toBe(0);
-            // let consent = consents[0];
-            // expect('consent_cursor' in consent).toBe(true);
-            // assertIsCursorLike(consent.consent_cursor);
-            // expect('consent_status' in consent).toBe(true);
-            // expect('date_c' in consent).toBe(true);
-            // assertIso8601Like(consent.date_c)
-            // expect('date_e' in consent).toBe(true);
-            // assertIso8601Like(consent.date_e)
-            // expect('user_xcoobee_id' in consent).toBe(true);
             done();
           });// eo it
 
@@ -198,11 +170,14 @@ describe('ConsentsApi', () => {
 
       it('should succeed and return with given reference', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const xcoobeeId = '~SDKTester_Developer';
-        const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const xcoobeeId = user.xcoobee_id;
+        const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
+        const campaignCursor = campaigns.data[0].campaign_cursor;
         const referenceId = 'asdfasdf';
         const result = await ConsentsApi.requestConsent(
-          apiUrlRoot, apiAccessToken, xcoobeeId, campaignId, referenceId
+          apiUrlRoot, apiAccessToken, xcoobeeId, campaignCursor, referenceId
         );
         expect(result).toBeDefined();
         expect(result.ref_id).toBe(referenceId);
@@ -220,11 +195,15 @@ describe('ConsentsApi', () => {
 
       it('should succeed and return with given reference', async (done) => {
         const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const consentCursor = 'CTZamTgKFkJyf5ujU9yR9NT2Pov/z8C+I+SmiUxlIQQCc0yY0ctiLxrbAb4KJDIL1uiaAA==';
+        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+        const userCursor = user.cursor;
+        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
+        const consentCursor = consents.data[0].consent_cursor;
         const xcoobeeId = await ConsentsApi.resolveXcoobeeId(
           apiUrlRoot, apiAccessToken, consentCursor
         );
-        expect(xcoobeeId).toBe('~SDKTester_Developer');
+
+        expect(xcoobeeId).toBe(user.xcoobee_id);
 
         done();
       });// eo it
