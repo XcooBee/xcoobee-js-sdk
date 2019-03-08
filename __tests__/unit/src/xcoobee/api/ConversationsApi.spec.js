@@ -54,7 +54,7 @@ describe('ConversationsApi', () => {
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
           expect(err).toBeInstanceOf(TypeError);
-          expect(err.message).toBe('At least one reference should be provided');
+          expect(err.message).toBe('Only one reference should be provided');
         });
     });
 

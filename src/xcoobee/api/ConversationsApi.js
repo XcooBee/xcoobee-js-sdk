@@ -190,7 +190,7 @@ const sendUserMessage = async (apiUrlRoot, apiAccessToken, message, reference = 
     noteType = NoteTypes.DATA_REQUEST;
     referenceCursor = requestRef;
   } else {
-    throw new TypeError('At least one reference should be provided');
+    throw new TypeError('Only one reference should be provided');
   }
 
   const userCursor = await getTargetId(apiUrlRoot, apiAccessToken, referenceCursor, noteType);
