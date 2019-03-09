@@ -36,7 +36,8 @@ describe('Users', () => {
             });
 
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
-            const targetCursor = 'CTZamTgKRkN8LMb/AtKR8d72P4v/k5bkI7ynikFlf1QFL0ybh8ZvKR6MAb4KJDIL1v6aAA==';
+            const conversations = await usersSdk.getConversations();
+            const targetCursor = conversations.result.data[0].target_cursor;
             const response = await usersSdk.getConversation(targetCursor);
             expect(response).toBeInstanceOf(PagingResponse);
             expect(response.hasNextPage()).toBe(false);
@@ -47,24 +48,22 @@ describe('Users', () => {
             expect(result.page_info).toBeDefined();
             expect(result.page_info.end_cursor).toBeNull();
             expect(result.page_info.has_next_page).toBeNull();
-            const conversations = result.data;
-            expect(conversations).toBeInstanceOf(Array);
-            expect(conversations.length).toBeGreaterThan(0);
-            const conversation = conversations[0];
-            expect('breach_cursor' in conversation).toBe(true);
-            assertIsCursorLike(conversation.breach_cursor, true);
-            expect('consent_cursor' in conversation).toBe(true);
-            assertIsCursorLike(conversation.consent_cursor);
+            const messages = result.data;
+            expect(messages).toBeInstanceOf(Array);
+            expect(messages.length).toBeGreaterThan(0);
+            const conversation = messages[0];
+            expect('reference_cursor' in conversation).toBe(true);
+            assertIsCursorLike(conversation.reference_cursor, true);
             expect('date_c' in conversation).toBe(true);
             assertIso8601Like(conversation.date_c);
             expect('date_e' in conversation).toBe(true);
-            assertIso8601Like(conversation.date_e, true);
             expect('display_city' in conversation).toBe(true);
             expect('display_country' in conversation).toBe(true);
             expect('display_name' in conversation).toBe(true);
             expect('display_province' in conversation).toBe(true);
             expect('is_outbound' in conversation).toBe(true);
             expect('note_text' in conversation).toBe(true);
+            expect(conversation.note_text).toBe('test message for test consent');
             expect(conversation.note_type).toBe('consent');
             expect('photo_url' in conversation).toBe(true);
             expect('xcoobee_id' in conversation).toBe(true);
@@ -108,7 +107,6 @@ describe('Users', () => {
             const conversation = conversations[0];
             expect('date_c' in conversation).toBe(true);
             assertIso8601Like(conversation.date_c);
-            expect(conversation.display_name).toBe('SDKTester Developer');
             expect(conversation.note_type).toBe('consent');
             expect('target_cursor' in conversation).toBe(true);
             assertIsCursorLike(conversation.target_cursor);
@@ -205,7 +203,7 @@ describe('Users', () => {
 
     });// eo describe('.getUser')
 
-    xdescribe('.sendUserMessage', () => {
+    describe('.sendUserMessage', () => {
 
       describe('called with a valid API key/secret pair', () => {
 
@@ -220,14 +218,15 @@ describe('Users', () => {
 
             const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
             const message = 'Testing. 1, 2, 3!';
-            const consentId = 'known'; // FIXME: TODO: Get a legit consent ID.
-            const response = await usersSdk.sendUserMessage(message, consentId);
+            const conversations = await usersSdk.getConversations();
+            const targetCursor = conversations.result.data[0].target_cursor;
+            const conversation = await usersSdk.getConversation(targetCursor);
+            const consentId = conversation.result.data[0].reference_cursor;
+            const response = await usersSdk.sendUserMessage(message, { consentId });
             expect(response).toBeInstanceOf(SuccessResponse);
             const note = response.result.data;
             expect(note).toBeDefined();
             expect(note.note_text).toBe('Testing. 1, 2, 3!');
-            assertIsCursorLike(note.target_cursor);
-            expect(note.xcoobee_id).toBe('');
 
             done();
           });// eo it

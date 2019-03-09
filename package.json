@@ -1,6 +1,6 @@
 {
   "name": "xcoobee-sdk",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "",
   "keywords": [
     "javascript",
@@ -93,5 +93,8 @@
     "webpack": "^4.16.2",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.0"
-  }
+  },
+  "files": [
+    "src/"
+  ]
 }

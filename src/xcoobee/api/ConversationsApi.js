@@ -25,8 +25,7 @@ const getConversation = (apiUrlRoot, apiAccessToken, targetCursor, after = null,
     query getConversation($targetCursor: String!, $after: String, $first: Int) {
       conversation(target_cursor: $targetCursor, after: $after, first: $first) {
         data {
-          breach_cursor
-          consent_cursor
+          reference_cursor
           date_c
           date_e
           display_city
@@ -113,21 +112,53 @@ const getConversations = (apiUrlRoot, apiAccessToken, userCursor, after = null, 
 };
 
 /**
- * Sends a message to a consent destination or a breach destination.
+ * @private
+ * @param {string} apiUrlRoot
+ * @param {string} apiAccessToken
+ * @param {string} referenceId
+ * @param {string} type
+ *
+ * @returns {Promise<string>}
+ */
+const getTargetId = (apiUrlRoot, apiAccessToken, referenceId, type) => {
+  const query = `
+    query getNoteTarget($referenceId: String!, $type: NoteType!){
+      note_target (reference_cursor: $referenceId, note_type: $type){
+          cursor
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    referenceId,
+    type,
+  })
+    .then((response) => {
+      const { note_target } = response;
+
+      return note_target.cursor;
+    })
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
+/**
+ * Sends a message to a destination depending on reference.
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} message
- * @param {*} userCursor
- * @param {*} consentId
- * @param {*} [breachId]
+ * @param {Object} reference
+ * @param {string} [reference.consentId]
+ * @param {string} [reference.ticketId]
+ * @param {string} [reference.requestRef]
  *
  * @returns {Promise<Note>}
  *
  * @throws {XcooBeeError}
  */
-const sendUserMessage = (apiUrlRoot, apiAccessToken, message, userCursor, consentId, breachId) => {
+const sendUserMessage = async (apiUrlRoot, apiAccessToken, message, reference = {}) => {
   const mutation = `
     mutation sendUserMessage($config: SendMessageConfig) {
       send_message(config: $config) {
@@ -139,16 +170,38 @@ const sendUserMessage = (apiUrlRoot, apiAccessToken, message, userCursor, consen
       }
     }
   `;
-  const noteType = breachId ? NoteTypes.BREACH : NoteTypes.CONSENT;
+
+  const {
+    consentId,
+    ticketId,
+    requestRef,
+  } = reference;
+
+  let noteType;
+  let referenceCursor;
+
+  if (consentId) {
+    noteType = NoteTypes.CONSENT;
+    referenceCursor = consentId;
+  } else if (ticketId) {
+    noteType = NoteTypes.TICKET;
+    referenceCursor = ticketId;
+  } else if (requestRef) {
+    noteType = NoteTypes.DATA_REQUEST;
+    referenceCursor = requestRef;
+  } else {
+    throw new TypeError('Only one reference should be provided');
+  }
+
+  const userCursor = await getTargetId(apiUrlRoot, apiAccessToken, referenceCursor, noteType);
+
   const config = {
-    consent_cursor: consentId,
+    reference_cursor: referenceCursor,
     message,
     note_type: noteType,
     user_cursor: userCursor,
   };
-  if (breachId) {
-    config.breach_cursor = breachId;
-  }
+
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config,
   })

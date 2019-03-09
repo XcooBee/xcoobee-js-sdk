@@ -1,5 +1,6 @@
 const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTokenCache');
 const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
+const CampaignApi = require('../../../../../src/xcoobee/api/CampaignApi');
 
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
@@ -23,8 +24,16 @@ describe('System', () => {
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
+  const getCampaignId = async () => {
+    const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+    const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
+    const userCursor = user.cursor;
+    const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
+    return campaigns.data[0].campaign_cursor;
+  };
+
   beforeAll(async (done) => {
-    const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+    const campaignId = await getCampaignId();
     await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
     done();
@@ -41,7 +50,7 @@ describe('System', () => {
           describe('and a valid events mapping', () => {
 
             afterEach(async (done) => {
-              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+              const campaignId = await getCampaignId();
               await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
               done();
@@ -50,11 +59,12 @@ describe('System', () => {
             describe('using default config', () => {
 
               it('should add the event subscriptions for the campaign', async (done) => {
+                const campaignId = await getCampaignId();
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId,
                 });
                 const eventsMapping = {
                   ConsentApproved: 'OnConsentApproved',
@@ -70,7 +80,7 @@ describe('System', () => {
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(2);
                 let eventSubscription = eventSubscriptionsPage.data[0];
-                expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+                expect(eventSubscription.campaign_cursor).toBe(campaignId);
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
                 if (eventSubscription.event_type === 'consent_approved') {
@@ -85,7 +95,7 @@ describe('System', () => {
                 expect(eventSubscriptionsPage.page_info).toBe(null);
 
                 eventSubscription = eventSubscriptionsPage.data[1];
-                expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+                expect(eventSubscription.campaign_cursor).toBe(campaignId);
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
                 if (eventSubscription.event_type === 'consent_approved') {
@@ -113,7 +123,7 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const campaignId = await getCampaignId();
                 const eventsMapping = {
                   ConsentApproved: 'OnConsentApproved',
                 };
@@ -127,7 +137,7 @@ describe('System', () => {
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
                 const eventSubscription = eventSubscriptionsPage.data[0];
-                expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+                expect(eventSubscription.campaign_cursor).toBe(campaignId);
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
                 expect(eventSubscription.event_type).toBe('consent_approved');
@@ -155,7 +165,7 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const campaignId = await getCampaignId();
                 const eventsMapping = {
                   ConsentApproved: 'OnConsentApproved',
                 };
@@ -169,7 +179,7 @@ describe('System', () => {
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(1);
                 const eventSubscription = eventSubscriptionsPage.data[0];
-                expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+                expect(eventSubscription.campaign_cursor).toBe(campaignId);
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
                 expect(eventSubscription.event_type).toBe('consent_approved');
@@ -185,6 +195,7 @@ describe('System', () => {
             describe('using overriding config', () => {
 
               it('should add the event subscriptions for the campaign', async (done) => {
+                const campaignId = await getCampaignId();
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -195,7 +206,7 @@ describe('System', () => {
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId,
                 });
                 const eventsMapping = {
                   ConsentApproved: 'OnConsentApproved',
@@ -211,7 +222,7 @@ describe('System', () => {
                 expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
                 expect(eventSubscriptionsPage.data.length).toBe(2);
                 let eventSubscription = eventSubscriptionsPage.data[0];
-                expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+                expect(eventSubscription.campaign_cursor).toBe(campaignId);
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
                 if (eventSubscription.event_type === 'consent_approved') {
@@ -226,7 +237,7 @@ describe('System', () => {
                 expect(eventSubscriptionsPage.page_info).toBe(null);
 
                 eventSubscription = eventSubscriptionsPage.data[1];
-                expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+                expect(eventSubscription.campaign_cursor).toBe(campaignId);
                 // assertIso8601Like(eventSubscription.date_c);
                 expect(eventSubscription.date_c).toBe(null);
                 if (eventSubscription.event_type === 'consent_approved') {
@@ -250,22 +261,22 @@ describe('System', () => {
           describe('and an invalid events mapping', () => {
 
             it('should reject with an error response', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const eventsMapping = {
                 Invalid: 'invalid',
               };
-              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
@@ -373,11 +384,12 @@ describe('System', () => {
           describe('using overriding config', () => {
 
             it('should reject with an error response', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
                 apiUrlRoot: 'should_be_unused',
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const overridingConfig = new Config({
                 apiKey,
@@ -411,17 +423,18 @@ describe('System', () => {
           describe('using campaign ID', () => {
 
             it('should reject with an error response', async (done) => {
+              const campaignIdReal = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId: campaignIdReal,
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId: campaignIdReal,
               });
               const campaignId = 'unknown';
               const eventsMapping = {
@@ -474,7 +487,7 @@ describe('System', () => {
           describe('and a valid events mapping', () => {
 
             beforeEach(async (done) => {
-              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+              const campaignId = await getCampaignId();
               await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
               done();
@@ -483,11 +496,12 @@ describe('System', () => {
             describe('using default config', () => {
 
               it('should delete both of the event subscriptions', async (done) => {
+                const campaignId = await getCampaignId();
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId,
                 });
                 const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
@@ -501,11 +515,12 @@ describe('System', () => {
               });// eo it
 
               it('should delete each of the event subscriptions', async (done) => {
+                const campaignId = await getCampaignId();
                 const defaultConfig = new Config({
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId,
                 });
                 let eventTypes = ['ConsentApproved'];
 
@@ -536,7 +551,7 @@ describe('System', () => {
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 const eventTypes = ['ConsentApproved', 'DataDeclined'];
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const campaignId = await getCampaignId();
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 const response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
@@ -555,7 +570,7 @@ describe('System', () => {
                   campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
                 let eventTypes = ['ConsentApproved'];
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const campaignId = await getCampaignId();
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
                 let response = await systemSdk.deleteEventSubscription(eventTypes, campaignId);
@@ -589,7 +604,7 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const campaignId = await getCampaignId();
                 const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -614,7 +629,7 @@ describe('System', () => {
                   apiUrlRoot,
                   campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
                 });
-                const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+                const campaignId = await getCampaignId();
                 let eventTypes = ['ConsentApproved'];
 
                 const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -637,6 +652,7 @@ describe('System', () => {
             describe('using overriding config', () => {
 
               it('should delete both of the event subscriptions', async (done) => {
+                const campaignId = await getCampaignId();
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -647,7 +663,7 @@ describe('System', () => {
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId,
                 });
                 const eventTypes = ['ConsentApproved', 'DataDeclined'];
 
@@ -661,6 +677,7 @@ describe('System', () => {
               });// eo it
 
               it('should delete each of the event subscriptions', async (done) => {
+                const campaignId = await getCampaignId();
                 const defaultConfig = new Config({
                   apiKey: 'should_be_unused',
                   apiSecret: 'should_be_unused',
@@ -671,7 +688,7 @@ describe('System', () => {
                   apiKey,
                   apiSecret,
                   apiUrlRoot,
-                  campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                  campaignId,
                 });
                 let eventTypes = ['ConsentApproved'];
 
@@ -697,20 +714,20 @@ describe('System', () => {
           describe('and an invalid events mapping', () => {
 
             it('should reject with an error response', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const eventTypes = ['Invalid'];
-              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
 
@@ -816,11 +833,12 @@ describe('System', () => {
           describe('using overriding config', () => {
 
             it('should reject with an error response', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
                 apiUrlRoot: 'should_be_unused',
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const overridingConfig = new Config({
                 apiKey,
@@ -852,17 +870,18 @@ describe('System', () => {
           describe('using campaign ID', () => {
 
             it('should reject with an error response', async (done) => {
+              const campaignIdReal = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId: campaignIdReal,
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId: campaignIdReal,
               });
               const campaignId = 'unknown';
               const eventTypes = ['ConsentApproved'];
@@ -1008,14 +1027,14 @@ describe('System', () => {
         describe('and known campaign ID', () => {
 
           beforeEach(async (done) => {
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
           });
 
           afterEach(async (done) => {
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
 
             done();
@@ -1024,11 +1043,12 @@ describe('System', () => {
           describe('using default config', () => {
 
             it('should fetch and return with the event subscriptions for the campaign', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -1046,7 +1066,7 @@ describe('System', () => {
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(2);
               let eventSubscription = eventSubscriptions[0];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1059,7 +1079,7 @@ describe('System', () => {
               assertIsCursorLike(eventSubscription.owner_cursor);
 
               eventSubscription = eventSubscriptions[1];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1085,7 +1105,7 @@ describe('System', () => {
                 apiUrlRoot,
                 campaignId: 'default-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
-              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+              const campaignId = await getCampaignId();
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(campaignId);
@@ -1102,7 +1122,7 @@ describe('System', () => {
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(2);
               let eventSubscription = eventSubscriptions[0];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1115,7 +1135,7 @@ describe('System', () => {
               assertIsCursorLike(eventSubscription.owner_cursor);
 
               eventSubscription = eventSubscriptions[1];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1135,6 +1155,7 @@ describe('System', () => {
           describe('using overriding config', () => {
 
             it('should fetch and return with the event subscriptions for the campaign', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
@@ -1145,7 +1166,7 @@ describe('System', () => {
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
@@ -1163,7 +1184,7 @@ describe('System', () => {
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(2);
               let eventSubscription = eventSubscriptions[0];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1176,7 +1197,7 @@ describe('System', () => {
               assertIsCursorLike(eventSubscription.owner_cursor);
 
               eventSubscription = eventSubscriptions[1];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1208,7 +1229,7 @@ describe('System', () => {
                 apiUrlRoot,
                 campaignId: 'overriding-campaign-id', // FIXME: TODO: Use other legit campaign cursors so we can make sure they are not being used.
               });
-              const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+              const campaignId = await getCampaignId();
 
               const systemSdk = new System(defaultConfig, apiAccessTokenCache, usersCache);
               const response = await systemSdk.listEventSubscriptions(campaignId, overridingConfig);
@@ -1225,7 +1246,7 @@ describe('System', () => {
               expect(eventSubscriptions).toBeInstanceOf(Array);
               expect(eventSubscriptions.length).toBe(2);
               let eventSubscription = eventSubscriptions[0];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1238,7 +1259,7 @@ describe('System', () => {
               assertIsCursorLike(eventSubscription.owner_cursor);
 
               eventSubscription = eventSubscriptions[1];
-              expect(eventSubscription.campaign_cursor).toBe('CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==');
+              expect(eventSubscription.campaign_cursor).toBe(campaignId);
               assertIso8601Like(eventSubscription.date_c);
               if (eventSubscription.event_type === 'consent_approved') {
                 expect(eventSubscription.handler).toBe('OnConsentApproved');
@@ -1315,11 +1336,12 @@ describe('System', () => {
           describe('using overriding config', () => {
 
             it('should return an error response', async (done) => {
+              const campaignId = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey: 'should_be_unused',
                 apiSecret: 'should_be_unused',
                 apiUrlRoot: 'should_be_unused',
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId,
               });
               const overridingConfig = new Config({
                 apiKey,
@@ -1350,17 +1372,18 @@ describe('System', () => {
           describe('using campaign ID', () => {
 
             it('should return an error response', async (done) => {
+              const campaignIdReal = await getCampaignId();
               const defaultConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId: campaignIdReal,
               });
               const overridingConfig = new Config({
                 apiKey,
                 apiSecret,
                 apiUrlRoot,
-                campaignId: 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==',
+                campaignId: campaignIdReal,
               });
               const campaignId = 'unknown';
 
@@ -1435,7 +1458,7 @@ describe('System', () => {
         describe('using default config with a valid campaign ID', () => {
 
           it('should be successful', async (done) => {
-            const campaignId = 'CTZamTgKRBUqJsavV4+R8NnwaIv/mcLqI+enjUFlcARTKRidhcY4K0rbAb4KJDIL1uaaAA==';
+            const campaignId = await getCampaignId();
             const defaultConfig = new Config({
               apiKey,
               apiSecret,
