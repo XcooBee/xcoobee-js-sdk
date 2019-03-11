@@ -1,7 +1,7 @@
 const { GraphQLClient } = require('graphql-request');
 const XcooBeeError = require('../core/XcooBeeError');
 
-const CURSOR__RE = /^[\w/=+]+$/;
+const CURSOR__RE = /^[\w:/=+]+$/;
 
 const EMAIL_ADDRESS__RE = /^[-+\w]+(\.[-+\w]+)*@([-a-z0-9]+\.)+[a-z]{2,6}$/i;
 
