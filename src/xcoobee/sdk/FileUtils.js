@@ -4,13 +4,14 @@ const PolicyApi = require('../../xcoobee/api/PolicyApi');
 const XcooBeeError = require('../core/XcooBeeError');
 
 /**
- * @private
+ * Prepare pairs of related policies to files
+ *
  * @param {string[]} files
  * @param {Object[]} policies
  *
  * @returns {Object[]}
  */
-function zipTogether(files, policies) {
+function prepareFilePolicyPairs(files, policies) {
   const pairs = [];
   // Note: Not expecting the lengths between the two arrays to be different, but
   // it doesn't hurt to be robust.
@@ -45,7 +46,7 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
   const policies = await PolicyApi.upload_policy(
     apiUrlRoot, apiAccessToken, uploadPolicyIntent, endPointCursor, files
   );
-  const policyFilePairs = zipTogether(files, policies);
+  const policyFilePairs = prepareFilePolicyPairs(files, policies);
   // Note: We don't want to upload one file, wait for the promise to resolve,
   // and then repeat.  Here we are uploading all files back-to-back so that they
   // can be processed concurrently.
@@ -68,5 +69,6 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
 }
 
 module.exports = {
+  prepareFilePolicyPairs,
   upload,
 };

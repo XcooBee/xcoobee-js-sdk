@@ -1,6 +1,7 @@
 const Config = require('./Config');
 const ConfigUtils = require('./ConfigUtils');
 const Sdk = require('./Sdk');
+const Utilities = require('./Utilities');
 
 /**
  * The XcooBee SDK JavaScript module. It may be imported with whatever name you
@@ -53,4 +54,16 @@ module.exports = {
    * @memberof SdkJs
    */
   Sdk,
+  /**
+     * A reference to XcooBee additional helpers and utilities
+     * that can be used independently of SDK
+     *
+     * ```js
+     * const XcooBee = require('xcoobee-sdk');
+     *
+     * XcooBee.Utilities.uploadFile(file, policy)
+     *  .then(...);
+     * ```
+    */
+  Utilities,
 };

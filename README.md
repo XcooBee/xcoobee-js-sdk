@@ -1082,6 +1082,30 @@ config => optional: the config object
 #### response
 public PGP or empty string
 
+## Static utilities and helpers
+
+### uploadFiles(files, policies)
+
+Allows user to upload files by policies received from XcooBee API without authorization.
+
+Node JS example:
+```
+Xcoobee.Utilities.uploadFiles(['test.png'], [{...}]).then(...); // NOTE, that files should be in folder where you run script.
+```
+Browser example:
+```
+Xcoobee.sdk.Utilities.uploadFiles([File], [{...}]).then(...); // NOTE, file should be instance of Web File.
+```
+
+options:
+```
+files    => Array of files (for browser) or file names (for node JS)
+policies => Array of policies, related to each file (returned from XcooBee API)
+```
+
+#### response
+true if success
+
 ## Troubleshooting
 
 ### Error 401
