@@ -1090,7 +1090,7 @@ Allows user to upload files by policies received from XcooBee API without author
 
 Node JS example:
 ```
-Xcoobee.Utilities.uploadFiles(['test.png'], [{...}]).then(...); // NOTE, that files should be in folder where you run script.
+Xcoobee.Utilities.uploadFiles(['test.png'], [{...}]).then(...); // NOTE: Relative file paths are relative to directory where you run script.
 ```
 Browser example:
 ```
