@@ -29,7 +29,7 @@ module.exports = {
      * that can be used independently of SDK
      *
      * ```js
-     * XcooBee.sdk.Utilities.uploadFile(file, policy)
+     * XcooBee.sdk.Utilities.uploadFiles(files, policies)
      *  .then(...);
      * ```
     */
