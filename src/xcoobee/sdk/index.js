@@ -61,7 +61,7 @@ module.exports = {
      * ```js
      * const XcooBee = require('xcoobee-sdk');
      *
-     * XcooBee.Utilities.uploadFile(file, policy)
+     * XcooBee.Utilities.uploadFiles(files, policies)
      *  .then(...);
      * ```
     */
