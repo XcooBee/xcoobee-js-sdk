@@ -1094,7 +1094,7 @@ Xcoobee.Utilities.uploadFiles(['test.png'], [{...}]).then(...); // NOTE, that fi
 ```
 Browser example:
 ```
-Xcoobee.sdk.Utilities.uploadFiles([File], [{...}]).then(...); // NOTE, file should be instance of Web File.
+Xcoobee.sdk.Utilities.uploadFiles([file], [{...}]).then(...); // NOTE: file should be instance of Web File.
 ```
 
 options:
