@@ -38,5 +38,6 @@ module.exports = {
     // '<rootDir>/xcoobee/sdk/SuccessResponse.spec.js',
     // '<rootDir>/xcoobee/sdk/System.spec.js',
     // '<rootDir>/xcoobee/sdk/Users.spec.js',
+    // '<rootDir>/xcoobee/sdk/Utilities.spec.js',
   ],
 };
