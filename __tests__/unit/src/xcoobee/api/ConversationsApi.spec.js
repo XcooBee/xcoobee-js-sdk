@@ -115,6 +115,25 @@ describe('ConversationsApi', () => {
         });
     });
 
+    it('should send message with complaint note type', () => {
+      GraphQLClient.prototype.request
+        .mockReturnValueOnce(Promise.resolve({ note_target: { cursor: 'userId' } }))
+        .mockReturnValueOnce(Promise.resolve({ send_message: true }));
+
+      return sendUserMessage('apiUrlRoot', 'accessToken', 'message', { complaintRef: 'complaintRef' })
+        .then((res) => {
+          expect(res).toBeTruthy();
+
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(2);
+
+          const options = GraphQLClient.prototype.request.mock.calls[1][1];
+          expect(options.config.reference_cursor).toBe('complaintRef');
+          expect(options.config.message).toBe('message');
+          expect(options.config.note_type).toBe('complaint');
+          expect(options.config.user_cursor).toBe('userId');
+        });
+    });
+
   });
 
 });

@@ -16,6 +16,7 @@ const {
   listConsents,
   resolveXcoobeeId,
   requestConsent,
+  setUserDataResponse,
   getDataPackage,
 } = require('../../../../../src/xcoobee/api/ConsentsApi');
 
@@ -174,6 +175,25 @@ describe('ConsentsApi', () => {
           expect(options.config.campaign_cursor).toBe('campaignId');
           expect(options.config.reference).toBe('refId');
           expect(options.config.xcoobee_id).toBe('~xid');
+        });
+    });
+
+  });
+
+  describe('setUserDataResponse', () => {
+
+    it('should call graphql endpoint with params', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ send_data_response: { ref_id: 'refId' } }));
+
+      return setUserDataResponse('apiUrlRoot', 'accessToken', 'test message', 'requestRef', 'data.txt')
+        .then((res) => {
+          expect(res).toBe('refId');
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
+          expect(options.config.message).toBe('test message');
+          expect(options.config.request_ref).toBe('requestRef');
+          expect(options.config.filenames[0]).toBe('data.txt');
         });
     });
 

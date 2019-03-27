@@ -3,6 +3,7 @@ const ConsentsApi = require('../../../../../src/xcoobee/api/ConsentsApi');
 const CampaignApi = require('../../../../../src/xcoobee/api/CampaignApi');
 const ConsentDataTypes = require('../../../../../src/xcoobee/api/ConsentDataTypes');
 const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
@@ -211,5 +212,25 @@ describe('ConsentsApi', () => {
     });// eo describe
 
   });// eo describe('.resolveXcoobeeId')
+
+  describe('.setUserDataResponse', () => {
+
+    describe('called with a valid API access token', () => {
+
+      it('should return error if no data request found', async (done) => {
+        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+        try {
+          await ConsentsApi.setUserDataResponse(apiUrlRoot, apiAccessToken, 'message', 'requestRef', 'test.txt');
+        } catch (err) {
+          expect(err).toBeInstanceOf(XcooBeeError);
+          expect(err.message).toBe('Data request not found at line: 3, column: 7');
+        }
+
+        done();
+      });// eo it
+
+    });// eo describe
+
+  });// eo describe('.setUserDataResponse')
 
 });// eo describe('ConsentsApi')

@@ -175,6 +175,7 @@ const sendUserMessage = async (apiUrlRoot, apiAccessToken, message, reference = 
     consentId,
     ticketId,
     requestRef,
+    complaintRef,
   } = reference;
 
   let noteType;
@@ -189,6 +190,9 @@ const sendUserMessage = async (apiUrlRoot, apiAccessToken, message, reference = 
   } else if (requestRef) {
     noteType = NoteTypes.DATA_REQUEST;
     referenceCursor = requestRef;
+  } else if (complaintRef) {
+    noteType = NoteTypes.COMPLAINT;
+    referenceCursor = complaintRef;
   } else {
     throw new TypeError('Only one reference should be provided');
   }

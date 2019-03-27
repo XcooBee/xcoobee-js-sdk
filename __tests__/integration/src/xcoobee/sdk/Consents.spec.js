@@ -9,6 +9,7 @@ const Consents = require('../../../../../src/xcoobee/sdk/Consents');
 const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
 const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
 const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
+const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
 const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
@@ -864,56 +865,19 @@ describe('Consents', () => {
 
             const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
             const message = 'Here are the files you requested.';
-            const consents = await consentsSdk.listConsents();
-            const consentId = consents.result.data[0].consent_cursor;
             const referenceId = 'someUniqueReferenceId';
             const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.txt');
-            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, file);
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const { result } = response;
-            expect(result).toBeDefined();
-            expect(result.progress).toBeInstanceOf(Array);
-            expect(result.progress.length).toBe(3);
-            expect(result.progress[0]).toBe('successfully sent message');
-            expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.txt/);
-            expect(result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
-            expect(result.ref_id).toBeDefined();
+            try {
+              await consentsSdk.setUserDataResponse(message, referenceId, file);
+            } catch (errorResponse) {
+              expect(errorResponse).toBeInstanceOf(ErrorResponse);
+              expect(errorResponse.code).toBe(400);
 
-            done();
-          });// eo it
+              const err = errorResponse.error;
+              expect(err).toBeInstanceOf(XcooBeeError);
+              expect(err.message).toBe('Data request not found at line: 3, column: 7');
+            }
 
-        });// eo describe
-
-        describe('using overriding config', () => {
-
-          it('should succeed and return progress report', async (done) => {
-            const defaultConfig = new Config({
-              apiKey: 'should_be_unused',
-              apiSecret: 'should_be_unused',
-              apiUrlRoot,
-            });
-            const overridingConfig = new Config({
-              apiKey,
-              apiSecret,
-              apiUrlRoot,
-            });
-
-            const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-            const message = 'Here are the files you requested.';
-            const consents = await consentsSdk.listConsents([], overridingConfig);
-            const consentId = consents.result.data[0].consent_cursor;
-            const referenceId = 'someUniqueReferenceId';
-            const file = Path.resolve(__dirname, '..', '..', '..', 'assets', 'user-data.dat');
-            const response = await consentsSdk.setUserDataResponse(message, consentId, referenceId, file, overridingConfig);
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const { result } = response;
-            expect(result).toBeDefined();
-            expect(result.progress).toBeInstanceOf(Array);
-            expect(result.progress.length).toBe(3);
-            expect(result.progress[0]).toBe('successfully sent message');
-            expect(result.progress[1]).toMatch(/successfully uploaded .*user-data\.dat/);
-            expect(result.progress[2]).toBe('successfully sent successfully uploaded file to destination');
-            expect(result.ref_id).toBeDefined();
 
             done();
           });// eo it
