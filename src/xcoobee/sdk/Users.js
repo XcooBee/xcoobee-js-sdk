@@ -206,6 +206,7 @@ class Users {
    * @param {Reference} reference - at least one of following keys should be provided
    * @property {string} consentId
    * @property {string} ticketId
+   * @property {string} complaintRef
    * @property {string} requestRef - data request reference
    * @param {Config} [config] - The configuration to use instead of the default.
    *

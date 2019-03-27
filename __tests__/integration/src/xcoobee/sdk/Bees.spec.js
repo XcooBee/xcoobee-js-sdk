@@ -44,7 +44,6 @@ describe('Bees', () => {
             expect(result).toBeDefined();
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
-            expect(bees.length).toBe(10);
 
             let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
@@ -116,7 +115,6 @@ describe('Bees', () => {
             expect(result).toBeDefined();
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
-            expect(bees.length).toBe(10);
 
             let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
