@@ -342,7 +342,7 @@ const setUserDataResponse = (apiUrlRoot, apiAccessToken, message, requestRef, fi
     config: {
       message,
       request_ref: requestRef,
-      filenames: [filename],
+      filenames: [filename.replace(/^.*[\\\/]/, '')],
     },
   })
     .then(response => response.send_data_response.ref_id)
