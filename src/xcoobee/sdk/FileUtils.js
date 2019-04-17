@@ -62,7 +62,7 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
     if (fileUploadResult instanceof Error) {
       return { success: false, error: fileUploadResult, file };
     }
-    return { success: true, file };
+    return { success: true, file: file.replace(/^.*[\\\/]/, ''), filePath: file };
   });
 
   return result;

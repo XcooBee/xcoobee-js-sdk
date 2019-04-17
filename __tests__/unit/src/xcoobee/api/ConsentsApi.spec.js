@@ -185,7 +185,7 @@ describe('ConsentsApi', () => {
     it('should call graphql endpoint with params', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ send_data_response: { ref_id: 'refId' } }));
 
-      return setUserDataResponse('apiUrlRoot', 'accessToken', 'test message', 'requestRef', 'data.txt')
+      return setUserDataResponse('apiUrlRoot', 'accessToken', 'test message', 'requestRef', '/path/to/data.txt')
         .then((res) => {
           expect(res).toBe('refId');
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
