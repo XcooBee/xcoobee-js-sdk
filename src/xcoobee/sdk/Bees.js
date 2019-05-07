@@ -130,6 +130,7 @@ class Bees {
    * @param {Object} bees[].value - The bee parameters.
    * @param {Object} options - The bee take off options.
    * @param {Object} options.process -
+   * @param {Array<{value: any, name: string}>} [options.custom] - custom properties
    * @param {Array<email|XcooBeeId>} [options.process.destinations] -
    * @param {string[]} options.process.fileNames -
    * @param {string} [options.process.userReference] -
@@ -137,7 +138,7 @@ class Bees {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>} - The response.
+   * @returns {Promise<SuccessResponse | ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -165,6 +166,14 @@ class Bees {
     }
 
     if (
+      options.custom
+      && Array.isArray(options.custom)
+      && options.custom.length
+    ) {
+      directiveInput.custom = options.custom.slice();
+    }
+
+    if (
       Array.isArray(options.process.destinations)
       && options.process.destinations.length > 0
     ) {
@@ -178,22 +187,20 @@ class Bees {
       );
     }
 
-    directiveInput.bees = [];
-    for (let beeName in bees) {
-      if (beeName !== 'transfer') {
-        let beeParams = bees[beeName];
-        directiveInput.bees.push({
-          bee_name: beeName,
-          params: JSON.stringify(beeParams),
-        });
-      }
-    }
+    directiveInput.bees = Object
+      .keys(bees)
+      .map((beeName) => {
+        if (beeName !== 'transfer') {
+          return { bee_name: beeName, params: JSON.stringify(bees[beeName]) };
+        }
+        return null;
+      })
+      .filter(bee => bee);
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const ref_id = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
-      const response = new SuccessResponse({ ref_id });
-      return response;
+      return new SuccessResponse({ ref_id });
     } catch (err) {
       throw new ErrorResponse(400, err);
     }
