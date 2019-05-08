@@ -376,6 +376,8 @@ class Consents {
    *   identifies this request.  This ID will be returned in the `UserDataRequest`
    *   consent events.  May be a maximum of 64 characters long.
    * @param {string} filename - The user's data being requested.
+   * @param {string} targetUrl - a webhook URL that will receive processing events
+   * @param {string} eventHandler - name of a function that will process POST events sent to webhook URL
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -393,7 +395,7 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async setUserDataResponse(message, requestRef, filename, config = null) {
+  async setUserDataResponse(message, requestRef, filename, targetUrl, eventHandler, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
@@ -406,7 +408,10 @@ class Consents {
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
 
-      const result = { progress, ref_id: null };
+      const result = {
+        progress,
+        ref_id: null,
+      };
       if (requestRef && filename) {
         const endPointName = UploadPolicyIntents.OUTBOX;
         const fileUploadResults = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, [filename]);
@@ -424,7 +429,7 @@ class Consents {
         });
 
         if (successfullyUploadedFiles.length > 0) {
-          const refId = await ConsentsApi.setUserDataResponse(apiUrlRoot, apiAccessToken, message, requestRef, filename);
+          const refId = await ConsentsApi.setUserDataResponse(apiUrlRoot, apiAccessToken, message, requestRef, filename, targetUrl, eventHandler);
           progress.push('successfully sent data response');
           result.ref_id = refId;
         }
