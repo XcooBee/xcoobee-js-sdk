@@ -178,9 +178,9 @@ describe('Consents', () => {
       FileUtils.upload.mockReturnValue(Promise.resolve([{ file: 'test.png', success: true }]));
       ConsentsApi.setUserDataResponse.mockReturnValue(Promise.resolve('referenceId'));
 
-      return consents.setUserDataResponse('message', 'refId', 'test.png')
+      return consents.setUserDataResponse('message', 'refId', 'test.png', 'url', 'handler')
         .then((res) => {
-          expect(ConsentsApi.setUserDataResponse).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'refId', 'test.png');
+          expect(ConsentsApi.setUserDataResponse).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'message', 'refId', 'test.png', 'url', 'handler');
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
@@ -194,7 +194,7 @@ describe('Consents', () => {
     it('should throw error if unable to upload file', () => {
       FileUtils.upload.mockReturnValue(Promise.resolve([{ error: 'validation error', file: 'test', success: false }]));
 
-      return consents.setUserDataResponse('message', 'refId', 'test')
+      return consents.setUserDataResponse('message', 'refId', 'test', 'url', 'handler')
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
           expect(FileUtils.upload).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', ['test.png']);
