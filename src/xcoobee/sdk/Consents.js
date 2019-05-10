@@ -408,10 +408,7 @@ class Consents {
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
       const userCursor = user.cursor;
 
-      const result = {
-        progress,
-        ref_id: null,
-      };
+      const result = { progress, ref_id: null };
       if (requestRef && filename) {
         const endPointName = UploadPolicyIntents.OUTBOX;
         const fileUploadResults = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, [filename]);
