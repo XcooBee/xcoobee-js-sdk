@@ -166,8 +166,7 @@ class Bees {
     }
 
     if (
-      options.custom
-      && Array.isArray(options.custom)
+      Array.isArray(options.custom)
       && options.custom.length
     ) {
       directiveInput.custom = options.custom.slice();
