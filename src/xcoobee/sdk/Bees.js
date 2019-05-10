@@ -199,7 +199,8 @@ class Bees {
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const ref_id = await DirectiveApi.addDirective(apiUrlRoot, apiAccessToken, directiveInput);
-      return new SuccessResponse({ ref_id });
+      const response = new SuccessResponse({ ref_id });
+      return response;
     } catch (err) {
       throw new ErrorResponse(400, err);
     }
