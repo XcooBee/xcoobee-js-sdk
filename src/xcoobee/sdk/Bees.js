@@ -194,7 +194,7 @@ class Bees {
         }
         return null;
       })
-      .filter(bee => bee);
+      .filter(Boolean);
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
