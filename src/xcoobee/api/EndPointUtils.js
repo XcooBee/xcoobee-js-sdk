@@ -9,7 +9,7 @@ const XcooBeeError = require('../core/XcooBeeError');
  * @param {string} endPointName
  * @param {string} fallbackEndPointName
  *
- * @returns {Promise<EndPoint, XcooBeeError>}
+ * @returns {Promise<EndPoint | XcooBeeError>}
  */
 async function findEndPoint(apiUrlRoot, apiAccessToken, userCursor, endPointName, fallbackEndPointName) {
   const { data } = await EndPointApi.outbox_endpoints(apiUrlRoot, apiAccessToken, userCursor);

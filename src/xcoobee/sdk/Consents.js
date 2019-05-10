@@ -66,7 +66,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -101,7 +101,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -139,7 +139,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>} - The response.
+   * @returns {Promise<SuccessResponse | ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -174,7 +174,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>} - The response.
+   * @returns {Promise<SuccessResponse | ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -212,7 +212,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>} - The response.
+   * @returns {Promise<SuccessResponse | ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -337,7 +337,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>} - The response.
+   * @returns {Promise<SuccessResponse | ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -379,7 +379,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -449,7 +449,7 @@ class Consents {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
