@@ -666,7 +666,7 @@ It contains:
 - consent reference
 
 ### ConsentRenewed
-Fires when an active consent was renewed by a user. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+Fires when an active consent was renewed by a user. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - expiration date
@@ -709,7 +709,7 @@ It contains:
 - consent reference
 
 #### DataChanged
-Fires when data or consent is changed. A standard consent object is returned. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+Fires when data or consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types with data
@@ -730,7 +730,7 @@ It contains:
 - consent reference
 
 ### DataRenewed
-Fires when an active consent was renewed by a user. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+Fires when an active consent was renewed by a user. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - expiration date
