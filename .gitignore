@@ -69,5 +69,6 @@ typings/
 
 # vs code settings
 .vscode
+
 # intelij settings
 .idea
