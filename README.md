@@ -647,7 +647,7 @@ The data submitted contains:
 - consent reference
 
 #### ConsentChanged
-Fires when consent is changed. A standard consent object is returned.
+Fires when consent is changed. A standard consent object is returned. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types
@@ -664,6 +664,12 @@ It contains:
 Fires when consent expired. You should remove user data and sent XcooBee confirmation via `confirmDataDelete()`.
 It contains:
 - consent reference
+
+### ConsentRenewed
+Fires when an active consent was renewed by a user. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+It contains:
+- consent reference
+- expiration date
 
 #### UserDataRequest
 Fires when user is making a request to extract their current data from your systems. This is to meet data-portability of GDPR. You should create data extract and send it to the User's XcooBee box. You can do so hiring the `xcoobee-data-response` bee with the GUID reference of the request.
@@ -703,7 +709,7 @@ It contains:
 - consent reference
 
 #### DataChanged
-Fires when data or consent is changed. A standard consent object is returned.
+Fires when data or consent is changed. A standard consent object is returned. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types with data
@@ -722,6 +728,12 @@ It contains:
 Fires when data has expired. You should remove user data and sent XcooBee confirmation via `confirmDataDelete()`.
 It contains:
 - consent reference
+
+### DataRenewed
+Fires when an active consent was renewed by a user. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+It contains:
+- consent reference
+- expiration date
 
 #### UserDataRequest
 Fires when user is making a request to extract their current data from your systems.
