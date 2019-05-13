@@ -155,6 +155,23 @@ describe('Consents', () => {
 
   });
 
+  describe('declineConsentChange', () => {
+
+    it('should return response with confirmed flag inside', () => {
+      ConsentsApi.declineConsentChange.mockReturnValue(Promise.resolve({ confirmed: true }));
+
+      return consents.declineConsentChange('consentId')
+        .then((res) => {
+          expect(ConsentsApi.declineConsentChange).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'consentId');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result.confirmed).toBeTruthy();
+        });
+    });
+
+  });
+
   describe('confirmDataDelete', () => {
 
     it('should return response with confirmed flag inside', () => {
