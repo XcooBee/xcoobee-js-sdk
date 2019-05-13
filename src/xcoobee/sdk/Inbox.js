@@ -59,7 +59,7 @@ class Inbox {
    * @param {string} messageId
    * @param {Config} [config]
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -93,7 +93,7 @@ class Inbox {
    * @param {string} messageId
    * @param {Config} [config]
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -130,7 +130,7 @@ class Inbox {
    * @async
    * @param {Config} [config]
    *
-   * @returns {Promise<PagingResponse, ErrorResponse>} - The response.
+   * @returns {Promise<PagingResponse | ErrorResponse>} - The response.
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.

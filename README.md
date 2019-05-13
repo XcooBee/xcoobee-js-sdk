@@ -913,6 +913,14 @@ options.process.destinations = ['email@mysite.com', '~jonny'];
 options.process.fileNames = ['filename.png'];
 ```
 
+general custom parameters example:
+```
+options.custom = {
+   full_name: 'John Doe',
+   age: 29
+}
+```
+
 Bee parameters that are specified require the bee name prefix. If the bee name is `xcoobee_testbee` and it requires two parameters `height` and `width` then you will need to add these into an associative array inside the parameters array with a key of bee name.
 
 #### `b` Subscriptions

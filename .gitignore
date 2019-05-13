@@ -70,5 +70,5 @@ typings/
 # vs code settings
 .vscode
 
-# intelij code settings
+# intelij settings
 .idea

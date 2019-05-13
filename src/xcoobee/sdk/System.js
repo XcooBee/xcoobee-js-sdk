@@ -70,7 +70,7 @@ class System {
    *   from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -115,7 +115,7 @@ class System {
    *   ID will be used from the config.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -198,7 +198,7 @@ class System {
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -277,7 +277,7 @@ class System {
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
