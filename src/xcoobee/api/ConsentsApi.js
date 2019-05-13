@@ -41,7 +41,7 @@ const confirmConsentChange = (apiUrlRoot, apiAccessToken, consentCursor) => {
 };
 
 /**
- * Allows a company to open consent related dispute
+ * Allows a company to open consent related dispute.
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
