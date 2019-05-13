@@ -229,6 +229,43 @@ describe('Bees', () => {
         });
     });
 
+    it('should transform custom properties', () => {
+      DirectiveApi.addDirective.mockReturnValue(Promise.resolve('refId'));
+
+      const bees = new Bees({
+        apiKey: 'apiKey',
+        apiSecret: 'apiSecret',
+        apiUrlRoot: 'apiUrlRoot',
+      }, { get: () => 'apiAccessToken' });
+
+      const processBees = { simple_bee: { param: 'value' } };
+      const options = {
+        custom: {
+          test: 'hello world',
+          anotherProperty: 'test 123',
+        },
+        process: {
+          fileNames: ['image.png'],
+          destinations: ['~testUser'],
+        },
+      };
+      const subscriptions = {};
+
+      return bees.takeOff(processBees, options, subscriptions)
+        .then((res) => {
+          expect(res.result.ref_id).toBe('refId');
+
+          expect(BeesApi.bees).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'bee', null, undefined);
+          expect(DirectiveApi.addDirective).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', {
+            filenames: ['image.png'],
+            user_reference: null,
+            destinations: [{ xcoobee_id: '~testUser' }],
+            subscriptions: {},
+            custom: [{ name: 'test', value: 'hello world' }, { name: 'anotherProperty', value: 'test 123' }],
+            bees: [{ bee_name: 'simple_bee', params: '{"param":"value"}' }],
+          });
+        });
+    });
   });
 
   describe('uploadFiles', () => {
@@ -275,7 +312,8 @@ describe('Bees', () => {
         .then((res) => {
           expect(res.result).toBe('success');
 
-          expect(FileUtils.upload).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', ['dog.png', 'cat.jpg']);
+          expect(FileUtils.upload)
+            .toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', ['dog.png', 'cat.jpg']);
         });
     });
 

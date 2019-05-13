@@ -130,7 +130,7 @@ class Bees {
    * @param {Object} bees[].value - The bee parameters.
    * @param {Object} options - The bee take off options.
    * @param {Object} options.process -
-   * @param {Array<{value: any, name: string}>} [options.custom] - custom properties
+   * @param {Object} [options.custom] - custom properties
    * @param {Array<email|XcooBeeId>} [options.process.destinations] -
    * @param {string[]} options.process.fileNames -
    * @param {string} [options.process.userReference] -
@@ -165,11 +165,10 @@ class Bees {
       directiveInput.subscriptions = subscriptions;
     }
 
-    if (
-      Array.isArray(options.custom)
-      && options.custom.length
-    ) {
-      directiveInput.custom = options.custom.slice();
+    if (options.custom && typeof options.custom === 'object') {
+      directiveInput.custom = Object
+        .keys(options.custom)
+        .map(name => ({ name, value: options.custom[name] }));
     }
 
     if (
