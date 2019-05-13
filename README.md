@@ -664,7 +664,7 @@ The data submitted contains:
 - consent reference
 
 #### ConsentChanged
-Fires when consent is changed. A standard consent object is returned. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+Fires when consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types
@@ -928,6 +928,14 @@ general process parameters example:
 options.process.userReference = 'myownreference';
 options.process.destinations = ['email@mysite.com', '~jonny'];
 options.process.fileNames = ['filename.png'];
+```
+
+general custom parameters example:
+```
+options.custom = {
+   full_name: 'John Doe',
+   age: 29
+}
 ```
 
 Bee parameters that are specified require the bee name prefix. If the bee name is `xcoobee_testbee` and it requires two parameters `height` and `width` then you will need to add these into an associative array inside the parameters array with a key of bee name.

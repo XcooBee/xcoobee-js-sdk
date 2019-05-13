@@ -60,7 +60,7 @@ class Users {
    * @param {string} userId
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<PagingResponse, ErrorResponse>}
+   * @returns {Promise<PagingResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -98,7 +98,7 @@ class Users {
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<PagingResponse, ErrorResponse>}
+   * @returns {Promise<PagingResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -138,7 +138,7 @@ class Users {
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -173,7 +173,7 @@ class Users {
    * @param {string} xid - User's xcoobee ID.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
@@ -210,7 +210,7 @@ class Users {
    * @property {string} requestRef - data request reference
    * @param {Config} [config] - The configuration to use instead of the default.
    *
-   * @returns {Promise<SuccessResponse, ErrorResponse>}
+   * @returns {Promise<SuccessResponse | ErrorResponse>}
    * @property {number} code - The response status code.
    * @property {Error} [error] - The response error if status is not successful.
    * @property {string} [error.message] - The error message.
