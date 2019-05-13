@@ -67,8 +67,8 @@ const declineConsentChange = (apiUrlRoot, apiAccessToken, consentCursor) => {
     .then((response) => {
       const { decline_consent_change } = response;
 
-      const declined = decline_consent_change.consent_cursor === consentCursor;
-      return { declined };
+      const confirmed = decline_consent_change.consent_cursor === consentCursor;
+      return { confirmed };
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);

@@ -47,7 +47,7 @@ describe('ConsentsApi', () => {
 
       return declineConsentChange('apiUrlRoot', 'accessToken', 'consentId')
         .then((res) => {
-          expect(res.declined).toBeTruthy();
+          expect(res.confirmed).toBeTruthy();
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
           expect(GraphQLClient.prototype.request.mock.calls[0][1].consentCursor).toBe('consentId');
         });

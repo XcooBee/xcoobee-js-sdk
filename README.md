@@ -605,7 +605,7 @@ config    => optional: the config object
 
 standard response object
 - status 200 if success:
-    - result will contain object with declined status
+    - result will contain object with confirmed status
 - status 400 if error
 
 ### confirmDataDelete(consentId[, config])
