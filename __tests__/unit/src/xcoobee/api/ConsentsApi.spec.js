@@ -10,6 +10,7 @@ const EncryptionUtils = require('../../../../../src/xcoobee/core/EncryptionUtils
 
 const {
   confirmConsentChange,
+  declineConsentChange,
   confirmDataDelete,
   getCookieConsent,
   getConsentData,
@@ -32,6 +33,21 @@ describe('ConsentsApi', () => {
       return confirmConsentChange('apiUrlRoot', 'accessToken', 'consentId')
         .then((res) => {
           expect(res.confirmed).toBeTruthy();
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].consentCursor).toBe('consentId');
+        });
+    });
+
+  });
+
+  describe('declineConsentChange', () => {
+
+    it('should call graphql endpoint with params', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ decline_consent_change: { consent_cursor: 'consentId' } }));
+
+      return declineConsentChange('apiUrlRoot', 'accessToken', 'consentId')
+        .then((res) => {
+          expect(res.declined).toBeTruthy();
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
           expect(GraphQLClient.prototype.request.mock.calls[0][1].consentCursor).toBe('consentId');
         });

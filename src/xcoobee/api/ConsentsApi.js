@@ -41,6 +41,41 @@ const confirmConsentChange = (apiUrlRoot, apiAccessToken, consentCursor) => {
 };
 
 /**
+ * Allows a company to open consent related dispute
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {*} consentCursor
+ *
+ * @returns {Promise<Object>} - The result.
+ * @property {boolean} confirmed - Flag indicating whether the change is confirmed.
+ *
+ * @throws {XcooBeeError}
+ */
+const declineConsentChange = (apiUrlRoot, apiAccessToken, consentCursor) => {
+  const mutation = `
+    mutation declineConsentChange($consentCursor: String!) {
+      decline_consent_change(consent_cursor: $consentCursor) {
+        consent_cursor
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    consentCursor,
+  })
+    .then((response) => {
+      const { decline_consent_change } = response;
+
+      const declined = decline_consent_change.consent_cursor === consentCursor;
+      return { declined };
+    })
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
+/**
  * Allows a company to confirm consent data deletion.
  *
  * @async
@@ -433,6 +468,7 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
 
 module.exports = {
   confirmConsentChange,
+  declineConsentChange,
   confirmDataDelete,
   getCookieConsent,
   getConsentData,

@@ -591,6 +591,23 @@ standard response object
     - result will contain object with confirmed status
 - status 400 if error
 
+
+### declineConsentChange(consentId[, config])
+Use this call to open dispute on consent.
+
+options:
+```
+consentId => the consent which should be disputed
+config    => optional: the config object
+```
+
+#### response
+
+standard response object
+- status 200 if success:
+    - result will contain object with declined status
+- status 400 if error
+
 ### confirmDataDelete(consentId[, config])
 Send by company to confirm that data has been purged from company systems
 
