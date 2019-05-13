@@ -647,7 +647,7 @@ The data submitted contains:
 - consent reference
 
 #### ConsentChanged
-Fires when consent is changed. A standard consent object is returned. You should confirm update and sent XcooBee confirmation via `confirmConsentChange()`.
+Fires when consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types
