@@ -25,21 +25,38 @@ There is detailed and extensive API documentation available on our
 
 ### For browser projects:
 
-Clone repo from GitHub.
+#### Use our CDN:
+
+Use from our CDN distribution point:
+You can use this pattern.
+
+https://app.xcoobee.net/scripts/sdk/[version]
+
+Available versions:
+
+   - xcoobee-sdk-1.0.0.web.js
+
+A fully formed url for you script tag would be
+
+`<script src='https://app.xcoobee.net/scripts/sdk/xcoobee-sdk-1.0.0.web.js' />`    
+
+#### Build yourself:
+
+1. Clone repo from GitHub.
 
 `git clone https://github.com/XcooBee/xcoobee-js-sdk.git`
 
-then run the following node commands
+2. then run the following node commands
 
 ```
 npm install
 npm run build
 ```
 
-You should have a minified js file like `xcoobee-sdk-0.9.5.web.js` in the `/dist` directory. You can use it in your web project via script tags.
+3. You should have a minified js file like `xcoobee-sdk-1.0.0.web.js` in the `/dist` directory. You can use it in your web project via script tags.
 
 ```
-<script src='xcoobee-sdk-0.9.5.web.js' />
+<script src='xcoobee-sdk-1.0.0.web.js' />
 ```
 
 Don't forget that if you need to use the openpgp to decrypt payloads you need to load the OpenPGP library files as well. Either via the openpgp CDN or from your own site. You can use cdnjs via `https://cdnjs.com/libraries/openpgp`.
