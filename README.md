@@ -591,6 +591,23 @@ standard response object
     - result will contain object with confirmed status
 - status 400 if error
 
+
+### declineConsentChange(consentId[, config])
+Use this call to open dispute on consent.
+
+options:
+```
+consentId => the consent which should be disputed
+config    => optional: the config object
+```
+
+#### response
+
+standard response object
+- status 200 if success:
+    - result will contain object with confirmed status
+- status 400 if error
+
 ### confirmDataDelete(consentId[, config])
 Send by company to confirm that data has been purged from company systems
 
@@ -608,16 +625,18 @@ standard response object
 - status 400 if error
 
 
-### setUserDataResponse(message, requestRef, filename[, config])
+### setUserDataResponse(message, requestRef, filename, targetUrl, eventHandler[, config])
 
 Companies can respond to user data requested via this call. Standard hiring points will be deducted for this. The call will send a `message` to user's communication center. You also need to send a file with user's data in order to close data request.
 
 options:
 ```
-message    => the text to be sent to the user as user data
-requestRef => unique identifier of the data request, you will receive this on `UserDataRequest` event
-filename   => pointer to the file which contains user's data
-config     => optional: the config object
+message         => the text to be sent to the user as user data
+requestRef      => unique identifier of the data request, you will receive this on `UserDataRequest` event
+filename        => pointer to the file which contains user's data
+targetUrl       => a webhook URL that will receive processing events
+eventHandler    => name of a function that will process POST events sent to webhook URL
+config          => optional: the config object
 ```
 
 #### response
@@ -645,7 +664,7 @@ The data submitted contains:
 - consent reference
 
 #### ConsentChanged
-Fires when consent is changed. A standard consent object is returned.
+Fires when consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types
@@ -662,6 +681,12 @@ It contains:
 Fires when consent expired. You should remove user data and sent XcooBee confirmation via `confirmDataDelete()`.
 It contains:
 - consent reference
+
+### ConsentRenewed
+Fires when an active consent was renewed by a user. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
+It contains:
+- consent reference
+- expiration date
 
 #### UserDataRequest
 Fires when user is making a request to extract their current data from your systems. This is to meet data-portability of GDPR. You should create data extract and send it to the User's XcooBee box. You can do so hiring the `xcoobee-data-response` bee with the GUID reference of the request.
@@ -701,7 +726,7 @@ It contains:
 - consent reference
 
 #### DataChanged
-Fires when data or consent is changed. A standard consent object is returned.
+Fires when data or consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
 It contains:
 - consent reference
 - data types with data
@@ -720,6 +745,12 @@ It contains:
 Fires when data has expired. You should remove user data and sent XcooBee confirmation via `confirmDataDelete()`.
 It contains:
 - consent reference
+
+### DataRenewed
+Fires when an active consent was renewed by a user. You should confirm update and send XcooBee confirmation via `confirmConsentChange()`.
+It contains:
+- consent reference
+- expiration date
 
 #### UserDataRequest
 Fires when user is making a request to extract their current data from your systems.
@@ -897,6 +928,14 @@ general process parameters example:
 options.process.userReference = 'myownreference';
 options.process.destinations = ['email@mysite.com', '~jonny'];
 options.process.fileNames = ['filename.png'];
+```
+
+general custom parameters example:
+```
+options.custom = {
+   full_name: 'John Doe',
+   age: 29
+}
 ```
 
 Bee parameters that are specified require the bee name prefix. If the bee name is `xcoobee_testbee` and it requires two parameters `height` and `width` then you will need to add these into an associative array inside the parameters array with a key of bee name.
