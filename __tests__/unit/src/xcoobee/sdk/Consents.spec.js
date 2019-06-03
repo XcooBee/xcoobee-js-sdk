@@ -255,7 +255,18 @@ describe('Consents', () => {
         .registerConsents('campaignCursor', targets)
         .then((res) => {
           expect(ConsentsApi.registerConsents)
-            .toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignCursor', targets, undefined, undefined);
+            .toHaveBeenCalledWith(
+              'apiUrlRoot',
+              'apiAccessToken',
+              'campaignCursor',
+              [{
+                target: '~test',
+                date_received: '2019-01-01',
+                date_expires: 's2020-01-01',
+              }],
+              undefined,
+              undefined
+            );
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);

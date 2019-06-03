@@ -19,6 +19,7 @@ const {
   requestConsent,
   setUserDataResponse,
   getDataPackage,
+  registerConsents,
 } = require('../../../../../src/xcoobee/api/ConsentsApi');
 
 describe('ConsentsApi', () => {
@@ -243,6 +244,34 @@ describe('ConsentsApi', () => {
           expect(options.consentId).toBe('consentId');
 
           expect(EncryptionUtils.decryptWithEncryptedPrivateKey).toHaveBeenCalledWith('encrypted', 'privateKey', 'passphrase');
+        });
+    });
+
+  });
+
+  describe('registerConsents', () => {
+
+    it('should call graphql endpoint with params', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ register_consents: { ref_id: 'refId' } }));
+      const targets = [{
+        target: '~test',
+        date_received: '2019-01-01',
+        date_expires: 's2020-01-01',
+      }]
+
+      return registerConsents('apiUrlRoot', 'accessToken', 'campaignCursor', targets, 'test.txt')
+        .then((res) => {
+          expect(res).toBe('refId');
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+
+          const options = GraphQLClient.prototype.request.mock.calls[0][1];
+          expect(options.config.campaign_cursor).toBe('campaignCursor');
+          expect(options.config.targets).toEqual([{
+            target: '~test',
+            date_received: '2019-01-01',
+            date_expires: 's2020-01-01',
+          }]);
+          expect(options.config.filename).toBe('test.txt');
         });
     });
 
