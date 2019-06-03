@@ -241,4 +241,26 @@ describe('Consents', () => {
 
   });
 
+  describe('registerConsents', () => {
+
+    it('should return response', () => {
+      ConsentsApi.registerConsents.mockReturnValue(Promise.resolve('ref_id'));
+      const targets = [{
+        target: '~test',
+        date_received: '2019-01-01',
+        date_expires: 's2020-01-01',
+      }];
+
+      return consents
+        .registerConsents('campaignCursor', targets)
+        .then((res) => {
+          expect(ConsentsApi.registerConsents)
+            .toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignCursor', targets, undefined, undefined);
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result).toBe('ref_id');
+        });
+    });
+  });
 });

@@ -466,6 +466,47 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
     });
 };
 
+/**
+ * Return consent data package
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} campaign_cursor
+ * @param {Array<RegisterConsentTarget>} targets
+ * @param {string} [filename]
+ * @param {string} [reference]
+ *
+ * @returns {Promise<string>} - The result.
+ * @property {Object|string} payload - The data package.
+ *
+ * @throws {XcooBeeError}
+ */
+const registerConsents = (apiUrlRoot, apiAccessToken, campaign_cursor, targets, filename, reference) => {
+  const query = `
+    mutation registerConsents($config: RegisterConsentsConfig) {
+      register_consents(config: $config) {
+          ref_id
+      }
+    }
+  `;
+
+  return ApiUtils
+    .createClient(apiUrlRoot, apiAccessToken)
+    .request(query, {
+      config: {
+        reference,
+        campaign_cursor,
+        filename,
+        targets,
+      },
+    })
+    .then(({ register_consents }) => register_consents.ref_id)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 module.exports = {
   confirmConsentChange,
   declineConsentChange,
@@ -477,4 +518,5 @@ module.exports = {
   requestConsent,
   setUserDataResponse,
   getDataPackage,
+  registerConsents,
 };

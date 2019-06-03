@@ -519,6 +519,35 @@ class Consents {
     }
   }
 
+  /**
+   * "Register consents received outside of XcooBee"
+   *
+   * @param {string} campaignCursor
+   * @param {Array<RegisterConsentTarget>} targets
+   * @param {string} [filename]
+   * @param {string} [reference]
+   * @param {Config} [config]
+   * @returns {Promise<SuccessResponse>}
+   */
+  async registerConsents(campaignCursor, targets, filename, reference, config = null) {
+    this._assertValidState();
+    const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
+    const {
+      apiKey,
+      apiSecret,
+      apiUrlRoot,
+    } = sdkCfg;
+
+    try {
+      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+      const result = await ConsentsApi.registerConsents(apiUrlRoot, apiAccessToken, campaignCursor, targets, filename, reference);
+      const response = new SuccessResponse(result);
+      return response;
+    } catch (err) {
+      throw new ErrorResponse(400, err);
+    }
+  }
+
 }// eo class Consents
 
 module.exports = Consents;

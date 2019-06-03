@@ -663,6 +663,19 @@ standard response object
     - result will contain progress and refId
 - status 400 if error
 
+### registerConsents(campaignCursor, targets, filename, reference[, config])
+
+Register consents received outside of XcooBee
+
+options:
+```
+campaignCursor  => the text to be sent to the user as user data
+targets         => recipients
+filename        => pointer to the file which contains consents data
+reference       => consent reference
+config          => optional: the config object
+```
+
 ### Consent Events (webhooks)
 
 These are events returned to your endpoint as part of user working with their consent center. All endpoints are determined inside each Consent Campaign.
