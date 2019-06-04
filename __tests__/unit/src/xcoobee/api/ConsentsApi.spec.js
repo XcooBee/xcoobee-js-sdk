@@ -10,16 +10,16 @@ const EncryptionUtils = require('../../../../../src/xcoobee/core/EncryptionUtils
 
 const {
   confirmConsentChange,
-  declineConsentChange,
   confirmDataDelete,
+  declineConsentChange,
   getCookieConsent,
   getConsentData,
+  getDataPackage,
   listConsents,
   resolveXcoobeeId,
   requestConsent,
-  setUserDataResponse,
-  getDataPackage,
   registerConsents,
+  setUserDataResponse,
 } = require('../../../../../src/xcoobee/api/ConsentsApi');
 
 describe('ConsentsApi', () => {

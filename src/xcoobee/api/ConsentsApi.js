@@ -508,14 +508,14 @@ const registerConsents = (apiUrlRoot, apiAccessToken, campaignId, targets, refer
 
 module.exports = {
   confirmConsentChange,
-  declineConsentChange,
   confirmDataDelete,
+  declineConsentChange,
   getCookieConsent,
   getConsentData,
+  getDataPackage,
   listConsents,
   resolveXcoobeeId,
   requestConsent,
-  setUserDataResponse,
-  getDataPackage,
   registerConsents,
+  setUserDataResponse,
 };
