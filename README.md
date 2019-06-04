@@ -671,7 +671,7 @@ options:
 ```
 targets     => list of users whose consents we need to register
 reference   => optional: user reference
-filename    => optional: pointer to the file which contains consents data
+filename    => optional: pointer to the file which list of targets
 campaignId  => optional: id of campaign to which consents must be assigned
 config      => optional: the config object
 ```
