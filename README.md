@@ -663,18 +663,32 @@ standard response object
     - result will contain progress and refId
 - status 400 if error
 
-### registerConsents(campaignCursor, targets, filename, reference[, config])
+### registerConsents(targets[, reference, filename, campaignId, config])
 
 Register consents received outside of XcooBee
 
 options:
 ```
-campaignCursor  => the text to be sent to the user as user data
-targets         => recipients
-filename        => pointer to the file which contains consents data
-reference       => consent reference
-config          => optional: the config object
+targets     => list of users whose consents we need to register
+reference   => optional: user reference
+filename    => optional: pointer to the file which contains consents data
+campaignId  => optional: id of campaign to which consents must be assigned
+config      => optional: the config object
 ```
+
+where targets is an array of objects:
+```
+target          => XiD or email address of a user whose consent we need to register
+date_received   => date when a consent was received, optional, we'll use current date as default
+date_expires    => date when a consent expires, optional, we'll set expiration date based on campaign's settings if missing
+```
+
+#### response
+
+standard response object
+- status 200 if success:
+  - result will contain progress and refId
+- status 400 if error
 
 ### Consent Events (webhooks)
 

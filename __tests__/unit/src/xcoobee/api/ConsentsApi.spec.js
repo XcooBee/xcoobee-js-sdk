@@ -257,15 +257,15 @@ describe('ConsentsApi', () => {
         target: '~test',
         date_received: '2019-01-01',
         date_expires: 's2020-01-01',
-      }]
+      }];
 
-      return registerConsents('apiUrlRoot', 'accessToken', 'campaignCursor', targets, 'test.txt')
+      return registerConsents('apiUrlRoot', 'accessToken', 'campaignId', targets, 'ref_id', 'test.txt')
         .then((res) => {
           expect(res).toBe('refId');
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
 
           const options = GraphQLClient.prototype.request.mock.calls[0][1];
-          expect(options.config.campaign_cursor).toBe('campaignCursor');
+          expect(options.config.campaign_cursor).toBe('campaignId');
           expect(options.config.targets).toEqual([{
             target: '~test',
             date_received: '2019-01-01',
