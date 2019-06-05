@@ -241,4 +241,41 @@ describe('Consents', () => {
 
   });
 
+  describe('registerConsents', () => {
+
+    it('should return response', () => {
+      FileUtils.upload.mockReturnValue(Promise.resolve([{ file: 'test.csv', success: true }]));
+      ConsentsApi.registerConsents.mockReturnValue(Promise.resolve('ref_id'));
+      const targets = [{
+        target: '~test',
+        date_received: '2019-01-01',
+        date_expires: 's2020-01-01',
+      }];
+
+      return consents
+        .registerConsents(targets, 'ref_id', 'test.csv', 'campaignId')
+        .then((res) => {
+          expect(ConsentsApi.registerConsents)
+            .toHaveBeenCalledWith(
+              'apiUrlRoot',
+              'apiAccessToken',
+              'campaignId',
+              [{
+                target: '~test',
+                date_received: '2019-01-01',
+                date_expires: 's2020-01-01',
+              }],
+              'ref_id',
+              'test.csv'
+            );
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result.progress).toBeInstanceOf(Array);
+          expect(res.result.progress[0]).toBe('successfully uploaded test.csv');
+          expect(res.result.progress[1]).toBe('successfully sent data response');
+          expect(res.result.ref_id).toBe('ref_id');
+        });
+    });
+  });
 });

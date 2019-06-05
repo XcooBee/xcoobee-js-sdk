@@ -466,15 +466,56 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
     });
 };
 
+/**
+ * Registers consents
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} campaignId
+ * @param {Array<{ target: string, date_received: ?string, date_expires: ?string }>} targets
+ * @param {?string} [reference]
+ * @param {?string} [filename]
+ *
+ * @returns {Promise<string>} - reference id
+ *
+ * @throws {XcooBeeError}
+ */
+const registerConsents = (apiUrlRoot, apiAccessToken, campaignId, targets, reference = null, filename = null) => {
+  const query = `
+    mutation registerConsents($config: RegisterConsentsConfig) {
+      register_consents(config: $config) {
+          ref_id
+      }
+    }
+  `;
+
+  return ApiUtils
+    .createClient(apiUrlRoot, apiAccessToken)
+    .request(query, {
+      config: {
+        reference,
+        campaign_cursor: campaignId,
+        filename,
+        targets,
+      },
+    })
+    .then(({ register_consents }) => register_consents.ref_id)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 module.exports = {
   confirmConsentChange,
-  declineConsentChange,
   confirmDataDelete,
+  declineConsentChange,
   getCookieConsent,
   getConsentData,
+  getDataPackage,
   listConsents,
   resolveXcoobeeId,
   requestConsent,
+  registerConsents,
   setUserDataResponse,
-  getDataPackage,
 };
