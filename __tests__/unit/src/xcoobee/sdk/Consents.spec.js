@@ -253,28 +253,25 @@ describe('Consents', () => {
       }];
 
       return consents
-        .registerConsents(targets, 'ref_id', 'test.csv', 'campaignId')
+        .registerConsents('test.csv', targets, 'ref_id', 'campaignId')
         .then((res) => {
           expect(ConsentsApi.registerConsents)
             .toHaveBeenCalledWith(
               'apiUrlRoot',
               'apiAccessToken',
               'campaignId',
+              'test.csv',
               [{
                 target: '~test',
                 date_received: '2019-01-01',
                 date_expires: 's2020-01-01',
               }],
-              'ref_id',
-              'test.csv'
+              'ref_id'
             );
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
-          expect(res.result.progress).toBeInstanceOf(Array);
-          expect(res.result.progress[0]).toBe('successfully uploaded test.csv');
-          expect(res.result.progress[1]).toBe('successfully sent data response');
-          expect(res.result.ref_id).toBe('ref_id');
+          expect(res.result).toBe('ref_id');
         });
     });
   });

@@ -669,9 +669,9 @@ Register consents received outside of XcooBee
 
 options:
 ```
-targets     => list of users whose consents we need to register
-reference   => optional: user reference
+targets     => optional: list of users whose consents we need to register
 filename    => optional: pointer to the file which list of targets
+reference   => optional: user reference
 campaignId  => optional: id of campaign to which consents must be assigned
 config      => optional: the config object
 ```
@@ -683,11 +683,24 @@ date_received   => date when a consent was received, optional, we'll use current
 date_expires    => date when a consent expires, optional, we'll set expiration date based on campaign's settings if missing
 ```
 
+example: 
+```
+{
+    targets: [
+        { target: "example@test.com' },
+        { target: "someTestXid', date_expires: "2019-06-14T08:35:35.866Z" },
+    ],
+    reference: "djgiokmd9-d34f-a345-9c7a-aeb104bc30be",
+    filename: File | "path/to/file",
+    campaignId: "ifddb4cd9-d6ea-4005-9c7a-aeb104bc30be"
+}
+```
+
 #### response
 
 standard response object
 - status 200 if success:
-  - result will contain progress and refId
+  - returns refId
 - status 400 if error
 
 ### Consent Events (webhooks)

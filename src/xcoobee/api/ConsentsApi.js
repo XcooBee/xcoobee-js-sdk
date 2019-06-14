@@ -473,15 +473,15 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} campaignId
- * @param {Array<{ target: string, date_received: ?string, date_expires: ?string }>} targets
- * @param {?string} [reference]
  * @param {?string} [filename]
+ * @param {?Array<{ target: string, date_received: ?string, date_expires: ?string }>} [targets]
+ * @param {?string} [reference]
  *
  * @returns {Promise<string>} - reference id
  *
  * @throws {XcooBeeError}
  */
-const registerConsents = (apiUrlRoot, apiAccessToken, campaignId, targets, reference = null, filename = null) => {
+const registerConsents = (apiUrlRoot, apiAccessToken, campaignId, filename = null, targets = [], reference = null) => {
   const query = `
     mutation registerConsents($config: RegisterConsentsConfig) {
       register_consents(config: $config) {

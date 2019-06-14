@@ -259,7 +259,7 @@ describe('ConsentsApi', () => {
         date_expires: 's2020-01-01',
       }];
 
-      return registerConsents('apiUrlRoot', 'accessToken', 'campaignId', targets, 'ref_id', 'test.txt')
+      return registerConsents('apiUrlRoot', 'accessToken', 'campaignId', 'test.txt', targets, 'ref_id')
         .then((res) => {
           expect(res).toBe('refId');
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);

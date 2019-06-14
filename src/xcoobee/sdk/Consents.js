@@ -522,14 +522,14 @@ class Consents {
   /**
    * Register consents
    *
-   * @param {Array<{ target: string, date_received: ?string, date_expires: ?string }>} targets
-   * @param {?string} [reference]
    * @param {?string} [filename]
+   * @param {?Array<{ target: string, date_received: ?string, date_expires: ?string }>} [targets]
+   * @param {?string} [reference]
    * @param {?string} [campaignId]
    * @param {Config} [config]
    * @returns {Promise<SuccessResponse>}
    */
-  async registerConsents(targets, reference = null, filename = null, campaignId = null, config = null) {
+  async registerConsents(filename = null, targets = [], reference = null, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
@@ -539,48 +539,22 @@ class Consents {
       apiUrlRoot,
     } = sdkCfg;
 
-    const errors = [];
-    const progress = [];
-    let response;
+    const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+    const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
+    const userCursor = user.cursor;
 
-    try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
-      const userCursor = user.cursor;
+    if (filename) {
+      const endPointName = UploadPolicyIntents.OUTBOX;
+      const [uploadedFile] = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, [filename]);
 
-      const successfullyUploadedFiles = [];
-      const result = { progress, ref_id: null };
-      if (filename) {
-        const endPointName = UploadPolicyIntents.OUTBOX;
-        const fileUploadResults = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, [filename]);
-
-        fileUploadResults.forEach((fileUploadResult) => {
-          const { error, file, success } = fileUploadResult;
-          if (success) {
-            successfullyUploadedFiles.push(file);
-            progress.push(`successfully uploaded ${file}`);
-          } else {
-            errors.push(`Failed to upload file: ${file}. Error: ${error}.`);
-            progress.push(`failed upload on ${file}`);
-          }
-        });
+      if (!uploadedFile) {
+        throw new ErrorResponse(400, { message: 'Failed to upload file' });
       }
-
-      if (!errors.length) {
-        const refId = await ConsentsApi.registerConsents(apiUrlRoot, apiAccessToken, resolvedCampaignId, targets, reference, successfullyUploadedFiles.length > 0 ? filename : null);
-        progress.push('successfully sent data response');
-        result.ref_id = refId;
-      }
-      response = new SuccessResponse(result);
-    } catch (err) {
-      errors.push(err.message);
     }
 
-    if (errors.length > 0) {
-      const err = errors.join(' ');
-      throw new ErrorResponse(400, new XcooBeeError(err));
-    }
-    return response;
+    const refId = await ConsentsApi.registerConsents(apiUrlRoot, apiAccessToken, resolvedCampaignId, filename, targets, reference);
+
+    return new SuccessResponse(refId);
   }
 
 }// eo class Consents
