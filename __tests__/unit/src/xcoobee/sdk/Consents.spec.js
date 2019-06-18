@@ -243,6 +243,13 @@ describe('Consents', () => {
 
   describe('registerConsents', () => {
 
+    it('should throw error neither file nor targets provided', () => {
+      return consents
+        .registerConsents()
+        .then(() => expect(false).toBeTruthy())
+        .catch(err => expect(err.message).toBe('At least one of arguments [filename, targets] must be provided'));
+    });
+
     it('should return response', () => {
       FileUtils.upload.mockReturnValue(Promise.resolve([{ file: 'test.csv', success: true }]));
       ConsentsApi.registerConsents.mockReturnValue(Promise.resolve('ref_id'));
@@ -253,7 +260,7 @@ describe('Consents', () => {
       }];
 
       return consents
-        .registerConsents('campaignId', 'test.csv', targets, 'ref_id')
+        .registerConsents('test.csv', targets, 'ref_id', 'campaignId')
         .then((res) => {
           expect(ConsentsApi.registerConsents)
             .toHaveBeenCalledWith(
