@@ -522,14 +522,14 @@ class Consents {
   /**
    * Register consents
    *
+   * @param {?string} [campaignId]
    * @param {?string} [filename]
    * @param {?Array<{ target: string, date_received: ?string, date_expires: ?string }>} [targets]
    * @param {?string} [reference]
-   * @param {?string} [campaignId]
    * @param {Config} [config]
    * @returns {Promise<SuccessResponse>}
    */
-  async registerConsents(filename = null, targets = [], reference = null, campaignId = null, config = null) {
+  async registerConsents(campaignId = null, filename = null, targets = [], reference = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
     const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);

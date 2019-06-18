@@ -253,7 +253,7 @@ describe('Consents', () => {
       }];
 
       return consents
-        .registerConsents('test.csv', targets, 'ref_id', 'campaignId')
+        .registerConsents('campaignId', 'test.csv', targets, 'ref_id')
         .then((res) => {
           expect(ConsentsApi.registerConsents)
             .toHaveBeenCalledWith(

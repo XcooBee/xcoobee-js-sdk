@@ -663,16 +663,16 @@ standard response object
     - result will contain progress and refId
 - status 400 if error
 
-### registerConsents(targets[, reference, filename, campaignId, config])
+### registerConsents([campaignId, filename, targets, reference, config])
 
 Register consents received outside of XcooBee
 
 options:
 ```
-targets     => optional: list of users whose consents we need to register
-filename    => optional: pointer to the file which list of targets
-reference   => optional: user reference
 campaignId  => optional: id of campaign to which consents must be assigned
+filename    => optional: pointer to the file which list of targets
+targets     => optional: list of users whose consents we need to register
+reference   => optional: user reference
 config      => optional: the config object
 ```
 
