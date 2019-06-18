@@ -685,15 +685,15 @@ date_expires    => date when a consent expires, optional, we'll set expiration d
 
 example: 
 ```
-{
+registerConsents(
+    filename: File | "path/to/file",
     targets: [
         { target: "example@test.com' },
         { target: "someTestXid', date_expires: "2019-06-14T08:35:35.866Z" },
     ],
     reference: "djgiokmd9-d34f-a345-9c7a-aeb104bc30be",
-    filename: File | "path/to/file",
     campaignId: "ifddb4cd9-d6ea-4005-9c7a-aeb104bc30be"
-}
+)
 ```
 
 #### response
