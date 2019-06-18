@@ -698,7 +698,7 @@ example:
 #### filename
 
 filename is either an instance of File or a path to a file
-it must be a csv format where each line represents target
+it must be a csv format where each line represents target, file should not contain headers
 
 | target           | date_received            | date_expires             |
 |------------------|--------------------------|--------------------------|
