@@ -667,16 +667,20 @@ standard response object
 
 Register consents received outside of XcooBee
 
+Must be provided at least one argument `filename` or `targets` otherwise will throws error.
+
 options:
 ```
-filename    => optional: pointer to the file which list of targets
+filename    => optional: pointer to the csv file which contains list of targets
 targets     => optional: list of users whose consents we need to register
 reference   => optional: user reference
 campaignId  => optional: id of campaign to which consents must be assigned
 config      => optional: the config object
 ```
 
-where targets is an array of objects:
+#### targets
+
+targets is an array of objects:
 ```
 target          => XiD or email address of a user whose consent we need to register
 date_received   => date when a consent was received, optional, we'll use current date as default
@@ -685,16 +689,22 @@ date_expires    => date when a consent expires, optional, we'll set expiration d
 
 example: 
 ```
-registerConsents(
-    filename: File | "path/to/file",
-    targets: [
-        { target: "example@test.com' },
-        { target: "someTestXid', date_expires: "2019-06-14T08:35:35.866Z" },
-    ],
-    reference: "djgiokmd9-d34f-a345-9c7a-aeb104bc30be",
-    campaignId: "ifddb4cd9-d6ea-4005-9c7a-aeb104bc30be"
-)
+[
+   { target: "example@test.com' },
+   { target: "someTestXid', date_expires: "2019-06-14T08:35:35.866Z" },
+]
 ```
+
+#### filename
+
+filename is either an instance of File or a path to a file
+it must be a csv format where each line represents target
+
+| target           | date_received            | date_expires             |
+|------------------|--------------------------|--------------------------|
+| example@test.com | 2019-06-14T08:35:35.866Z | 2019-06-14T08:35:35.866Z |
+| someTestXid      | 2019-06-14T08:35:35.866Z | 2019-06-14T08:35:35.866Z |
+|                  |                          |                          |
 
 #### response
 
