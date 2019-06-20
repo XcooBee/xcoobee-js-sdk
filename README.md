@@ -703,8 +703,7 @@ it must be a csv format where each line represents target, file should not conta
 | target           | date_received            | date_expires             |
 |------------------|--------------------------|--------------------------|
 | example@test.com | 2019-06-14T08:35:35.866Z | 2019-06-14T08:35:35.866Z |
-| someTestXid      | 2019-06-14T08:35:35.866Z | 2019-06-14T08:35:35.866Z |
-|                  |                          |                          |
+| ~someTestXid     | 2019-06-14T08:35:35.866Z | 2019-06-14T08:35:35.866Z |
 
 #### response
 
