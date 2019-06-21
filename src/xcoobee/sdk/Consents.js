@@ -552,7 +552,7 @@ class Consents {
       const endPointName = UploadPolicyIntents.OUTBOX;
       const [uploadedFile] = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, [filename]);
 
-      if (!uploadedFile) {
+      if (!uploadedFile || uploadedFile.error) {
         throw new ErrorResponse(400, { message: 'Failed to upload file' });
       }
     }
