@@ -31,7 +31,14 @@ class Config {
     }
     const { apiKey, apiSecret } = values;
 
-    const apiUrlRoot = values.apiUrlRoot || 'https://api.xcoobee.net'; // use link to beta by default
+    let apiUrlRoot;
+    if (process.env && process.env.API_URL) {
+      apiUrlRoot = process.env.API_URL;
+    } else if (values.apiUrlRoot) {
+      apiUrlRoot = values.apiUrlRoot;
+    } else {
+      apiUrlRoot = 'https://api.xcoobee.net'; // use link to beta by default
+    }
 
     let {
       campaignId,
