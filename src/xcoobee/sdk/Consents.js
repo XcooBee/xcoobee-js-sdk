@@ -519,6 +519,49 @@ class Consents {
     }
   }
 
+  /**
+   * Register consents
+   *
+   * @param {?string} [filename]
+   * @param {?Array<{ target: string, date_received: ?string, date_expires: ?string }>} [targets]
+   * @param {?string} [reference]
+   * @param {?string} [campaignId]
+   * @param {Config} [config]
+   * @returns {Promise<SuccessResponse>}
+   */
+  async registerConsents(filename = null, targets = [], reference = null, campaignId = null, config = null) {
+    this._assertValidState();
+
+    if (!filename && (!targets || !targets.length)) {
+      throw new TypeError('At least one of arguments [filename, targets] must be provided');
+    }
+
+    const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+    const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
+    const {
+      apiKey,
+      apiSecret,
+      apiUrlRoot,
+    } = sdkCfg;
+
+    const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+    const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
+    const userCursor = user.cursor;
+
+    if (filename) {
+      const endPointName = UploadPolicyIntents.OUTBOX;
+      const [uploadedFile] = await FileUtils.upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, [filename]);
+
+      if (!uploadedFile || uploadedFile.error) {
+        throw new ErrorResponse(400, { message: 'Failed to upload file' });
+      }
+    }
+
+    const refId = await ConsentsApi.registerConsents(apiUrlRoot, apiAccessToken, resolvedCampaignId, filename, targets, reference);
+
+    return new SuccessResponse(refId);
+  }
+
 }// eo class Consents
 
 module.exports = Consents;
