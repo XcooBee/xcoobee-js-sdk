@@ -7,6 +7,9 @@ const Inbox = require('./Inbox');
 const System = require('./System');
 const Users = require('./Users');
 
+const apiAccessTokenCache = new ApiAccessTokenCache();
+const usersCache = new UsersCache(apiAccessTokenCache);
+
 /**
  * The SDK class.
  *
@@ -50,17 +53,9 @@ class Sdk {
    * Constructs an Sdk instance.
    */
   constructor(config) {
-    const cfg = config || null;
-    const apiAccessTokenCache = new ApiAccessTokenCache();
-    const usersCache = new UsersCache(apiAccessTokenCache);
-    this._ = {
-      bees: new Bees(cfg, apiAccessTokenCache, usersCache),
-      config: cfg,
-      consents: new Consents(cfg, apiAccessTokenCache, usersCache),
-      inbox: new Inbox(cfg, apiAccessTokenCache, usersCache),
-      system: new System(cfg, apiAccessTokenCache, usersCache),
-      users: new Users(cfg, apiAccessTokenCache, usersCache),
-    };
+    if (config) {
+      this.config = config;
+    }
   }
 
   /**
@@ -138,5 +133,14 @@ class Sdk {
   }
 
 }// eo class Sdk
+
+Sdk.prototype._ = {
+  config: null,
+  bees: new Bees(null, apiAccessTokenCache, usersCache),
+  consents: new Consents(null, apiAccessTokenCache, usersCache),
+  inbox: new Inbox(null, apiAccessTokenCache, usersCache),
+  system: new System(null, apiAccessTokenCache, usersCache),
+  users: new Users(null, apiAccessTokenCache, usersCache),
+};
 
 module.exports = Sdk;
