@@ -282,4 +282,21 @@ describe('Consents', () => {
         });
     });
   });
+
+  describe('getCampaignIdByRef', () => {
+
+    it('should return response with campaign id', () => {
+      CampaignApi.getCampaignIdByRef.mockReturnValue(Promise.resolve('campaignId'));
+
+      return consents.getCampaignIdByRef('campaignRef')
+        .then((res) => {
+          expect(CampaignApi.getCampaignIdByRef).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignRef');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result).toBe('campaignId');
+        });
+    });
+
+  });
 });

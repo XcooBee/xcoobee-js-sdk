@@ -4,7 +4,7 @@ jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');
 
-const { getCampaignInfo, getCampaigns } = require('../../../../../src/xcoobee/api/CampaignApi');
+const { getCampaignInfo, getCampaigns, getCampaignIdByRef } = require('../../../../../src/xcoobee/api/CampaignApi');
 
 describe('CampaignApi', () => {
 
@@ -38,6 +38,34 @@ describe('CampaignApi', () => {
           expect(res[0].title).toBe('test');
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
           expect(GraphQLClient.prototype.request.mock.calls[0][1].userCursor).toBe('userId');
+        });
+    });
+
+  });
+
+  describe('getCampaignIdByRef', () => {
+
+    it('should call graphql endpoint with params', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ campaign: { campaign_cursor: 'campaignId' } }));
+
+      return getCampaignIdByRef('apiUrlRoot', 'accessToken', 'campaignRef')
+        .then((res) => {
+          expect(res).toBe('campaignId');
+
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].campaignRef).toBe('campaignRef');
+        });
+    });
+
+    it('should return empty string if campaign not found', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.reject());
+
+      return getCampaignIdByRef('apiUrlRoot', 'accessToken', 'campaignRef')
+        .then((res) => {
+          expect(res).toBe('');
+
+          expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].campaignRef).toBe('campaignRef');
         });
     });
 
