@@ -105,7 +105,36 @@ const getCampaigns = (apiUrlRoot, apiAccessToken, userCursor, after = null, firs
     });
 };
 
+/**
+ * Fetches the campaign information for the given campaign ID.
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {CampaignRef} campaignRef - The campaign reference.
+ *
+ * @returns {Promise<string>} - The result.
+ * @property {CampaignInfo} campaign - The campaign information.
+ *
+ * @throws {XcooBeeError}
+ */
+const getCampaignIdByRef = (apiUrlRoot, apiAccessToken, campaignRef) => {
+  const query = `
+    query getCampaignId($campaignRef: String!) {
+      campaign(campaign_ref: $campaignRef) {
+          campaign_cursor
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    campaignRef,
+  })
+    .then(response => response.campaign.campaign_cursor)
+    .catch(() => ''); // campaign not found
+};
+
 module.exports = {
   getCampaignInfo,
   getCampaigns,
+  getCampaignIdByRef,
 };

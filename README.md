@@ -1,20 +1,15 @@
 # XcooBee JavaScript SDK
 
-The XcooBee SDK is a facility to abstract lower level calls and implement
-standard behaviors.  The XcooBee team is providing this to improve the speed of
-implementation and show the best practices while interacting with XcooBee.
+The XcooBee SDK is a facility to abstract lower level calls and implement standard behaviors.
+The XcooBee team is providing this to improve the speed of implementation and show the best practices while interacting with XcooBee.
 
-Generally, all communication with XcooBee is encrypted over the wire since none
-of the XcooBee systems will accept plain traffic.  All data sent to XcooBee from
-you and vice versa is going to use encryption. In addition, non-bee event communication to you is also signed using your PGP key.
+Generally, all communication with XcooBee is encrypted over the wire since none of the XcooBee systems will accept plain traffic. All data sent to XcooBee from you and vice versa is going to use encryption. In addition, non-bee event communication to you is also signed using your PGP key.
 
-If you need to generate new PGP keys you can login to your XcooBee account and
-go to the `Settings` page to do so.
+If you need to generate new PGP keys you can login to your XcooBee account and go to the `Settings` page to do so.
 
-XcooBee systems operate globally but with regional connections.  The SDK will be
-connecting you to your regional endpoint automatically.
+XcooBee systems operate globally but with regional connections. The SDK will be connecting you to your regional endpoint automatically.
 
-There is detailed and extensive [API documentation](https://github.com/XcooBee/xcoobee-js-sdk/blob/1.1.1/API.md).
+There is detailed and extensive [API documentation](https://github.com/XcooBee/xcoobee-js-sdk/blob/1.2.0/API.md).
 
 # Instalation
 
@@ -70,12 +65,9 @@ Example of load with openpgp library all from your own source:
 
 # Usage
 
-Before using the SDK, it needs to be configured.  Once created, the
-configuration can be set on the SDK instance. In this case, each function call
-will fallback to using this configuration.  Alternatively, you may pass a
-reference to a configuration instance to each function call.  This passed
-configuration will take precedence over any configuration set on the SDK
-instance.
+Before using the SDK, it needs to be configured.
+Once created, the configuration can be set on the SDK instance. In this case, each function call will fallback to using this configuration.
+Alternatively, you may pass a reference to a configuration instance to each function call. This passed configuration will take precedence over any configuration set on the SDK instance.
 
 **CommonJS:**
 ```js
@@ -88,10 +80,7 @@ import XcooBee from "xcoobee-sdk";
 
 ## The config object
 
-The config object carries all basic configuration information for your specific
-setup and use. There are two ways to instantiate a config object. The first way
-is to use the constructor directly. The second way is to use the constructor
-indirectly via an utility function.
+The config object carries all basic configuration information for your specific setup and use. There are two ways to instantiate a config object. The first way is to use the constructor directly. The second way is to use the constructor indirectly via an utility function.
 
 ### Options
 

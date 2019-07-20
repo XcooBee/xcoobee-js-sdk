@@ -1,3 +1,5 @@
+# API Reference
+
 - [Call limits](#call-limits)
 - [Logs](#logs)
 - [PGP Secret and password](#pgp)
@@ -51,6 +53,7 @@
     - [confirmDataDelete](#confirm-data-delete)
     - [setUserDataResponse](#set-user-data-response)
     - [registerConsents](#register-consents)
+    - [getCampaignIdByRef](#get-campaign-id)
 - [User API](#user-api)
     - [getUsePublicKey](#get-user-public-key)
     - [sendUserMessage](#send-user-message)
@@ -73,55 +76,36 @@
 If you are using developer accounts, please be aware that there is a call limit.
 This is normally 120 calls per hour or 600 calls per 24 hour period.
 
-For subscription accounts your call limits are determined per your account and
-contract.  If you hit your call limits, you will need to contact your account
-manager or support to increase them.
+For subscription accounts your call limits are determined per your account and contract.
+If you hit your call limits, you will need to contact your account manager or support to increase them.
 
-Once you have exceeded your call limits, your call will return status `429` too
-many requests.
+Once you have exceeded your call limits, your call will return status `429` too many requests.
 
 
 # Logs
 
-API calls are logged like standard transactions with the same time to live
-constraints.
+API calls are logged like standard transactions with the same time to live constraints.
 
 
 # About PGP Secret and password {#pgp}
 
-All PGP data is optional to the configuration object.  If you do not supply it,
-then the SDK will skip decryption/encryption steps.  You will have to do these
-outside the SDK and supply or process the data yourself.
+All PGP data is optional to the configuration object.
+If you do not supply it, then the SDK will skip decryption/encryption steps.
+You will have to do these outside the SDK and supply or process the data yourself.
 
 If you wish to handle decryption of PGP yourself you can use the open source [openPGP javascript project](https://github.com/openpgpjs/openpgpjs) or any PGP library of your choosing. The raw event message is the encrypted payload for you to process.
 
 # Asynchronous
 
-Because JavaScript is not multi-threaded, almost all function calls in the SDK
-are asynchronous (i.e., non-blocking).  Each asynchronous function returns a
-`Promise`.  This allows the use of `async/await` syntax in JS environments that
-support it.  Being asynchronous allows the SDK to be embedded, for example in an
-Express app, and not block the app for each call to the SDK.  The `Promise` may
-be resolved with a `Response` instance or rejected with an `ErrorResponse`
-instance.
+Because JavaScript is not multi-threaded, almost all function calls in the SDK are asynchronous (i.e., non-blocking).
+Each asynchronous function returns a `Promise`.
+This allows the use of `async/await` syntax in JS environments that support it.
+Being asynchronous allows the SDK to be embedded, for example in an Express app, and not block the app for each call to the SDK.
+The `Promise` may be resolved with a `Response` instance or rejected with an `ErrorResponse` instance.
 
 # Responses
 
-All calls to the SDK functions return a `Promise` which will either resolve with
-a successful response or reject with an error response. An error response means
-that the call did not complete successfully and no processing operation has
-begun. A successful response, on the other hand, means that the _call_ completed
-successfully but it does not necessarily mean that the processing operation
-initiated by the call has also completed. It all depends on the particular SDK
-function being called. For example, when the `bees.listBees` function resolves
-with a successful response, the processing operation (in this case, searching
-for a list of bees matching a search string) has completed and the result is
-apart of the response. However, when the `consents.requestConsent` function
-resolves with a successful response, the processing operation has just begun.
-The actual response to the requesting consent is asynchronous. The actual
-response will be `POST`ed to the webhook after the processing operation has
-completed. Which of the SDK functions result in a webhook being called is
-documented in the API docs.
+All calls to the SDK functions return a `Promise` which will either resolve with a successful response or reject with an error response. An error response means that the call did not complete successfully and no processing operation has begun. A successful response, on the other hand, means that the _call_ completed successfully but it does not necessarily mean that the processing operation initiated by the call has also completed. It all depends on the particular SDK function being called. For example, when the `bees.listBees` function resolves with a successful response, the processing operation (in this case, searching for a list of bees matching a search string) has completed and the result is apart of the response. However, when the `consents.requestConsent` function resolves with a successful response, the processing operation has just begun. The actual response to the requesting consent is asynchronous. The actual response will be `POST`ed to the webhook after the processing operation has completed. Which of the SDK functions result in a webhook being called is documented in the API docs.
 
 ## SuccessResponse
 ```js
@@ -734,6 +718,23 @@ it must be a csv format where each line represents target, file should not conta
 standard response object
 - status 200 if success:
   - returns refId
+- status 400 if error
+
+## getCampaignIdByRef(campaignRef[, config]) {#get-campaign-id}
+get campaign id by it's reference
+
+options:
+
+```
+campaignRef => the campaign reference which is available on Consent Administration page
+config      => optional: the config object
+```
+
+### response
+
+standard response object
+- status 200 if success:
+  - returns campaignId or `null` if not found
 - status 400 if error
 
 
