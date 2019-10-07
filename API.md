@@ -164,6 +164,14 @@ It contains:
 - consent type
 - expiration date
 
+### ConsentPartiallyChanged
+Fires when some consent's properties were changed. You should confirm update and send XcooBee confirmation via [`confirmConsentChange()`](#confirm-consent-change). A standard consent object is returned, but only updated data type are available.
+It contains:
+- consent reference
+- data types
+- consent type
+- expiration date
+
 ### ConsentNearExpiration
 Fires when an active consent is about to expire (inside 30 days). This is not exactly 30 days as the XcooBee system processes may push this slightly. You should plan ask for renewal of consent if you like to use the user data longer.
 It contains:
@@ -220,6 +228,14 @@ It contains:
 - data types with data
 - consent types
 - expiration
+
+### DataPartiallyChanged
+Fires when some consent's properties were changed. You should confirm update and send XcooBee confirmation via [`confirmConsentChange()`](#confirm-consent-change). A standard consent object is returned, but only updated data type are available.
+It contains:
+- consent reference
+- data types
+- consent type
+- expiration date
 
 ### DataNearExpiration
 Fires when an active consent is about to expire (inside 30 days).
@@ -676,7 +692,7 @@ standard response object
 Generally register/save consents that you received outside of XcooBee.
 
 a) You may have already a list of consents that you have obtained from user but wish to use XcooBee as a system of record so you can manage them through XcooBee.
-b) Or, you would like for XcooBee to verify the consent that you have in your corporate system. 
+b) Or, you would like for XcooBee to verify the consent that you have in your corporate system.
 
 You can upload a list of emails for your campaign and, if your campaign is setup for it,  XcooBee will validate the consent for you with the users.
 
@@ -722,8 +738,8 @@ it must be a csv format where each line represents target, file should not conta
 
 ### response
 
-You should save the refId that is returned from XcooBee when using emails. This is your reference to the consent for lookup purposes. 
-XcooBee does not save the actual email of the user for the consent record, it uses a one way hash pattern. XcooBee technology is unable to resolve consent record via email until user has created an account.  Thus, you should save the refId returned. This is the only link between data stored in your system and XcooBee consent. 
+You should save the refId that is returned from XcooBee when using emails. This is your reference to the consent for lookup purposes.
+XcooBee does not save the actual email of the user for the consent record, it uses a one way hash pattern. XcooBee technology is unable to resolve consent record via email until user has created an account.  Thus, you should save the refId returned. This is the only link between data stored in your system and XcooBee consent.
 
 When you submit multiple records via array object or file, the refId returned is only the **prefix** to the final reference for each consent. The final reference Id can be determined by the ordinal position (zero based index) of the record you submitted `refId-[ordinal position]`. Thus if you have a reference Id of `3657f2c0-d6a7-4a83-88db-0ad8ac4ca4e9` and you submitted two records, the final reference Id for each of the consent records would be:
 
