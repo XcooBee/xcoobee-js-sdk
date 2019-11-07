@@ -49,9 +49,9 @@ describe('Consents', () => {
     it('should return response with consents inside', () => {
       ConsentsApi.listConsents.mockReturnValue(Promise.resolve({ data: [{ name: 'consent1' }, { name: 'consent2' }], page_info: {} }));
 
-      return consents.listConsents(['new'])
+      return consents.listConsents({ statuses: ['new'] })
         .then((res) => {
-          expect(ConsentsApi.listConsents).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', ['new'], null, undefined);
+          expect(ConsentsApi.listConsents).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'userId', { statuses: ['new'] }, null, undefined);
 
           expect(res).toBeInstanceOf(PagingResponse);
           expect(res.code).toBe(200);

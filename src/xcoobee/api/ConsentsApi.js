@@ -245,7 +245,7 @@ const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {*} userCursor
- * @param {ConsentStatus[]} statuses
+ * @param {object} filters
  * @param {string} [after] - Fetch data after this cursor.
  * @param {number} [first] - The maximum count to fetch.
  *
@@ -258,28 +258,42 @@ const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
  *
  * @throws {XcooBeeError}
  */
-const listConsents = (apiUrlRoot, apiAccessToken, userCursor, statuses = [], after = null, first = null) => {
-  if (!Array.isArray(statuses)) {
-    throw TypeError('`statuses` should be array');
-  }
-
-  statuses.forEach((status) => {
-    if (typeof status === 'string') {
-      if (!ConsentStatuses.values.includes(status)) {
-        throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
-      }
-    }
-  });
-
+const listConsents = (apiUrlRoot, apiAccessToken, userCursor, filters = {}, after = null, first = null) => {
   const query = `
-    query listConsents($userCursor: String!, $statuses: [ConsentStatus], $after: String, $first: Int) {
-      consents(campaign_owner_cursor: $userCursor, statuses: $statuses, after: $after, first: $first) {
+  query listConsents($userId: String!, $statuses: [ConsentStatus], $consentTypes: [ConsentType], $dataTypes: [ConsentDatatype], $dateFrom: String, $dateTo: String, $search: String, $country: String, $province: String, $city: String, $first: Int, $after: String) {
+    consents(campaign_owner_cursor: $userId, statuses : $statuses, consent_types: $consentTypes, data_types: $dataTypes, date_from: $dateFrom, date_to: $dateTo, search: $search, country: $country, province: $province, city: $city, first: $first, after: $after) {
         data {
-          consent_cursor,
-          consent_status,
-          date_c,
-          date_e,
-          user_xcoobee_id,
+          consent_cursor
+          user_cursor
+          user_display_name
+          user_xcoobee_id
+          campaign_cursor
+          campaign_status
+          consent_name
+          consent_description
+          consent_status
+          consent_type
+          consent_source
+          consent_details {
+              datatype
+              marker
+              share_hash
+          }
+          date_c
+          date_e
+          date_u
+          date_approved
+          date_deleted
+          update_confirmed
+          deletion_confirmed
+          request_data_types
+          request_data_sections {
+              section_fields {
+                  datatype
+              }
+          }
+          is_data_request
+          user_email_mask
         }
         page_info {
           end_cursor
@@ -289,12 +303,75 @@ const listConsents = (apiUrlRoot, apiAccessToken, userCursor, statuses = [], aft
     }
   `;
 
-  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+  const variables = {
     after,
     first,
-    statuses: statuses.length ? statuses : null,
     userCursor,
-  })
+  };
+
+  if (filters.query) {
+    variables.query = filters.query;
+  }
+
+  if (filters.country) {
+    variables.country = filters.country;
+  }
+
+  if (filters.province) {
+    variables.province = filters.province;
+  }
+
+  if (filters.city) {
+    variables.city = filters.city;
+  }
+
+  if (filters.dateFrom) {
+    if (isNaN(new Date(filters.dateFrom))) {
+      throw TypeError(`Invalid date string given: ${filters.dateFrom}.`);
+    }
+
+    variables.dateFrom = filters.dateFrom;
+  }
+
+  if (filters.dateTo) {
+    if (isNaN(new Date(filters.dateTo))) {
+      throw TypeError(`Invalid date string given: ${filters.dateTo}.`);
+    }
+
+    variables.dateTo = filters.dateTo;
+  }
+
+  if (filters.statuses && Array.isArray(filters.statuses)) {
+    filters.statuses.forEach((status) => {
+      if (!ConsentStatuses.values.includes(status)) {
+        throw TypeError(`Invalid consent status: ${status}.  Must be one of ${ConsentStatuses.values.join(', ')}.`);
+      }
+    });
+
+    variables.statuses = filters.statuses;
+  }
+
+  if (filters.consentTypes && Array.isArray(filters.consentTypes)) {
+    filters.consentTypes.forEach((type) => {
+      if (!ConsentTypes.values.includes(type)) {
+        throw TypeError(`Invalid consent type: ${type}.  Must be one of ${ConsentTypes.values.join(', ')}.`);
+      }
+    });
+
+    variables.consentTypes = filters.consentTypes;
+  }
+
+  if (filters.dataTypes && Array.isArray(filters.dataTypes)) {
+    filters.dataTypes.forEach((type) => {
+      if (!ConsentDataTypes.values.includes(type)) {
+        throw TypeError(`Invalid consent data type: ${type}.  Must be one of ${ConsentDataTypes.values.join(', ')}.`);
+      }
+    });
+
+    variables.dataTypes = filters.dataTypes;
+  }
+
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, variables)
     .then((response) => {
       const { consents } = response;
 
@@ -431,7 +508,7 @@ const resolveXcoobeeId = (apiUrlRoot, apiAccessToken, consentCursor) => {
  * @param {string} privateKey
  * @param {string} passphrase
  *
- * @returns {Promise<Object>} - The result.
+ * @returns {Promise<Array>} - The result.
  * @property {Object|string} payload - The data package.
  *
  * @throws {XcooBeeError}
@@ -450,16 +527,18 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
   })
     .then(async (response) => {
       if (privateKey && passphrase) {
-        const payloadJson = await decryptWithEncryptedPrivateKey(
-          response.data_package.data,
-          privateKey,
-          passphrase
-        );
+        return Promise.all(response.data_package.map(async (dataPackage) => {
+          const payloadJson = await decryptWithEncryptedPrivateKey(
+            dataPackage.data,
+            privateKey,
+            passphrase
+          );
 
-        return { payload: JSON.parse(payloadJson) };
+          return { payload: JSON.parse(payloadJson) };
+        }));
       }
 
-      return { payload: response.data_package && response.data_package.data };
+      return response.data_package.map(dataPackage => ({ payload: dataPackage && dataPackage.data }));
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);
@@ -506,6 +585,49 @@ const registerConsents = (apiUrlRoot, apiAccessToken, campaignId, filename = nul
     });
 };
 
+/**
+ * Share consents
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} campaignRef
+ * @param {?string} [campaignId]
+ * @param {?Array<string>} [consentIds]
+ * @param {?string} [reference]
+ *
+ * @returns {Promise<string>} - reference id
+ *
+ * @throws {XcooBeeError}
+ */
+const shareConsents = (apiUrlRoot, apiAccessToken, campaignRef, campaignId = null, consentIds = []) => {
+  if (!campaignId && !consentIds.length) {
+    throw TypeError('Either campaignId or consentIds should be provided');
+  }
+
+  const query = `
+    mutation shareConsents($config: ShareConsentsConfig!){
+      share_consents(config: $config){
+        ref_id
+      }
+    }
+  `;
+
+  return ApiUtils
+    .createClient(apiUrlRoot, apiAccessToken)
+    .request(query, {
+      config: {
+        campaign_reference: campaignRef,
+        campaign_cursor: campaignId,
+        consent_cursors: consentIds,
+      },
+    })
+    .then(({ share_consents }) => share_consents.ref_id)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 module.exports = {
   confirmConsentChange,
   confirmDataDelete,
@@ -518,4 +640,5 @@ module.exports = {
   requestConsent,
   registerConsents,
   setUserDataResponse,
+  shareConsents,
 };
