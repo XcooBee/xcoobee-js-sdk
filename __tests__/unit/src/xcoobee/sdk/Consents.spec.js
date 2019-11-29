@@ -299,4 +299,21 @@ describe('Consents', () => {
     });
 
   });
+
+  describe('dontSellData', () => {
+
+    it('should return response with true', () => {
+      ConsentsApi.dontSellData.mockReturnValue(Promise.resolve(true));
+
+      return consents.dontSellData('test@email.com')
+        .then((res) => {
+          expect(ConsentsApi.dontSellData).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'test@email.com');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result).toBe(true);
+        });
+    });
+
+  });
 });
