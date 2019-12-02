@@ -643,7 +643,7 @@ const shareConsents = (apiUrlRoot, apiAccessToken, campaignRef, campaignId = nul
  */
 const dontSellData = (apiUrlRoot, apiAccessToken, email) => {
   const mutation = `
-    mutation dontSellData($email: String!){
+    mutation dontSellData($email: String!) {
       do_not_sell_data(email: $email){
           user_email
       }
