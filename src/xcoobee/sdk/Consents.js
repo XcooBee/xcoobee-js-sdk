@@ -634,7 +634,7 @@ class Consents {
   }
 
   /**
-    * Set or extend `Do Not Sell Data` flag
+   * Set or extend `Do Not Sell Data` flag
    *
    * @async
    * @param {string} email - The email of user, that flag will be set for.
