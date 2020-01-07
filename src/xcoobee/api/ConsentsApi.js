@@ -635,22 +635,24 @@ const shareConsents = (apiUrlRoot, apiAccessToken, campaignRef, campaignId = nul
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
  * @param {string} email
+ * @param {boolean} dontSell
  *
  * @returns {Promise<Object>} - The result.
  * @property {boolean} confirmed - Flag indicating whether the change is confirmed.
  *
  * @throws {XcooBeeError}
  */
-const dontSellData = (apiUrlRoot, apiAccessToken, email) => {
+const dontSellData = (apiUrlRoot, apiAccessToken, email, dontSell) => {
   const mutation = `
-    mutation dontSellData($email: String!) {
-      do_not_sell_data(email: $email) {
-        user_email
+    mutation dontSellData($email: String!, $dontSell: Boolean){
+      do_not_sell_data(email: $email, dont_sell: $dontSell){
+          user_email
       }
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     email,
+    dontSell,
   })
     .then(() => true)
     .catch((err) => {

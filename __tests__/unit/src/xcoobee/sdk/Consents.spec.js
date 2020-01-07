@@ -307,7 +307,7 @@ describe('Consents', () => {
 
       return consents.dontSellData('test@email.com')
         .then((res) => {
-          expect(ConsentsApi.dontSellData).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'test@email.com');
+          expect(ConsentsApi.dontSellData).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'test@email.com', true);
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);

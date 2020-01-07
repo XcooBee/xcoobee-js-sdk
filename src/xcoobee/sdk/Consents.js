@@ -638,6 +638,7 @@ class Consents {
    *
    * @async
    * @param {string} email - The email of user, that flag will be set for.
+   * @param {boolean} [dontSell] - Flag status. `true` by default
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -652,14 +653,14 @@ class Consents {
    *
    * @throws {XcooBeeError}
    */
-  async dontSellData(email, config = null) {
+  async dontSellData(email, dontSell = true, config = null) {
     this._assertValidState();
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const result = await ConsentsApi.dontSellData(apiUrlRoot, apiAccessToken, email);
+      const result = await ConsentsApi.dontSellData(apiUrlRoot, apiAccessToken, email, dontSell);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {

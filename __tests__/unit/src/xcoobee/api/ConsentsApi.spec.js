@@ -364,11 +364,12 @@ describe('ConsentsApi', () => {
     it('should call graphql endpoint with params', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve());
 
-      return dontSellData('apiUrlRoot', 'accessToken', 'test@email.com')
+      return dontSellData('apiUrlRoot', 'accessToken', 'test@email.com', false)
         .then((res) => {
           expect(res).toBe(true);
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
           expect(GraphQLClient.prototype.request.mock.calls[0][1].email).toBe('test@email.com');
+          expect(GraphQLClient.prototype.request.mock.calls[0][1].dontSell).toBe(false);
         });
     });
 
