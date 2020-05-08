@@ -17,48 +17,6 @@ describe('ConsentsApi', () => {
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  describe('.confirmConsentChange', () => {
-
-    describe('called with a valid API access token', () => {
-
-      it('should return flag indicating if the consent change has been confirmed', async (done) => {
-        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
-        const userCursor = user.cursor;
-        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
-        const consentCursor = consents.data[0].consent_cursor;
-        const result = await ConsentsApi.confirmConsentChange(apiUrlRoot, apiAccessToken, consentCursor);
-        expect(result).toBeDefined();
-        expect(result.confirmed).toBe(true);
-
-        done();
-      });// eo it
-
-    });// eo describe
-
-  });// eo describe('.confirmConsentChange')
-
-  describe('.confirmDataDelete', () => {
-
-    describe('called with a valid API access token', () => {
-
-      it('should return flag indicating if the data has been deleted/purged', async (done) => {
-        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
-        const userCursor = user.cursor;
-        const consents = await ConsentsApi.listConsents(apiUrlRoot, apiAccessToken, userCursor);
-        const consentCursor = consents.data[0].consent_cursor;
-        const result = await ConsentsApi.confirmDataDelete(apiUrlRoot, apiAccessToken, consentCursor);
-        expect(result).toBeDefined();
-        expect(result.confirmed).toBe(true);
-
-        done();
-      });// eo it
-
-    });// eo describe
-
-  });// eo describe('.confirmDataDelete')
-
   describe('.getCookieConsent', () => {
 
     describe('called with a valid API access token', () => {

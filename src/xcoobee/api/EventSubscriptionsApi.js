@@ -1,65 +1,12 @@
-const XcooBeeError = require('../core/XcooBeeError');
 const ApiUtils = require('./ApiUtils');
-
-/**
- * An event subscription type.
- *
- * @name EventSubscriptionType
- * @enum {string}
- */
-
-const TypeToEventTypeLut = {
-  BreachBeeUsed: 'breach_bee_used',
-  BreachPresented: 'breach_presented',
-  ConsentApproved: 'consent_approved',
-  ConsentChanged: 'consent_changed',
-  ConsentDeclined: 'consent_declined',
-  ConsentExpired: 'consent_expired',
-  ConsentNearExpiration: 'consent_near_expiration',
-  DataApproved: 'data_approved',
-  DataChanged: 'data_changed',
-  DataDeclined: 'data_declined',
-  DataExpired: 'data_expired',
-  DataNearExpiration: 'data_near_expiration',
-  UserDataRequest: 'user_data_request',
-  UserMessage: 'user_message',
-};
-
-/**
- * @param {string} type
- *
- * @returns {string}
- *
- * @throws {XcooBeeError}
- */
-const toEventType = (type) => {
-  if (!(type in TypeToEventTypeLut)) {
-    throw new XcooBeeError(`Invalid event type provided: "${type}".`);
-  }
-
-  return TypeToEventTypeLut[type];
-};
-
-/**
- * A summary of an event subscription.
- *
- * @typedef {Object} EventSubscription
- * @property {string} campaign_cursor
- * @property {string} date_c - The creation date in ISO 8601 format.
- * @property {EventSubscriptionType} event_type - The type of the event subscription.
- * @property {string} handler - The name of the method to call when the event is
- *   fired.
- * @property {string} owner_cursor
- */
+const XcooBeeError = require('../core/XcooBeeError');
 
 /**
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {Object} eventsMapping - A mapping between event subscription type and
- *   handler.
- * @param {CampaignId} campaignId - The campaign cursor.
+ * @param {EventSubscription[]} eventSubscriptions - A list of event subscriptions to subscribe
  *
  * @returns {Promise<Object>} - The result.
  * @property {EventSubscription[]} data - A page of the newly added event
@@ -69,33 +16,30 @@ const toEventType = (type) => {
  *
  * @throws {XcooBeeError}
  */
-const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaignId) => {
-  ApiUtils.assertAppearsToBeACampaignId(campaignId);
-  const events = [];
-
-  for (let type in eventsMapping) {
-    events.push({
-      handler: eventsMapping[type],
-      event_type: toEventType(type),
-    });
-  }
+const addEventSubscriptions = (apiUrlRoot, apiAccessToken, eventSubscriptions) => {
   const addSubscriptionsConfig = {
-    campaign_cursor: campaignId,
-    events,
+    events: eventSubscriptions.map((eventSubscription) => {
+      if (!eventSubscription.topic || !eventSubscription.channel) {
+        throw new XcooBeeError('No topic or channel provided');
+      }
+
+      return {
+        topic: eventSubscription.topic,
+        channel: eventSubscription.channel,
+        handler: eventSubscription.handler,
+      };
+    }),
   };
   const mutation = `
-    mutation addEventSubscription($config: AddSubscriptionsConfig!) {
-      add_event_subscriptions(config: $config) {
+    mutation addEventSubscriptionss($config: AddSubscriptionsConfig! ){
+      add_event_subscriptions(config: $config){
         data {
-          campaign_cursor
-          date_c
-          event_type
-          handler
-          owner_cursor
-        }
-        page_info {
-          end_cursor
-          has_next_page
+            topic
+            channel
+            handler
+            owner_cursor
+            reference_cursor
+            reference_type
         }
       }
     }
@@ -103,13 +47,7 @@ const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaig
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: addSubscriptionsConfig,
   })
-    .then((response) => {
-      const { add_event_subscriptions } = response;
-
-      // Note: `page_info` should always be `null` for this mutation.
-
-      return add_event_subscriptions;
-    })
+    .then((response) => response.add_event_subscriptions)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });
@@ -120,29 +58,28 @@ const addEventSubscription = (apiUrlRoot, apiAccessToken, eventsMapping, campaig
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {Array<string>} arrayOfEventNames - An array of event subscription types to be
- *   deleted.
- * @param {CampaignId} campaignId - The campaign cursor.
+ * @param {EventSubscription[]} eventSubscriptions - An array of event subscriptions to unsubscribe
  *
  * @returns {Promise<Object>} - The result.
  * @property {number} deleted_number - The number of event subscriptions deleted.
  *
  * @throws {XcooBeeError}
  */
-const deleteEventSubscription = (apiUrlRoot, apiAccessToken, arrayOfEventNames, campaignId) => {
-  ApiUtils.assertAppearsToBeACampaignId(campaignId);
-
-  const eventTypes = [];
-  arrayOfEventNames.forEach((type) => {
-    eventTypes.push(toEventType(type));
-  });
-
+const deleteEventSubscriptions = (apiUrlRoot, apiAccessToken, eventSubscriptions) => {
   const deleteSubscriptionsConfig = {
-    campaign_cursor: campaignId,
-    events: eventTypes,
+    events: eventSubscriptions.map((eventSubscription) => {
+      if (!eventSubscription.topic || !eventSubscription.channel) {
+        throw new XcooBeeError('No topic or channel provided');
+      }
+
+      return {
+        topic: eventSubscription.topic,
+        channel: eventSubscription.channel,
+      };
+    }),
   };
   const mutation = `
-    mutation deleteEventSubscription($config: DeleteSubscriptionsConfig!) {
+    mutation deleteEventSubscriptions($config: DeleteSubscriptionsConfig!) {
       delete_event_subscriptions(config: $config) {
         deleted_number
       }
@@ -151,75 +88,120 @@ const deleteEventSubscription = (apiUrlRoot, apiAccessToken, arrayOfEventNames, 
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
     config: deleteSubscriptionsConfig,
   })
-    .then((response) => {
-      const { delete_event_subscriptions } = response;
-
-      return delete_event_subscriptions;
-    })
+    .then((response) => response.delete_event_subscriptions)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });
 };
 
 /**
- * Fetches a page of event subscriptions for the given campaign cursor.
+ * Fetches event subscriptions for the user
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {CampaignId} campaignId - The campaign cursor.
+ * @param {string} referenceId - id of related enyity (i.e. campaignId)
+ * @param {string} referenceType - type of related entity (i.e. campaign, funding_panel)
  *
  * @returns {Promise<Object>} - The result.
- * @property {EventSubscription[]} data - A page of event subscriptions for the
- *   given campaign cursor.
- * @property {Object} page_info - The page information.
- * @property {boolean} page_info.has_next_page - Flag indicating whether there is
- *   another page of data to may be fetched.
- * @property {string} page_info.end_cursor - The end cursor.
+ * @property {EventSubscription[]} data - A page of event subscriptions for the user
  *
  * @throws {XcooBeeError}
  */
-const listEventSubscriptions = (apiUrlRoot, apiAccessToken, campaignId) => {
-  ApiUtils.assertAppearsToBeACampaignId(campaignId);
-  const query = `
-    query listEventSubscriptions($campaignId: String!) {
-      event_subscriptions(campaign_cursor: $campaignId) {
-        data {
-          campaign_cursor
-          date_c
-          event_type
-          handler
-          owner_cursor
-        }
-        page_info {
-          end_cursor
-          has_next_page
-        }
+const listEventSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, referenceType) => {
+  const query = `{
+    event_subscriptions {
+      data {
+        owner_cursor
+        reference_cursor
+        reference_type
+        topic
+        channel
+        handler
+        date_c
       }
     }
-  `;
+  }`;
+
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
-    campaignId,
+    referenceId,
+    referenceType,
   })
-    .then((response) => {
-      const { event_subscriptions } = response;
+    .then((response) => response.event_subscriptions)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
 
-      // TODO: Remove the following once `event_subscriptions` returns a valid `page_info`
-      // property or no longer does cursor-based pagination.
-      event_subscriptions.page_info = event_subscriptions.page_info || { end_cursor: null, has_next_page: false };
+/**
+ * Fetches available subscriptions and channels for the user
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} referenceId - id of related enyity (i.e. campaignId)
+ * @param {string} referenceType - type of related entity (i.e. campaign, funding_panel)
+ *
+ * @returns {Promise<Array>} - All available subscriptions to subscribe.
+ *
+ * @throws {XcooBeeError}
+ */
+const getAvailableSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, referenceType) => {
+  const query = `query getAvailableSubscriptions($referenceType: EventReferenceType, $referenceId: String){
+    available_subscriptions (reference_type: $referenceType, reference_cursor: $referenceId) {
+        topic
+        channels
+    }
+  }`;
 
-      // TODO: return valid event type
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    referenceId,
+    referenceType,
+  })
+    .then((response) => response.available_subscriptions)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
 
-      return event_subscriptions;
-    })
+/**
+ * Fetches available subscriptions and channels for the user
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {string} topic - topic of subscription
+ * @param {string} channel - channel of subscription
+ *
+ * @returns {Promise<Array>} - All available subscriptions to subscribe.
+ *
+ * @throws {XcooBeeError}
+ */
+const unsuspendEventSubscription = (apiUrlRoot, apiAccessToken, topic, channel) => {
+  const mutation = `mutation unsuspendEventSubscriptions($config: EditSubscriptionConfig!) {
+    edit_event_subscription(config: $config) {
+        topic
+        channel
+        status
+    }
+  }`;
+
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(mutation, {
+    config: {
+      topic,
+      channel,
+    },
+  })
+    .then((response) => response.edit_event_subscription)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });
 };
 
 module.exports = {
-  addEventSubscription,
-  deleteEventSubscription,
+  addEventSubscriptions,
+  deleteEventSubscriptions,
   listEventSubscriptions,
-  toEventType,
+  getAvailableSubscriptions,
+  unsuspendEventSubscription,
 };

@@ -45,49 +45,9 @@ describe('Bees', () => {
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
 
-            let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
+            const filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_dropbox_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_google_drive_uploader');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_send_contact');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_contact');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_timestamp');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_timestamp');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
-
-            expect(response.hasNextPage()).toBe(false);
-            const nextPageResponse = await response.getNextPage();
-            expect(nextPageResponse).toBe(null);
 
             done();
           });// eo it
@@ -116,41 +76,9 @@ describe('Bees', () => {
             const bees = result.data;
             expect(bees).toBeInstanceOf(Array);
 
-            let filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
+            const filteredBees = findBeesBySystemName(bees, 'xcoobee_bee_watermark');
             expect(filteredBees.length).toBe(1);
             expect(filteredBees[0].bee_system_name).toBe('xcoobee_bee_watermark');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_dropbox_uploader');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_dropbox_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_google_drive_uploader');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_google_drive_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_imgur');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_imgur');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_message');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_message');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_onedrive_uploader');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_onedrive_uploader');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_send_consent_request');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_send_consent_request');
-
-            filteredBees = findBeesBySystemName(bees, 'xcoobee_twitter');
-            expect(filteredBees.length).toBe(1);
-            expect(filteredBees[0].bee_system_name).toBe('xcoobee_twitter');
-
-            expect(response.hasNextPage()).toBe(false);
-            const nextPageResponse = await response.getNextPage();
-            expect(nextPageResponse).toBe(null);
 
             done();
           });// eo it
@@ -177,7 +105,7 @@ describe('Bees', () => {
           } catch (response) {
             expect(response).toBeInstanceOf(ErrorResponse);
             expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
+            expect(response.error.message).toBe('[Failure] Cannot process request');
           }
 
           done();
@@ -246,7 +174,7 @@ describe('Bees', () => {
             expect(result).toBeInstanceOf(Array);
             expect(result.length).toBe(1);
             const fileResult = result[0];
-            expect(fileResult.file).toBe(file);
+            expect(fileResult.file).toBe('bees-upload-files-test.txt');
             expect(fileResult.success).toBe(true);
 
             done();

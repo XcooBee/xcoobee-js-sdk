@@ -95,7 +95,7 @@ describe('TokenApi', () => {
           })
           .catch((err) => {
             expect(err).toBeInstanceOf(XcooBeeError);
-            expect(err.message).toBe('Unable to get an API access token.');
+            expect(err.message).toBe('[Failure] Cannot process request');
             done();
           });
       });// eo it

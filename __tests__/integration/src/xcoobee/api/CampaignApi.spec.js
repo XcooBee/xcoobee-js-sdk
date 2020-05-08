@@ -39,14 +39,6 @@ describe('CampaignApi', () => {
           expect(campaign.date_c).toBeDefined();
           expect(campaign.date_e).toBeDefined();
           assertIso8601Like(campaign.date_c);
-          expect(campaign.email_targets).toBeInstanceOf(Array);
-          expect(campaign.email_targets.length).toBe(0);
-          expect(campaign.endpoint).toBe(null);
-          expect(campaign.status).toBe('active');
-          expect(campaign.targets).toBeInstanceOf(Array);
-          expect(campaign.targets.length).toBe(0);
-          expect(campaign.xcoobee_targets).toBeInstanceOf(Array);
-          expect(campaign.xcoobee_targets.length).toBe(0);
 
           done();
         });// eo it

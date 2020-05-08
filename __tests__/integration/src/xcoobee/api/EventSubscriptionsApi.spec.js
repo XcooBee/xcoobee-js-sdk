@@ -6,7 +6,6 @@ const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
 
-const { addTestEventSubscriptions, deleteAllEventSubscriptions } = require('../../../../lib/EventSubscriptionUtils');
 const { assertIsCursorLike, assertIso8601Like } = require('../../../../lib/Utils');
 
 const apiUrlRoot = process.env.XCOOBEE__API_URL_ROOT || 'https://testapi.xcoobee.net/Test';
@@ -20,260 +19,13 @@ describe('EventSubscriptionsApi', () => {
   const apiAccessTokenCache = new ApiAccessTokenCache();
   const usersCache = new UsersCache(apiAccessTokenCache);
 
-  const getCampaignId = async () => {
+  const getCampaign = async () => {
     const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
     const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
     const userCursor = user.cursor;
     const campaigns = await CampaignApi.getCampaigns(apiUrlRoot, apiAccessToken, userCursor);
-    return campaigns.data[0].campaign_cursor;
+    return campaigns.data[0];
   };
-
-  beforeAll(async (done) => {
-    const campaignId = await getCampaignId();
-    await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
-
-    done();
-  });
-
-  describe('.addEventSubscription', () => {
-
-    describe('called with a valid API access token', () => {
-
-      describe('and a known campaign ID', () => {
-
-        describe('and a valid events mapping', () => {
-
-          afterEach(async (done) => {
-            const campaignId = await getCampaignId();
-            await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
-
-            done();
-          });
-
-          it('should add the event subscriptions', async (done) => {
-            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            const eventsMapping = {
-              ConsentApproved: 'OnConsentApproved',
-              DataDeclined: 'OnDataDeclined',
-            };
-            const campaignId = await getCampaignId();
-            const eventSubscriptionsPage = await EventSubscriptionsApi.addEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
-            );
-            expect(eventSubscriptionsPage).toBeDefined();
-            expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
-            expect(eventSubscriptionsPage.data.length).toBe(2);
-            let eventSubscription = eventSubscriptionsPage.data[0];
-            expect(eventSubscription.campaign_cursor).toBe(campaignId);
-            // assertIso8601Like(eventSubscription.date_c);
-            expect(eventSubscription.date_c).toBe(null);
-            if (eventSubscription.event_type === 'consent_approved') {
-              expect(eventSubscription.handler).toBe('OnConsentApproved');
-            } else if (eventSubscription.event_type === 'data_declined') {
-              expect(eventSubscription.handler).toBe('OnDataDeclined');
-            } else {
-              // This should not be called.
-              expect(true).toBe(false);
-            }
-            assertIsCursorLike(eventSubscription.owner_cursor);
-            expect(eventSubscriptionsPage.page_info).toBe(null);
-
-            eventSubscription = eventSubscriptionsPage.data[1];
-            expect(eventSubscription.campaign_cursor).toBe(campaignId);
-            // assertIso8601Like(eventSubscription.date_c);
-            expect(eventSubscription.date_c).toBe(null);
-            if (eventSubscription.event_type === 'consent_approved') {
-              expect(eventSubscription.handler).toBe('OnConsentApproved');
-            } else if (eventSubscription.event_type === 'data_declined') {
-              expect(eventSubscription.handler).toBe('OnDataDeclined');
-            } else {
-              // This should not be called.
-              expect(true).toBe(false);
-            }
-            assertIsCursorLike(eventSubscription.owner_cursor);
-            expect(eventSubscriptionsPage.page_info).toBe(null);
-
-            done();
-          });// eo it
-
-          it('should throw an error when trying to add an existing event subscription type', async (done) => {
-            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            const eventsMapping = {
-              ConsentApproved: 'OnConsentApproved',
-            };
-            const campaignId = await getCampaignId();
-            await EventSubscriptionsApi.addEventSubscription(
-              apiUrlRoot, apiAccessToken, eventsMapping, campaignId
-            );
-            try {
-              await EventSubscriptionsApi.addEventSubscription(
-                apiUrlRoot, apiAccessToken, eventsMapping, campaignId
-              );
-              // This should not be called.
-              expect(true).toBe(false);
-            } catch (err) {
-              expect(err).toBeInstanceOf(XcooBeeError);
-              expect(err.message).toBe('Event subscription for consent_approved already exists at line: 3, column: 7');
-              expect(err.name).toBe('XcooBeeError');
-
-              done();
-            }
-          });// eo it
-
-        });// eo describe
-
-        describe('and an invalid events mapping', () => {
-
-          it('should throw an error', async (done) => {
-            const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
-            const eventsMapping = {
-              Invalid: 'invalid',
-            };
-            const campaignId = await getCampaignId();
-            try {
-              await EventSubscriptionsApi.addEventSubscription(
-                apiUrlRoot, apiAccessToken, eventsMapping, campaignId
-              );
-              // This should not be called.
-              expect(true).toBe(false);
-            } catch (err) {
-              expect(err).toBeInstanceOf(XcooBeeError);
-              expect(err.message).toBe('Invalid event type provided: "Invalid".');
-              expect(err.name).toBe('XcooBeeError');
-
-              done();
-            }
-          });// eo it
-
-        });// eo describe
-
-      });// eo describe
-
-      describe('and an unknown campaign ID', async () => {
-
-        it('should throw an error', async (done) => {
-          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const eventsMapping = {
-            ConsentApproved: 'OnConsentApproved',
-          };
-          const campaignId = 'unknown';
-          try {
-            await EventSubscriptionsApi.addEventSubscription(apiUrlRoot, apiAccessToken, eventsMapping, campaignId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (err) {
-            expect(err).toBeInstanceOf(XcooBeeError);
-            expect(err.message).toBe('Wrong key at line: 3, column: 7');
-            expect(err.name).toBe('XcooBeeError');
-
-            done();
-          }
-        });
-
-      });// eo describe
-
-    });// eo describe
-
-  });// eo describe('.addEventSubscription')
-
-  describe('.deleteEventSubscription', () => {
-
-    describe('called with a valid API access token', () => {
-
-      describe('and a known campaign ID', () => {
-
-        describe('and a valid events mapping', () => {
-
-          beforeEach(async (done) => {
-            const campaignId = await getCampaignId();
-            await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
-
-            done();
-          });
-
-          it('should delete both of the event subscriptions', async (done) => {
-            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            const eventTypes = ['ConsentApproved', 'DataDeclined'];
-            const campaignId = await getCampaignId();
-            const result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventTypes, campaignId
-            );
-            expect(result).toBeDefined();
-            expect(result.deleted_number).toBe(2);
-
-            done();
-          });// eo it
-
-          it('should delete each of the event subscriptions', async (done) => {
-            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-            let eventTypes = ['ConsentApproved'];
-            const campaignId = await getCampaignId();
-            let result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventTypes, campaignId
-            );
-            expect(result).toBeDefined();
-            expect(result.deleted_number).toBe(1);
-
-            eventTypes = ['DataDeclined'];
-            result = await EventSubscriptionsApi.deleteEventSubscription(
-              apiUrlRoot, apiAccessToken, eventTypes, campaignId
-            );
-            expect(result).toBeDefined();
-            expect(result.deleted_number).toBe(1);
-
-            done();
-          });// eo it
-        });// eo describe
-
-        describe('and an invalid events mapping', () => {
-
-          it('should throw an error', async (done) => {
-            const apiAccessToken = 'should_not_matter_expecting_to_fail_fast';
-            const eventTypes = ['Invalid'];
-            const campaignId = await getCampaignId();
-            try {
-              await EventSubscriptionsApi.deleteEventSubscription(
-                apiUrlRoot, apiAccessToken, eventTypes, campaignId
-              );
-              // This should not be called.
-              expect(true).toBe(false);
-            } catch (err) {
-              expect(err).toBeInstanceOf(XcooBeeError);
-              expect(err.message).toBe('Invalid event type provided: "Invalid".');
-              expect(err.name).toBe('XcooBeeError');
-
-              done();
-            }
-          });// eo it
-
-        });// eo describe
-
-      });// eo describe
-
-      describe('and an unknown campaign ID', async () => {
-
-        it('should throw an error', async (done) => {
-          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const eventTypes = ['ConsentApproved'];
-          const campaignId = 'unknown';
-          try {
-            await EventSubscriptionsApi.deleteEventSubscription(apiUrlRoot, apiAccessToken, eventTypes, campaignId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (err) {
-            expect(err).toBeInstanceOf(XcooBeeError);
-            expect(err.message).toBe('Wrong key at line: 3, column: 7');
-            expect(err.name).toBe('XcooBeeError');
-
-            done();
-          }
-        });
-
-      });// eo describe
-
-    });// eo describe
-
-  });// eo describe('.deleteEventSubscription')
 
   describe('.listEventSubscriptions', () => {
 
@@ -281,82 +33,162 @@ describe('EventSubscriptionsApi', () => {
 
       describe('and called with a known campaign ID', () => {
 
-        beforeEach(async (done) => {
-          const campaignId = await getCampaignId();
-          await addTestEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
-
-          done();
-        });
-
-        afterEach(async (done) => {
-          const campaignId = await getCampaignId();
-          await deleteAllEventSubscriptions(apiAccessTokenCache, apiUrlRoot, apiKey, apiSecret, campaignId);
-
-          done();
-        });
-
         it('should return with a list of event subscriptions', async (done) => {
           const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const campaignId = await getCampaignId();
+          const campaign = await getCampaign();
           const eventSubscriptionsPage = await EventSubscriptionsApi.listEventSubscriptions(
-            apiUrlRoot, apiAccessToken, campaignId
+            apiUrlRoot, apiAccessToken, campaign.campaign_cursor, 'campaign'
           );
           expect(eventSubscriptionsPage).toBeDefined();
-          expect(eventSubscriptionsPage.page_info).toBeDefined();
-          expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
-          expect(eventSubscriptionsPage.data.length).toBe(2);
-          let eventSubscription = eventSubscriptionsPage.data[0];
-          expect(eventSubscription.campaign_cursor).toBe(campaignId);
+          const eventSubscription = eventSubscriptionsPage.data[0];
+          expect(eventSubscription.reference_cursor).toBe(campaign.campaign_cursor);
           assertIso8601Like(eventSubscription.date_c);
-          if (eventSubscription.event_type === 'consent_approved') {
-            expect(eventSubscription.handler).toBe('OnConsentApproved');
-          } else if (eventSubscription.event_type === 'data_declined') {
-            expect(eventSubscription.handler).toBe('OnDataDeclined');
-          } else {
-            // This should not be called.
-            expect(true).toBe(false);
-          }
           assertIsCursorLike(eventSubscription.owner_cursor);
-
-          eventSubscription = eventSubscriptionsPage.data[1];
-          expect(eventSubscription.campaign_cursor).toBe(campaignId);
-          assertIso8601Like(eventSubscription.date_c);
-          if (eventSubscription.event_type === 'consent_approved') {
-            expect(eventSubscription.handler).toBe('OnConsentApproved');
-          } else if (eventSubscription.event_type === 'data_declined') {
-            expect(eventSubscription.handler).toBe('OnDataDeclined');
-          } else {
-            // This should not be called.
-            expect(true).toBe(false);
-          }
-          assertIsCursorLike(eventSubscription.owner_cursor);
+          expect(eventSubscription.topic).toBe(`campaign:${campaign.campaign_reference}/data_approved`);
+          expect(eventSubscription.channel).toBe('email');
 
           done();
         });// eo it
 
       });// eo describe
 
-      describe('and called with an unknown campaign ID', async () => {
+    });// eo describe
 
-        it('should throw an error', async (done) => {
-          const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-          const campaignId = 'unknown';
-          try {
-            await EventSubscriptionsApi.listEventSubscriptions(apiUrlRoot, apiAccessToken, campaignId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (err) {
-            expect(err).toBeInstanceOf(XcooBeeError);
-            expect(err.message).toBe('Wrong key at line: 3, column: 7');
-            expect(err.name).toBe('XcooBeeError');
+  });// eo describe('.listEventSubscriptions')
+
+  describe('.addEventSubscriptions', () => {
+
+    describe('called with a valid API access token', () => {
+
+      describe('and a known campaign ID', () => {
+
+        describe('and a valid events mapping', () => {
+
+          it('should add the event subscriptions', async (done) => {
+            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+
+            const campaign = await getCampaign();
+
+            const eventSubscriptions = [
+              {
+                topic: `campaign:${campaign.campaign_reference}/*`,
+                channel: 'webhook',
+                handler: 'testHandler',
+              },
+            ];
+
+            const eventSubscriptionsPage = await EventSubscriptionsApi.addEventSubscriptions(
+              apiUrlRoot, apiAccessToken, eventSubscriptions
+            );
+            expect(eventSubscriptionsPage).toBeDefined();
+            expect(eventSubscriptionsPage.data).toBeInstanceOf(Array);
+            expect(eventSubscriptionsPage.data.length).toBe(1);
+
+            const eventSubscription = eventSubscriptionsPage.data[0];
+            expect(eventSubscription.reference_cursor).toBe(campaign.campaign_cursor);
+            assertIsCursorLike(eventSubscription.owner_cursor);
+            expect(eventSubscription.topic).toBe(`campaign:${campaign.campaign_reference}/*`);
+            expect(eventSubscription.channel).toBe('webhook');
+            expect(eventSubscription.handler).toBe('testHandler');
+
             done();
-          }
-        });
+          });// eo it
+
+          it('should throw an error when trying to add an existing event subscription type', async (done) => {
+            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+            const campaign = await getCampaign();
+
+            const topic = `campaign:${campaign.campaign_reference}/*`;
+            const channel = 'webhook';
+            const eventSubscriptions = [
+              {
+                topic,
+                channel,
+                handler: 'testHandler',
+              },
+            ];
+            try {
+              await EventSubscriptionsApi.addEventSubscriptions(
+                apiUrlRoot, apiAccessToken, eventSubscriptions
+              );
+              // This should not be called.
+              expect(true).toBe(false);
+            } catch (err) {
+              expect(err).toBeInstanceOf(XcooBeeError);
+              expect(err.message).toBe(`Event subscriptions for '${topic}' and channel '${channel}' already exist. Remove them first. at line: 3, column: 7`);
+              expect(err.name).toBe('XcooBeeError');
+
+              done();
+            }
+          });// eo it
+
+        });// eo describe
 
       });// eo describe
 
     });// eo describe
 
-  });// eo describe('.listEventSubscriptions')
+  });// eo describe('.addEventSubscriptions')
+
+  describe('.deleteEventSubscriptions', () => {
+
+    describe('called with a valid API access token', () => {
+
+      describe('and a known campaign ID', () => {
+
+        describe('and a valid events mapping', () => {
+
+          it('should delete event subscription', async (done) => {
+            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+
+            const campaign = await getCampaign();
+
+            const result = await EventSubscriptionsApi.deleteEventSubscriptions(
+              apiUrlRoot, apiAccessToken, [{ topic: `campaign:${campaign.campaign_reference}/*`, channel: 'webhook' }]
+            );
+            expect(result).toBeDefined();
+            expect(result.deleted_number).toBe(1);
+
+            done();
+          });// eo it
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe
+
+  });// eo describe('.deleteEventSubscriptions')
+
+  describe('.getAvailableSubscriptions', () => {
+
+    describe('called with a valid API access token', () => {
+
+      describe('and a known campaign ID', () => {
+
+        describe('and a valid events mapping', () => {
+
+          it('should delete event subscription', async (done) => {
+            const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
+
+            const campaign = await getCampaign();
+
+            const result = await EventSubscriptionsApi.getAvailableSubscriptions(
+              apiUrlRoot, apiAccessToken, campaign.campaign_cursor, 'campaign'
+            );
+            expect(result).toBeDefined();
+            expect(result[0].topic).toBe(`campaign:${campaign.campaign_reference}/*`);
+            expect(result[0].channels[0]).toBe('email');
+            expect(result[0].channels[1]).toBe('webhook');
+            expect(result[0].channels[2]).toBe('inbox');
+
+            done();
+          });// eo it
+        });// eo describe
+
+      });// eo describe
+
+    });// eo describe
+
+  });// eo describe('.getAvailableSubscriptions')
 
 });// eo describe('EventSubscriptionsApi')

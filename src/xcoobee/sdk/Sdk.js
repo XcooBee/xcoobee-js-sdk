@@ -1,5 +1,5 @@
-const ApiAccessTokenCache = require('../../xcoobee/api/ApiAccessTokenCache');
-const UsersCache = require('../../xcoobee/api/UsersCache');
+const ApiAccessTokenCache = require('../api/ApiAccessTokenCache');
+const UsersCache = require('../api/UsersCache');
 
 const Bees = require('./Bees');
 const Consents = require('./Consents');

@@ -2,7 +2,6 @@ const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTok
 const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
 const Config = require('../../../../../src/xcoobee/sdk/Config');
-const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
 const Inbox = require('../../../../../src/xcoobee/sdk/Inbox');
 const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
 const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
@@ -151,33 +150,6 @@ describe('Inbox', () => {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', async () => {
-
-        it('should reject with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
-          const messageId = 'ico-lock-64x64.png.f02cde11-85d5-42bf-be53-e1e930a4a52b'; // FIXME: TODO: Get a legit message ID.
-
-          try {
-            await inboxSdk.getInboxItem(messageId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
-
-      });// eo describe
-
     });// eo describe('.getInboxItem')
 
     describe('.listInbox', () => {
@@ -267,32 +239,6 @@ describe('Inbox', () => {
           });// eo it
 
         });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const inboxSdk = new Inbox(defaultConfig, apiAccessTokenCache, usersCache);
-
-          try {
-            await inboxSdk.listInbox();
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
 
       });// eo describe
 

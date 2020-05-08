@@ -1,5 +1,4 @@
 const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
-const { toEventType } = require('./EventSubscriptionsApi');
 const ApiUtils = require('./ApiUtils');
 
 /**
@@ -26,14 +25,20 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
     query getEvents($userCursor: String!, $after: String, $first: Int) {
       events(user_cursor: $userCursor, after: $after, first: $first) {
         data {
-          date_c
           event_id
-          event_type
-          hmac
-          owner_cursor
-          payload
           reference_cursor
           reference_type
+          owner_cursor
+          topic
+          event_type
+          payload
+          hmac
+          date_c
+          response {
+            channel
+            status
+            response
+          }
         }
         page_info {
           end_cursor
@@ -78,29 +83,27 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
  *
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {string} [campaignId] - Campaign id.
- * @param {string} [type] - Event type to trigger.
+ * @param {string} topic - Topic, where event should be sent.
  *
  * @returns {Promise<Object>} - The result.
  * @property {Event} result - Test event data.
  *
  * @throws {XcooBeeError}
  */
-const triggerEvent = (apiUrlRoot, apiAccessToken, campaignId, type) => {
+const triggerEvent = (apiUrlRoot, apiAccessToken, topic) => {
   const query = `
-    mutation triggerEvent($campaignId: String!, $type: EventSubscriptionType!) {
-      send_test_event(campaign_cursor: $campaignId, type: $type){
-        event_type
+    mutation sendTestEvent($topic: String){
+      send_test_event(topic: $topic){
+        topic
         payload
         hmac
       }
     }
   `;
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
-    campaignId,
-    type: toEventType(type),
+    topic,
   })
-    .then(response => response.send_test_event)
+    .then((response) => response.send_test_event)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });

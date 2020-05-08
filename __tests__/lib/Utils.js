@@ -76,7 +76,7 @@ const assertIsJwtToken = (presumedToken) => {
 };
 
 const findBeesBySystemName = (bees, bee_system_name) => {
-  return bees.filter(bee => bee.bee_system_name === bee_system_name);
+  return bees.filter((bee) => bee.bee_system_name === bee_system_name);
 };
 
 /**
@@ -88,14 +88,14 @@ const findBeesBySystemName = (bees, bee_system_name) => {
  * @param {string} path - The path to the environment files.
  */
 const loadEnv = (path) => {
-  let result = dotenv.load({
+  let result = dotenv.config({
     path: Path.resolve(path, '.env.local'),
   });
   if (result.error) {
     throw result.error;
   }
 
-  result = dotenv.load({
+  result = dotenv.config({
     path: Path.resolve(path, '.env'),
   });
   if (result.error) {

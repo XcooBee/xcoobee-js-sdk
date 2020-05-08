@@ -22,23 +22,15 @@ const getCampaignInfo = (apiUrlRoot, apiAccessToken, campaignId) => {
           text
         }
         campaign_name
+        campaign_cursor
+        campaign_reference
         campaign_title {
           text
         }
         date_c
         date_e
-        email_targets {
-          email
-        }
         endpoint
         status
-        targets {
-          name
-          recipient
-        }
-        xcoobee_targets {
-          xcoobee_id
-        }
       }
     }
   `;
@@ -81,6 +73,7 @@ const getCampaigns = (apiUrlRoot, apiAccessToken, userCursor, after = null, firs
         data {
           campaign_cursor
           campaign_name
+          campaign_reference
           status
         }
         page_info {
@@ -129,7 +122,7 @@ const getCampaignIdByRef = (apiUrlRoot, apiAccessToken, campaignRef) => {
   return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
     campaignRef,
   })
-    .then(response => response.campaign.campaign_cursor)
+    .then((response) => response.campaign.campaign_cursor)
     .catch(() => ''); // campaign not found
 };
 

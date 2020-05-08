@@ -1,5 +1,5 @@
-const UsersApi = require('../../xcoobee/api/UsersApi');
-const ConversationsApi = require('../../xcoobee/api/ConversationsApi');
+const UsersApi = require('../api/UsersApi');
+const ConversationsApi = require('../api/ConversationsApi');
 
 const ErrorResponse = require('./ErrorResponse');
 const SdkUtils = require('./SdkUtils');

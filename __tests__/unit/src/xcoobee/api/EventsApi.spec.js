@@ -27,7 +27,7 @@ describe('EventsApi', () => {
       EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue('{"decrypted": "test"}');
 
       return getEvents('apiUrlRoot', 'accessToken', 'userId', 'privateKey', 'passphrase')
-        .then(res => expect(res.data[0].payload.decrypted).toBe('test'));
+        .then((res) => expect(res.data[0].payload.decrypted).toBe('test'));
     });
 
   });
@@ -37,18 +37,17 @@ describe('EventsApi', () => {
     it('should get events and decrypt payload', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({
         send_test_event: {
-          event_type: 'consent_approved',
+          topic: 'campaign:123.qwerty/consent_approved',
           payload: 'encrypted',
         },
       }));
 
-      return triggerEvent('apiUrlRoot', 'accessToken', 'campaignId', 'ConsentApproved')
+      return triggerEvent('apiUrlRoot', 'accessToken', 'campaign:123.qwerty/consent_approved')
         .then((res) => {
-          expect(res.event_type).toBe('consent_approved');
+          expect(res.topic).toBe('campaign:123.qwerty/consent_approved');
 
           const options = GraphQLClient.prototype.request.mock.calls[0][1];
-          expect(options.campaignId).toBe('campaignId');
-          expect(options.type).toBe('consent_approved');
+          expect(options.topic).toBe('campaign:123.qwerty/consent_approved');
         });
     });
 

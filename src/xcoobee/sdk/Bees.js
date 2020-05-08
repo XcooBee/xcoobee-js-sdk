@@ -1,7 +1,7 @@
-const ApiUtils = require('../../xcoobee/api/ApiUtils');
-const BeesApi = require('../../xcoobee/api/BeesApi');
-const DirectiveApi = require('../../xcoobee/api/DirectiveApi');
-const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
+const ApiUtils = require('../api/ApiUtils');
+const BeesApi = require('../api/BeesApi');
+const DirectiveApi = require('../api/DirectiveApi');
+const UploadPolicyIntents = require('../api/UploadPolicyIntents');
 
 const ErrorResponse = require('./ErrorResponse');
 const FileUtils = require('./FileUtils');
@@ -168,7 +168,7 @@ class Bees {
     if (options.custom && typeof options.custom === 'object') {
       directiveInput.custom = Object
         .keys(options.custom)
-        .map(name => ({ name, value: options.custom[name] }));
+        .map((name) => ({ name, value: options.custom[name] }));
     }
 
     if (
