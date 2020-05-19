@@ -92,8 +92,9 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
  */
 const triggerEvent = (apiUrlRoot, apiAccessToken, topic) => {
   const query = `
-    mutation sendTestEvent($topic: String){
-      send_test_event(topic: $topic){
+    mutation sendTestEvent($topic: String) {
+      send_test_event(topic: $topic) {
+
         topic
         payload
         hmac
