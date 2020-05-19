@@ -6,7 +6,8 @@ const XcooBeeError = require('../core/XcooBeeError');
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {EventSubscription[]} eventSubscriptions - A list of event subscriptions to subscribe
+ * @param {EventSubscription[]} eventSubscriptions - A list of event subscriptions to subscribe.
+
  *
  * @returns {Promise<Object>} - The result.
  * @property {EventSubscription[]} data - A page of the newly added event
