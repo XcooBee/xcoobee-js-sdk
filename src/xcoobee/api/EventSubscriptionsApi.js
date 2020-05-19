@@ -144,7 +144,7 @@ const listEventSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, referen
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
  * @param {ApiAccessToken} apiAccessToken - A valid API access token.
- * @param {string} referenceId - id of related enyity (i.e. campaignId)
+ * @param {string} referenceId - ID of related entity (i.e. campaignId).
  * @param {string} referenceType - type of related entity (i.e. campaign, funding_panel)
  *
  * @returns {Promise<Array>} - All available subscriptions to subscribe.
