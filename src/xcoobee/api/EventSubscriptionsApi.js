@@ -148,7 +148,8 @@ const listEventSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, referen
  * @throws {XcooBeeError}
  */
 const getAvailableSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, referenceType) => {
-  const query = `query getAvailableSubscriptions($referenceType: EventReferenceType, $referenceId: String){
+  const query = `query getAvailableSubscriptions($referenceType: EventReferenceType, $referenceId: String) {
+
     available_subscriptions (reference_type: $referenceType, reference_cursor: $referenceId) {
         topic
         channels
