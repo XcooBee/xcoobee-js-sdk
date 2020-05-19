@@ -499,7 +499,7 @@ standard response object
 
 ## deleteEventSubscriptions(eventSubscriptions, config])
 
-delete existing subscriptions.
+Delete existing subscriptions.
 If the subscription does not exists we will still return success.
 
 Event subscription object structure:
