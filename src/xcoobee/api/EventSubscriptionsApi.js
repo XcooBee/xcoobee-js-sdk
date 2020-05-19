@@ -139,7 +139,8 @@ const listEventSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, referen
 };
 
 /**
- * Fetches available subscriptions and channels for the user
+ * Fetches available subscriptions and channels for the user.
+
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
