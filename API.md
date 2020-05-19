@@ -428,7 +428,7 @@ standard response object
 
 ## getAvailableSubscriptions([config])
 
-list all available topics and channels to subscribe.
+List all available topics and channels to subscribe.
 
 options:
 
