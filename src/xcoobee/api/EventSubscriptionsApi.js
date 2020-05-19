@@ -151,8 +151,8 @@ const getAvailableSubscriptions = (apiUrlRoot, apiAccessToken, referenceId, refe
   const query = `query getAvailableSubscriptions($referenceType: EventReferenceType, $referenceId: String) {
 
     available_subscriptions (reference_type: $referenceType, reference_cursor: $referenceId) {
-        topic
-        channels
+      topic
+      channels
     }
   }`;
 
