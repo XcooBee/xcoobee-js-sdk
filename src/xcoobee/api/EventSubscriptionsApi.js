@@ -98,7 +98,8 @@ const deleteEventSubscriptions = (apiUrlRoot, apiAccessToken, eventSubscriptions
 };
 
 /**
- * Fetches event subscriptions for the user
+ * Fetches event subscriptions for the user.
+
  *
  * @async
  * @param {string} apiUrlRoot - The root of the API URL.
