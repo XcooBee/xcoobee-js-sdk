@@ -32,7 +32,8 @@ const addEventSubscriptions = (apiUrlRoot, apiAccessToken, eventSubscriptions) =
     }),
   };
   const mutation = `
-    mutation addEventSubscriptionss($config: AddSubscriptionsConfig! ){
+    mutation addEventSubscriptions($config: AddSubscriptionsConfig!) {
+
       add_event_subscriptions(config: $config){
         data {
             topic
