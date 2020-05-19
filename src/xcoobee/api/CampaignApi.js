@@ -115,7 +115,7 @@ const getCampaignIdByRef = (apiUrlRoot, apiAccessToken, campaignRef) => {
   const query = `
     query getCampaignId($campaignRef: String!) {
       campaign(campaign_ref: $campaignRef) {
-          campaign_cursor
+        campaign_cursor
       }
     }
   `;

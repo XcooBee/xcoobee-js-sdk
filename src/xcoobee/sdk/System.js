@@ -63,7 +63,7 @@ class System {
    * Adds event subscriptions
    *
    * @async
-   * @param {EventSubscription[]} eventSubscriptions - list of subscriptions to create
+   * @param {EventSubscription[]} eventSubscriptions - List of subscriptions to create.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse | ErrorResponse>}
@@ -96,10 +96,10 @@ class System {
   }
 
   /**
-   * Deletes any event subscriptions from the specified campaign.
+   * Deletes event subscriptions for passed topics and channels.
    *
    * @async
-   * @param {EventSubscription[]} eventSubscriptions - list of subscriptions to delete
+   * @param {EventSubscription[]} eventSubscriptions - List of subscriptions to delete.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse | ErrorResponse>}
@@ -180,7 +180,7 @@ class System {
    * Triggers test event to webhook of campaign.
    *
    * @async
-   * @param {string} topic - event topic to trigger
+   * @param {string} topic - Event topic to trigger.
    * @param {Config} [config] - If specified, the configuration to use instead of the
    *   default.
    *
@@ -214,8 +214,8 @@ class System {
    * Lists the current event subscriptions for the specified campaign.
    *
    * @async
-   * @param {string} [referenceId] - id of related enyity (i.e. campaignId)
-   * @param {string} [referenceType] - type of related entity (i.e. campaign, funding_panel)
+   * @param {string} [referenceId] - ID of related enyity (i.e. campaignId).
+   * @param {string} [referenceType] - Type of related entity (i.e. campaign, funding_panel).
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<PagingResponse, ErrorResponse>}
@@ -247,11 +247,11 @@ class System {
   }
 
   /**
-   * Lists the current event subscriptions for the specified campaign.
+   * Lists available event subscriptions for the specified reference.
    *
    * @async
-   * @param {string} [referenceId] - id of related enyity (i.e. campaignId)
-   * @param {string} [referenceType] - type of related entity (i.e. campaign, funding_panel)
+   * @param {string} [referenceId] - ID of related enyity (i.e. campaignId).
+   * @param {string} [referenceType] - Type of related entity (i.e. campaign, funding_panel).
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse, ErrorResponse>}
@@ -283,11 +283,11 @@ class System {
   }
 
   /**
-   * Lists the current event subscriptions for the specified campaign.
+   * Unsuspends event subscription by topic and channel.
    *
    * @async
-   * @param {string} topic - topic of subscription
-   * @param {string} channel - channel of subscription
+   * @param {string} topic - Topic of subscription.
+   * @param {string} channel - Channel of subscription.
    * @param {Config} [config] - The configuration to use instead of the default.
    *
    * @returns {Promise<SuccessResponse, ErrorResponse>}

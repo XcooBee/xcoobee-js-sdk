@@ -124,7 +124,7 @@ const getTargetId = (apiUrlRoot, apiAccessToken, referenceId, type) => {
   const query = `
     query getNoteTarget($referenceId: String!, $type: NoteType!){
       note_target (reference_cursor: $referenceId, note_type: $type){
-          cursor
+        cursor
       }
     }
   `;

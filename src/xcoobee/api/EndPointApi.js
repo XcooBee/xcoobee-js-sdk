@@ -36,7 +36,7 @@ const outbox_endpoints = (apiUrlRoot, apiAccessToken, userCursor, after = null, 
     first,
     userCursor,
   })
-    .then(response => response.outbox_endpoints)
+    .then((response) => response.outbox_endpoints)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });

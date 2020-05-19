@@ -94,7 +94,6 @@ const triggerEvent = (apiUrlRoot, apiAccessToken, topic) => {
   const query = `
     mutation sendTestEvent($topic: String) {
       send_test_event(topic: $topic) {
-
         topic
         payload
         hmac
