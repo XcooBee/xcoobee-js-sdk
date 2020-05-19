@@ -34,7 +34,8 @@ const addEventSubscriptions = (apiUrlRoot, apiAccessToken, eventSubscriptions) =
   const mutation = `
     mutation addEventSubscriptions($config: AddSubscriptionsConfig!) {
 
-      add_event_subscriptions(config: $config){
+      add_event_subscriptions(config: $config) {
+
         data {
             topic
             channel
