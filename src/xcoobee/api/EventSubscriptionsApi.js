@@ -109,7 +109,8 @@ const deleteEventSubscriptions = (apiUrlRoot, apiAccessToken, eventSubscriptions
  * @param {string} referenceType - type of related entity (i.e. campaign, funding_panel)
  *
  * @returns {Promise<Object>} - The result.
- * @property {EventSubscription[]} data - A page of event subscriptions for the user
+ * @property {EventSubscription[]} data - The event subscriptions for the user.
+
  *
  * @throws {XcooBeeError}
  */
