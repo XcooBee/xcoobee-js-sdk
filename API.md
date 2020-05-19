@@ -408,7 +408,7 @@ standard response object
 
 ## getAvailableSubscriptions([referenceId, referenceType, config])
 
-list available topics and channels to subscribe.
+List available topics and channels to subscribe.
 If no arguments passed, method will return all available topics for user.
 
 options:
