@@ -391,7 +391,7 @@ standard response object
 
 ## listEventSubscriptions([config])
 
-list current subscriptions.
+List current subscriptions.
 
 options:
 
