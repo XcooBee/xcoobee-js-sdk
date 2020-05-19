@@ -445,7 +445,7 @@ standard response object
 
 ## addEventSubscriptions(eventSubscriptions[, config])
 
-You can register subscriptions to email, inbox and webhook by calling the addEventSubscriptions function and providing list of event subscription objects.
+You can register subscriptions to email, inbox, and webhook by calling the `addEventSubscriptions` function and providing list of event subscription objects.
 
 Event subscription object structure:
 
