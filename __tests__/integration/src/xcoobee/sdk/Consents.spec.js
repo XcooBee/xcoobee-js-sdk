@@ -26,186 +26,6 @@ describe('Consents', () => {
 
   describe('instance', () => {
 
-    describe('.confirmConsentChange', () => {
-
-      describe('called with a valid API key/secret pair', () => {
-
-        describe('and a known consent ID', () => {
-
-          describe('using default config', () => {
-
-            it('should return flag indicating if the consent change has been confirmed', async (done) => {
-              const defaultConfig = new Config({
-                apiKey,
-                apiSecret,
-                apiUrlRoot,
-              });
-
-              const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const consents = await consentsSdk.listConsents();
-              const consentId = consents.result.data[0].consent_cursor;
-              const response = await consentsSdk.confirmConsentChange(consentId);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const { result } = response;
-              expect(result).toBeDefined();
-              expect(result.confirmed).toBe(true);
-
-              done();
-            });// eo it
-
-          });// eo describe
-
-          describe('using overriding config', () => {
-
-            it('should return flag indicating if the consent change has been confirmed', async (done) => {
-              const defaultConfig = new Config({
-                apiKey: 'should_be_unused',
-                apiSecret: 'should_be_unused',
-                apiUrlRoot: 'should_be_unused',
-              });
-              const overridingConfig = new Config({
-                apiKey,
-                apiSecret,
-                apiUrlRoot,
-              });
-
-              const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const consents = await consentsSdk.listConsents([], overridingConfig);
-              const consentId = consents.result.data[0].consent_cursor;
-              const response = await consentsSdk.confirmConsentChange(consentId, overridingConfig);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const { result } = response;
-              expect(result).toBeDefined();
-              expect(typeof result.confirmed).toBe('boolean');
-
-              done();
-            });// eo it
-
-          });// eo describe
-
-        });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const consentId = 'does not matter';
-
-          try {
-            await consentsSdk.confirmConsentChange(consentId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
-
-      });// eo describe
-
-    });// eo describe('.confirmConsentChange')
-
-    describe('.confirmDataDelete', () => {
-
-      describe('called with a valid API key/secret pair', () => {
-
-        describe('and a known consent ID', () => {
-
-          describe('using default config', () => {
-
-            it('should return flag indicating if the data has been deleted/purged', async (done) => {
-              const defaultConfig = new Config({
-                apiKey,
-                apiSecret,
-                apiUrlRoot,
-              });
-
-              const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const consents = await consentsSdk.listConsents();
-              const consentId = consents.result.data[0].consent_cursor;
-              const response = await consentsSdk.confirmDataDelete(consentId);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const { result } = response;
-              expect(result).toBeDefined();
-              expect(typeof result.confirmed).toBe('boolean');
-
-              done();
-            });// eo it
-
-          });// eo describe
-
-          describe('using overriding config', () => {
-
-            it('should return flag indicating if the data has been deleted/purged', async (done) => {
-              const defaultConfig = new Config({
-                apiKey: 'should_be_unused',
-                apiSecret: 'should_be_unused',
-                apiUrlRoot: 'should_be_unused',
-              });
-              const overridingConfig = new Config({
-                apiKey,
-                apiSecret,
-                apiUrlRoot,
-              });
-
-              const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const consents = await consentsSdk.listConsents([], overridingConfig);
-              const consentId = consents.result.data[0].consent_cursor;
-              const response = await consentsSdk.confirmDataDelete(consentId, overridingConfig);
-              expect(response).toBeInstanceOf(SuccessResponse);
-              const { result } = response;
-              expect(result).toBeDefined();
-              expect(typeof result.confirmed).toBe('boolean');
-
-              done();
-            });// eo it
-
-          });// eo describe
-
-        });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const consentId = 'does not matter';
-
-          try {
-            await consentsSdk.confirmDataDelete(consentId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
-
-      });// eo describe
-
-    });// eo describe('.confirmDataDelete')
-
     describe('.getCampaignInfo', () => {
 
       describe('called with a valid API key/secret pair', () => {
@@ -235,14 +55,8 @@ describe('Consents', () => {
               expect(campaign.campaign_title.text).toBe(undefined);
               expect(campaign.date_c).toBeDefined();
               expect(campaign.date_e).toBeDefined();
-              expect(campaign.email_targets).toBeInstanceOf(Array);
-              expect(campaign.email_targets.length).toBe(0);
               expect(campaign.endpoint).toBe(null);
               expect(campaign.status).toBe('active');
-              expect(campaign.targets).toBeInstanceOf(Array);
-              expect(campaign.targets.length).toBe(0);
-              expect(campaign.xcoobee_targets).toBeInstanceOf(Array);
-              expect(campaign.xcoobee_targets.length).toBe(0);
 
               done();
             });// eo it
@@ -277,14 +91,8 @@ describe('Consents', () => {
               expect(campaign.campaign_title.text).toBe(undefined);
               expect(campaign.date_c).toBeDefined();
               expect(campaign.date_e).toBeDefined();
-              expect(campaign.email_targets).toBeInstanceOf(Array);
-              expect(campaign.email_targets.length).toBe(0);
               expect(campaign.endpoint).toBe(null);
               expect(campaign.status).toBe('active');
-              expect(campaign.targets).toBeInstanceOf(Array);
-              expect(campaign.targets.length).toBe(0);
-              expect(campaign.xcoobee_targets).toBeInstanceOf(Array);
-              expect(campaign.xcoobee_targets.length).toBe(0);
 
               done();
             });// eo it
@@ -292,33 +100,6 @@ describe('Consents', () => {
           });// eo describe
 
         });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const campaignId = 'does not matter';
-
-          try {
-            await consentsSdk.getCampaignInfo(campaignId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
 
       });// eo describe
 
@@ -378,7 +159,7 @@ describe('Consents', () => {
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
               const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
               const xcoobeeId = user.xcoobee_id;
-              const consents = await consentsSdk.listConsents([], overridingConfig);
+              const consents = await consentsSdk.listConsents({}, overridingConfig);
               const consentId = consents.result.data[0].consent_cursor;
               const response = await consentsSdk.getConsentData(consentId, overridingConfig);
               expect(response).toBeDefined();
@@ -398,33 +179,6 @@ describe('Consents', () => {
           });// eo describe
 
         });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const consentId = 'does not matter';
-
-          try {
-            await consentsSdk.getConsentData(consentId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
 
       });// eo describe
 
@@ -498,34 +252,6 @@ describe('Consents', () => {
           });// eo it
 
         });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const xcoobeeId = 'does not matter';
-          const campaignId = 'does not matter';
-
-          try {
-            await consentsSdk.getCookieConsent(xcoobeeId, campaignId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
 
       });// eo describe
 
@@ -610,32 +336,6 @@ describe('Consents', () => {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-
-          try {
-            await consentsSdk.listCampaigns();
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
-
-      });// eo describe
-
     });// eo describe('.listCampaigns')
 
     describe('.listConsents', () => {
@@ -696,7 +396,7 @@ describe('Consents', () => {
               });
 
               const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-              const response = await consentsSdk.listConsents(null, overridingConfig);
+              const response = await consentsSdk.listConsents({}, overridingConfig);
               expect(response).toBeInstanceOf(PagingResponse);
               expect(response.hasNextPage()).toBe(false);
               const nextPageResponse = await response.getNextPage();
@@ -724,33 +424,6 @@ describe('Consents', () => {
           });// eo describe
 
         });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const consentStatus = 'does not matter';
-
-          try {
-            await consentsSdk.listConsents(consentStatus);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
 
       });// eo describe
 
@@ -819,35 +492,6 @@ describe('Consents', () => {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const xcoobeeId = 'does not matter';
-          const campaignId = 'does not matter';
-          const referenceId = 'does not matter';
-
-          try {
-            await consentsSdk.requestConsent(xcoobeeId, campaignId, referenceId);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
-
-      });// eo describe
-
     });// eo describe('.requestConsent')
 
     describe('.setUserDataResponse', () => {
@@ -883,36 +527,6 @@ describe('Consents', () => {
           });// eo it
 
         });// eo describe
-
-      });// eo describe
-
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should return with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const consentsSdk = new Consents(defaultConfig, apiAccessTokenCache, usersCache);
-          const message = 'does not matter';
-          const consentId = 'does not matter';
-          const referenceId = 'does not matter';
-          const file = null;
-
-          try {
-            await consentsSdk.setUserDataResponse(message, consentId, referenceId, file);
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
 
       });// eo describe
 

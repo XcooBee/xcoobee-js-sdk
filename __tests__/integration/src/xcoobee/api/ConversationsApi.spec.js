@@ -41,7 +41,7 @@ describe('ConversationsApi', () => {
         expect('display_province' in conversation).toBe(true);
         expect('is_outbound' in conversation).toBe(true);
         expect('note_text' in conversation).toBe(true);
-        expect(conversation.note_text).toBe('test message for test consent');
+        expect(conversation.note_text).toBe('Test Message. Message added by XcooBee system for developer accounts.');
         expect(conversation.note_type).toBe('consent');
         expect('photo_url' in conversation).toBe(true);
         expect('xcoobee_id' in conversation).toBe(true);
@@ -78,30 +78,5 @@ describe('ConversationsApi', () => {
     });// eo describe
 
   });// eo describe('.getConversations')
-
-  describe('.sendUserMessage', () => {
-
-    describe('called with a valid API access token', () => {
-
-      it('should create, send, and return a note', async (done) => {
-        const apiAccessToken = await apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-        const user = await usersCache.get(apiUrlRoot, apiKey, apiSecret);
-        const message = 'Testing. 1, 2, 3!';
-        const userCursor = user.cursor;
-        const conversations = await ConversationsApi.getConversations(apiUrlRoot, apiAccessToken, userCursor);
-        const targetCursor = conversations.data[0].target_cursor;
-        const conversationsPage = await ConversationsApi.getConversation(apiUrlRoot, apiAccessToken, targetCursor);
-        const consentId = conversationsPage.data[0].reference_cursor;
-        const note = await ConversationsApi.sendUserMessage(apiUrlRoot, apiAccessToken, message, { consentId });
-        expect(note).toBeDefined();
-        expect(note.note_text).toBe('Testing. 1, 2, 3!');
-
-        done();
-      });// eo it
-
-      // TODO: Test with a breach ID.
-    });// eo describe
-
-  });// eo describe('.sendUserMessage')
 
 });// eo describe('ConversationsApi')

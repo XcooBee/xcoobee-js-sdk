@@ -1,6 +1,6 @@
-const CampaignApi = require('../../xcoobee/api/CampaignApi');
-const ConsentsApi = require('../../xcoobee/api/ConsentsApi');
-const UploadPolicyIntents = require('../../xcoobee/api/UploadPolicyIntents');
+const CampaignApi = require('../api/CampaignApi');
+const ConsentsApi = require('../api/ConsentsApi');
+const UploadPolicyIntents = require('../api/UploadPolicyIntents');
 
 const XcooBeeError = require('../core/XcooBeeError');
 

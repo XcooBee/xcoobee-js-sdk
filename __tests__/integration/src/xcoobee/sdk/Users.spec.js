@@ -2,7 +2,6 @@ const ApiAccessTokenCache = require('../../../../../src/xcoobee/api/ApiAccessTok
 const UsersCache = require('../../../../../src/xcoobee/api/UsersCache');
 
 const Config = require('../../../../../src/xcoobee/sdk/Config');
-const ErrorResponse = require('../../../../../src/xcoobee/sdk/ErrorResponse');
 const PagingResponse = require('../../../../../src/xcoobee/sdk/PagingResponse');
 const SuccessResponse = require('../../../../../src/xcoobee/sdk/SuccessResponse');
 const Users = require('../../../../../src/xcoobee/sdk/Users');
@@ -63,7 +62,7 @@ describe('Users', () => {
             expect('display_province' in conversation).toBe(true);
             expect('is_outbound' in conversation).toBe(true);
             expect('note_text' in conversation).toBe(true);
-            expect(conversation.note_text).toBe('test message for test consent');
+            expect(conversation.note_text).toBe('Test Message. Message added by XcooBee system for developer accounts.');
             expect(conversation.note_type).toBe('consent');
             expect('photo_url' in conversation).toBe(true);
             expect('xcoobee_id' in conversation).toBe(true);
@@ -175,67 +174,7 @@ describe('Users', () => {
 
       });// eo describe
 
-      describe('called with an invalid API key/secret pair', () => {
-
-        it('should reject with an error response', async (done) => {
-          const defaultConfig = new Config({
-            apiKey: 'invalid',
-            apiSecret: 'invalid',
-            apiUrlRoot,
-          });
-
-          const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
-
-          try {
-            await usersSdk.getUser();
-            // This should not be called.
-            expect(true).toBe(false);
-          } catch (response) {
-            expect(response).toBeInstanceOf(ErrorResponse);
-            expect(response.code).toBe(400);
-            expect(response.error.message).toBe('Unable to get an API access token.');
-          }
-
-          done();
-        });// eo it
-
-      });// eo describe
-
     });// eo describe('.getUser')
-
-    describe('.sendUserMessage', () => {
-
-      describe('called with a valid API key/secret pair', () => {
-
-        describe('using default config', () => {
-
-          it('should send a message', async (done) => {
-            const defaultConfig = new Config({
-              apiKey,
-              apiSecret,
-              apiUrlRoot,
-            });
-
-            const usersSdk = new Users(defaultConfig, apiAccessTokenCache, usersCache);
-            const message = 'Testing. 1, 2, 3!';
-            const conversations = await usersSdk.getConversations();
-            const targetCursor = conversations.result.data[0].target_cursor;
-            const conversation = await usersSdk.getConversation(targetCursor);
-            const consentId = conversation.result.data[0].reference_cursor;
-            const response = await usersSdk.sendUserMessage(message, { consentId });
-            expect(response).toBeInstanceOf(SuccessResponse);
-            const note = response.result.data;
-            expect(note).toBeDefined();
-            expect(note.note_text).toBe('Testing. 1, 2, 3!');
-
-            done();
-          });// eo it
-
-        });// eo describe
-
-      });// eo describe
-
-    });// eo describe('.sendUserMessage')
 
   });// eo describe('instance')
 

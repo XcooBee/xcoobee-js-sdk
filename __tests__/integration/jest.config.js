@@ -43,10 +43,10 @@ const sequential = process.argv.includes('--runInBand');
 if (sequential) {
   const absRootDir = Path.resolve(__dirname, rootDir);
   let filenames = klawSync(absRootDir, { nodir: true })
-    .map(file => file.path)
-    .map(file => file.replace(absRootDir, ''))
-    .map(file => file.replace(/\\/g, '/'))
-    .map(file => `<rootDir>${file}`);
+    .map((file) => file.path)
+    .map((file) => file.replace(absRootDir, ''))
+    .map((file) => file.replace(/\\/g, '/'))
+    .map((file) => `<rootDir>${file}`);
   filenames = mm(filenames, testMatch);
   testPathIgnorePatterns = mm.not(filenames, sequentialTestPathMatchPatterns);
 }

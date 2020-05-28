@@ -27,12 +27,12 @@ describe('System', () => {
     pgpSecret: 'pgpSecret',
   }, { get: () => 'apiAccessToken' }, { get: () => ({ cursor: 'userId', xcoobee_id: '~xid' }) });
 
-  describe('addEventSubscription', () => {
+  describe('addEventSubscriptions', () => {
 
     it('should return ErrorResponse if any errors', () => {
-      EventSubscriptionsApi.addEventSubscription.mockReturnValue(Promise.reject({ message: 'error' }));
+      EventSubscriptionsApi.addEventSubscriptions.mockReturnValue(Promise.reject({ message: 'error' }));
 
-      return system.addEventSubscription({ ConsentApproved: 'test' }, 'campaignId')
+      return system.addEventSubscriptions([{ topic: 'campaign:123.qwerty/consent_approved', channel: 'inbox' }])
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
           expect(err).toBeInstanceOf(ErrorResponse);
@@ -42,11 +42,11 @@ describe('System', () => {
     });
 
     it('should return response with added event subscriptions', () => {
-      EventSubscriptionsApi.addEventSubscription.mockReturnValue(Promise.resolve({ data: [{ handler: 'test' }], page_info: {} }));
+      EventSubscriptionsApi.addEventSubscriptions.mockReturnValue(Promise.resolve({ data: [{ handler: 'test' }], page_info: {} }));
 
-      return system.addEventSubscription({ ConsentApproved: 'test' }, 'campaignId')
+      return system.addEventSubscriptions([{ topic: 'campaign:123.qwerty/consent_approved', channel: 'inbox' }])
         .then((res) => {
-          expect(EventSubscriptionsApi.addEventSubscription).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', { ConsentApproved: 'test' }, 'campaignId');
+          expect(EventSubscriptionsApi.addEventSubscriptions).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', [{ topic: 'campaign:123.qwerty/consent_approved', channel: 'inbox' }]);
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
@@ -57,12 +57,12 @@ describe('System', () => {
 
   });
 
-  describe('deleteEventSubscription', () => {
+  describe('deleteEventSubscriptions', () => {
 
     it('should return ErrorResponse if any errors', () => {
-      EventSubscriptionsApi.deleteEventSubscription.mockReturnValue(Promise.reject({ message: 'error' }));
+      EventSubscriptionsApi.deleteEventSubscriptions.mockReturnValue(Promise.reject({ message: 'error' }));
 
-      return system.deleteEventSubscription(['ConsentApproved'], 'campaignId')
+      return system.deleteEventSubscriptions([{ topic: 'campaign:123.qwerty/consent_approved' }])
         .then(() => expect(false).toBe(true)) // this will never happen
         .catch((err) => {
           expect(err).toBeInstanceOf(ErrorResponse);
@@ -72,11 +72,11 @@ describe('System', () => {
     });
 
     it('should return response with deleted number', () => {
-      EventSubscriptionsApi.deleteEventSubscription.mockReturnValue(Promise.resolve({ deleted_number: 1 }));
+      EventSubscriptionsApi.deleteEventSubscriptions.mockReturnValue(Promise.resolve({ deleted_number: 1 }));
 
-      return system.deleteEventSubscription(['ConsentApproved'], 'campaignId')
+      return system.deleteEventSubscriptions([{ topic: 'campaign:123.qwerty/consent_approved' }])
         .then((res) => {
-          expect(EventSubscriptionsApi.deleteEventSubscription).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', ['ConsentApproved'], 'campaignId');
+          expect(EventSubscriptionsApi.deleteEventSubscriptions).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', [{ topic: 'campaign:123.qwerty/consent_approved' }]);
 
           expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
@@ -92,13 +92,51 @@ describe('System', () => {
     it('should return response with event subscriptions', () => {
       EventSubscriptionsApi.listEventSubscriptions.mockReturnValue(Promise.resolve({ data: [{ handler: 'test' }], page_info: {} }));
 
-      return system.listEventSubscriptions('campaignId')
+      return system.listEventSubscriptions('campaignId', 'campaign')
         .then((res) => {
-          expect(EventSubscriptionsApi.listEventSubscriptions).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignId', null, undefined);
+          expect(EventSubscriptionsApi.listEventSubscriptions).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignId', 'campaign');
 
-          expect(res).toBeInstanceOf(PagingResponse);
+          expect(res).toBeInstanceOf(SuccessResponse);
           expect(res.code).toBe(200);
           expect(res.result.data[0].handler).toBe('test');
+          expect(res.hasNextPage()).toBeFalsy();
+        });
+    });
+
+  });
+
+  describe('getAvailableSubscriptions', () => {
+
+    it('should return response with available event subscriptions', () => {
+      EventSubscriptionsApi.getAvailableSubscriptions.mockReturnValue(Promise.resolve([{ topic: 'campaign:123.qwerty/*', channels: ['webhook'] }]));
+
+      return system.getAvailableSubscriptions('campaignId', 'campaign')
+        .then((res) => {
+          expect(EventSubscriptionsApi.getAvailableSubscriptions).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaignId', 'campaign');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result[0].topic).toBe('campaign:123.qwerty/*');
+          expect(res.result[0].channels[0]).toBe('webhook');
+          expect(res.hasNextPage()).toBeFalsy();
+        });
+    });
+
+  });
+
+  describe('unsuspendEventSubscription', () => {
+
+    it('should return response with available event subscriptions', () => {
+      EventSubscriptionsApi.unsuspendEventSubscription.mockReturnValue(Promise.resolve([{ topic: 'campaign:123.qwerty/*', channels: ['webhook'] }]));
+
+      return system.unsuspendEventSubscription('campaign:123.qwerty/consent_approved', 'webhook')
+        .then((res) => {
+          expect(EventSubscriptionsApi.unsuspendEventSubscription).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', 'campaign:123.qwerty/consent_approved', 'webhook');
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result[0].topic).toBe('campaign:123.qwerty/*');
+          expect(res.result[0].channels[0]).toBe('webhook');
           expect(res.hasNextPage()).toBeFalsy();
         });
     });

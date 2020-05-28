@@ -1,6 +1,6 @@
-const EndPointUtils = require('../../xcoobee/api/EndPointUtils');
-const FileApi = require('../../xcoobee/api/FileApi');
-const PolicyApi = require('../../xcoobee/api/PolicyApi');
+const EndPointUtils = require('../api/EndPointUtils');
+const FileApi = require('../api/FileApi');
+const PolicyApi = require('../api/PolicyApi');
 const XcooBeeError = require('../core/XcooBeeError');
 
 /**
@@ -53,7 +53,7 @@ async function upload(apiUrlRoot, apiAccessToken, userCursor, endPointName, file
   const fileUploadResults = await Promise.all(policyFilePairs.map((pair) => {
     const { file, policy } = pair;
 
-    return FileApi.upload_file(file, policy).catch(err => err); // return error back to user
+    return FileApi.upload_file(file, policy).catch((err) => err); // return error back to user
   }));
 
   const result = policyFilePairs.map((pair, idx) => {

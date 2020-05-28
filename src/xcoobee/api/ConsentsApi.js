@@ -260,8 +260,8 @@ const getConsentData = (apiUrlRoot, apiAccessToken, consentCursor) => {
  */
 const listConsents = (apiUrlRoot, apiAccessToken, userCursor, filters = {}, after = null, first = null) => {
   const query = `
-  query listConsents($userId: String!, $statuses: [ConsentStatus], $consentTypes: [ConsentType], $dataTypes: [ConsentDatatype], $dateFrom: String, $dateTo: String, $search: String, $country: String, $province: String, $city: String, $first: Int, $after: String) {
-    consents(campaign_owner_cursor: $userId, statuses : $statuses, consent_types: $consentTypes, data_types: $dataTypes, date_from: $dateFrom, date_to: $dateTo, search: $search, country: $country, province: $province, city: $city, first: $first, after: $after) {
+  query listConsents($userCursor: String!, $statuses: [ConsentStatus], $consentTypes: [ConsentType], $dataTypes: [ConsentDatatype], $dateFrom: String, $dateTo: String, $search: String, $country: String, $province: String, $city: String, $first: Int, $after: String) {
+    consents(campaign_owner_cursor: $userCursor, statuses : $statuses, consent_types: $consentTypes, data_types: $dataTypes, date_from: $dateFrom, date_to: $dateTo, search: $search, country: $country, province: $province, city: $city, first: $first, after: $after) {
         data {
           consent_cursor
           user_cursor
@@ -461,7 +461,7 @@ const setUserDataResponse = (apiUrlRoot, apiAccessToken, message, requestRef, fi
       filenames: [filename.replace(/^.*[\\\/]/, '')],
     },
   })
-    .then(response => response.send_data_response.ref_id)
+    .then((response) => response.send_data_response.ref_id)
     .catch((err) => {
       throw ApiUtils.transformError(err);
     });
@@ -538,7 +538,7 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
         }));
       }
 
-      return response.data_package.map(dataPackage => ({ payload: dataPackage && dataPackage.data }));
+      return response.data_package.map((dataPackage) => ({ payload: dataPackage && dataPackage.data }));
     })
     .catch((err) => {
       throw ApiUtils.transformError(err);

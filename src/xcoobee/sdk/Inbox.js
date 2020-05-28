@@ -1,4 +1,4 @@
-const InboxApi = require('../../xcoobee/api/InboxApi');
+const InboxApi = require('../api/InboxApi');
 
 const ErrorResponse = require('./ErrorResponse');
 const SdkUtils = require('./SdkUtils');
