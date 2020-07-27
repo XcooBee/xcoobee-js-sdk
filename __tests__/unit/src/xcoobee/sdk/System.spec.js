@@ -290,7 +290,7 @@ describe('System', () => {
       it('should decrypt payload and call habdler', () => {
         const testHandler = jestMock.fn();
 
-        EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue(Promise.resolve(JSON.stringify({ decrypted: true })));
+        EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue(Promise.resolve({ decrypted: true }));
 
         return system.handleEvents(
           { testHandler },
@@ -313,7 +313,7 @@ describe('System', () => {
       it('should use lovercase headers', () => {
         const testHandler = jestMock.fn();
 
-        EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue(Promise.resolve(JSON.stringify({ decrypted: true })));
+        EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue(Promise.resolve({ decrypted: true }));
 
         return system.handleEvents(
           { testHandler },
@@ -336,7 +336,7 @@ describe('System', () => {
       it('should call habdler with encrypted payload', () => {
         const testHandler = jestMock.fn();
 
-        EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue(Promise.reject());
+        EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue(Promise.resolve('encryptedPayload'));
 
         return system.handleEvents(
           { testHandler },

@@ -29,6 +29,8 @@ https://app.xcoobee.net/scripts/sdk/[version]
 Available versions:
 
    - xcoobee-sdk-1.0.0.web.js
+   - xcoobee-sdk-1.4.0.web.js
+   - xcoobee-sdk-1.4.1.web.js
 
 A fully formed url for you script tag would be
 
@@ -53,13 +55,14 @@ npm run build
 <script src='xcoobee-sdk-1.0.0.web.js' />
 ```
 
-Don't forget that if you need to use the openpgp to decrypt payloads you need to load the OpenPGP library files as well. Either via the openpgp CDN or from your own site. You can use cdnjs via `https://cdnjs.com/libraries/openpgp`.
+Don't forget that if you need to use the openpgp to decrypt payloads you need to load the OpenPGP library files as well. Either via the openpgp CDN or from your own site. You can use cdnjs via `https://cdnjs.com/libraries/openpgp` or our `https://app.xcoobee.net/scripts/sdk`.
+
+`<script src='https://app.xcoobee.net/scripts/sdk/openpgp.min.js' />`
 
 Example of load with openpgp library all from your own source:
 
 ```
 <script src='openpgp.min.js' />
-<script src='openpgp.worker.js' />
 <script src='xcoobee-sdk-0.9.5.web.js' />
 ```
 

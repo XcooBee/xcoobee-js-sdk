@@ -285,7 +285,7 @@ describe('ConsentsApi', () => {
 
     it('should decrypt package', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ data_package: [{ data: 'encrypted' }] }));
-      EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue('{"decrypted": "test"}');
+      EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue({ decrypted: 'test' });
 
       return getDataPackage('apiUrlRoot', 'accessToken', 'consentId', 'privateKey', 'passphrase')
         .then((res) => {

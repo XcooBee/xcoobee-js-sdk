@@ -407,17 +407,13 @@ class System {
         payload,
         handler,
       };
-      try {
-        const encryptedPayload = await decryptWithEncryptedPrivateKey(
-          payload,
-          pgpSecret,
-          pgpPassword
-        );
+      const payloadJson = await decryptWithEncryptedPrivateKey(
+        payload,
+        pgpSecret,
+        pgpPassword
+      );
 
-        event.payload = JSON.parse(encryptedPayload);
-      } catch (e) {
-        // Do nothing, we will pass on the payload as it is.
-      }
+      event.payload = payloadJson;
 
       events.push(event);
     }
