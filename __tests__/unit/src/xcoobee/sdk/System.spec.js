@@ -180,52 +180,6 @@ describe('System', () => {
 
   describe('ping', () => {
 
-    it('should return ErrorResponse if user doesn\'t have pgp key', () => {
-      return system.ping()
-        .then(() => expect(false).toBe(true)) // this will never happen
-        .catch((err) => {
-          expect(err).toBeInstanceOf(ErrorResponse);
-          expect(err.code).toBe(400);
-          expect(err.error.message).toBe('PGP key not found.');
-        });
-    });
-
-    it('should return ErrorResponse if there was an error on getting campaign info', () => {
-      const systemModel = new System({
-        apiKey: 'apiKey',
-        apiSecret: 'apiSecret',
-        apiUrlRoot: 'apiUrlRoot',
-      }, { get: () => 'apiAccessToken' }, { get: () => ({ cursor: 'userId', pgp_public_key: 'pgpKey' }) });
-
-      CampaignApi.getCampaignInfo.mockReturnValue(Promise.reject({ message: 'error' }));
-
-      return systemModel.ping()
-        .then(() => expect(false).toBe(true)) // this will never happen
-        .catch((err) => {
-          expect(err).toBeInstanceOf(ErrorResponse);
-          expect(err.code).toBe(400);
-          expect(err.error.message).toBe('error');
-        });
-    });
-
-    it('should return ErrorResponse if campaign not found', () => {
-      const systemModel = new System({
-        apiKey: 'apiKey',
-        apiSecret: 'apiSecret',
-        apiUrlRoot: 'apiUrlRoot',
-      }, { get: () => 'apiAccessToken' }, { get: () => ({ cursor: 'userId', pgp_public_key: 'pgpKey' }) });
-
-      CampaignApi.getCampaignInfo.mockReturnValue(Promise.resolve({ campaign: null }));
-
-      return systemModel.ping()
-        .then(() => expect(false).toBe(true)) // this will never happen
-        .catch((err) => {
-          expect(err).toBeInstanceOf(ErrorResponse);
-          expect(err.code).toBe(400);
-          expect(err.error.message).toBe('Campaign not found.');
-        });
-    });
-
     it('should return response with true result', () => {
       const systemModel = new System({
         apiKey: 'apiKey',
