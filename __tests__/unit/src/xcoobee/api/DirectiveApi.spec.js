@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');

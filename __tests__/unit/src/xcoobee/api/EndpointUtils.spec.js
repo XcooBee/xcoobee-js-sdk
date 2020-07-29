@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('../../../../../src/xcoobee/api/EndPointApi');
 
 const XcooBeeError = require('../../../../../src/xcoobee/core/XcooBeeError');
@@ -28,14 +26,14 @@ describe('EndpointUtils', () => {
       EndPointApi.outbox_endpoints.mockReturnValue(Promise.resolve({ data: [{ name: 'test' }] }));
 
       return findEndPoint('apiUrlRoot', 'apiAccessToken', 'userId', 'test')
-        .then(endpoint => expect(endpoint.name).toBe('test'));
+        .then((endpoint) => expect(endpoint.name).toBe('test'));
     });
 
     it('should return fallback endpoint', () => {
       EndPointApi.outbox_endpoints.mockReturnValue(Promise.resolve({ data: [{ name: 'test' }] }));
 
       return findEndPoint('apiUrlRoot', 'apiAccessToken', 'userId', 'outbox', 'test')
-        .then(endpoint => expect(endpoint.name).toBe('test'));
+        .then((endpoint) => expect(endpoint.name).toBe('test'));
     });
 
   });

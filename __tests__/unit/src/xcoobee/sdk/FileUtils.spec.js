@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('../../../../../src/xcoobee/api/EndPointUtils');
 jest.mock('../../../../../src/xcoobee/api/FileApi');
 jest.mock('../../../../../src/xcoobee/api/PolicyApi');

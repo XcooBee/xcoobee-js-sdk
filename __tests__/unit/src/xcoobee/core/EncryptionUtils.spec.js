@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('openpgp');
 
 const openpgp = require('openpgp');

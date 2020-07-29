@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('cross-fetch');
 
 const fetch = require('cross-fetch');
@@ -25,7 +23,7 @@ describe('TokenApi', () => {
       getApiAccessToken._.unfulfilledPromises['apiKey:apiSecret'] = Promise.resolve(10);
 
       return getApiAccessToken(apiConfig)
-        .then(res => expect(res).toBe(10));
+        .then((res) => expect(res).toBe(10));
     });
 
     it('should return error if request was rejected', () => {
@@ -109,7 +107,7 @@ describe('TokenApi', () => {
       fetch.mockReturnValue(Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ token: 'token' }) }));
 
       return getApiAccessToken(apiConfig)
-        .then(token => expect(token).toBe('token'));
+        .then((token) => expect(token).toBe('token'));
     });
 
   });

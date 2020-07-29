@@ -63,7 +63,7 @@ Example of load with openpgp library all from your own source:
 
 ```
 <script src='openpgp.min.js' />
-<script src='xcoobee-sdk-0.9.5.web.js' />
+<script src='xcoobee-sdk-1.4.1.web.js' />
 ```
 
 # Usage

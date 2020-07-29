@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');
@@ -53,7 +51,7 @@ describe('UsersApi', () => {
       GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ users: { data: [] } }));
 
       return getUserPublicKey('apiUrlRoot', 'userAccessToken', '~xcoobeeId')
-        .then(res => expect(res).toBe(''));
+        .then((res) => expect(res).toBe(''));
     });
 
   });
