@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('../../../../../src/xcoobee/api/InboxApi');
 
 const InboxApi = require('../../../../../src/xcoobee/api/InboxApi');

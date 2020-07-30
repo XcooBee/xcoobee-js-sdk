@@ -1,6 +1,5 @@
 const createHmac = require('crypto-js/hmac-sha1');
 
-const CampaignApi = require('../api/CampaignApi');
 const EventsApi = require('../api/EventsApi');
 const EventSubscriptionsApi = require('../api/EventSubscriptionsApi');
 
@@ -319,10 +318,7 @@ class System {
   }
 
   /**
-   * Can be called to check whether the current configuration will connect to the
-   * XcooBee system.  This will return an error if your API user does not have a
-   * public PGP key on its profile. The configuration must also be configured with
-   * a valid campaign ID. If one is not set, then an error will occur.
+   * Can be called to check whether the current configuration will connect to the XcooBee system.
    *
    * @async
    * @param {Config} [config] - The configuration to use instead of the default.
@@ -339,25 +335,17 @@ class System {
    */
   async ping(config = null) {
     this._assertValidState();
-    const resolvedCampaignId = SdkUtils.resolveCampaignId(null, config, this._.config);
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
     try {
-      const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
       const user = await this._.usersCache.get(apiUrlRoot, apiKey, apiSecret);
-      const pgpPublicKey = user.pgp_public_key;
 
-      if (pgpPublicKey) {
-        const result = await CampaignApi.getCampaignInfo(apiUrlRoot, apiAccessToken, resolvedCampaignId);
-        if (result && result.campaign) {
-          return new SuccessResponse(true);
-        }
-
-        throw new XcooBeeError('Campaign not found.');
+      if (user) {
+        return new SuccessResponse(true);
       }
 
-      throw new XcooBeeError('PGP key not found.');
+      throw new XcooBeeError('User not found.');
     } catch (err) {
       throw new ErrorResponse(400, err);
     }
@@ -407,17 +395,13 @@ class System {
         payload,
         handler,
       };
-      try {
-        const encryptedPayload = await decryptWithEncryptedPrivateKey(
-          payload,
-          pgpSecret,
-          pgpPassword
-        );
+      const payloadJson = await decryptWithEncryptedPrivateKey(
+        payload,
+        pgpSecret,
+        pgpPassword
+      );
 
-        event.payload = JSON.parse(encryptedPayload);
-      } catch (e) {
-        // Do nothing, we will pass on the payload as it is.
-      }
+      event.payload = payloadJson;
 
       events.push(event);
     }

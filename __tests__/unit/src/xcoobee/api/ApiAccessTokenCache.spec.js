@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('jwt-decode');
 jest.mock('../../../../../src/xcoobee/api/TokenApi');
 
@@ -92,7 +90,7 @@ describe('ApiAccessTokenCache', () => {
         global.Date.now = dateNowStub; // 2019-01-01
 
         return ApiAccessTokenCacheInstance.get('apiUrlRoot', 'apiKey', 'apiSecret')
-          .then(token => expect(token).toBe('cachedAccessToken'));
+          .then((token) => expect(token).toBe('cachedAccessToken'));
       });
 
       it('should validate and return fresh token', () => {

@@ -59,12 +59,11 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
       // user.
       if (privateKey && passphrase) {
         events.data = await Promise.all(events.data.map(async (event) => {
-          const payloadJson = await decryptWithEncryptedPrivateKey(
+          const payload = await decryptWithEncryptedPrivateKey(
             event.payload,
             privateKey,
             passphrase
           );
-          const payload = JSON.parse(payloadJson);
           return {
             ...event,
             payload,

@@ -66,7 +66,6 @@
     }
   },
   "dependencies": {
-    "@afuggini/loadscript": "^0.1.5",
     "cross-fetch": "^2.2.2",
     "crypto-js": "^3.1.9-1",
     "form-data": "^2.3.2",
@@ -87,8 +86,8 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.13.0",
     "husky": "^4.2.5",
-    "jest": "^25.3.0",
-    "jest-config": "^25.3.0",
+    "jest": "^26.1.0",
+    "jest-config": "^26.1.0",
     "klaw-sync": "^6.0.0",
     "lint-staged": "^10.1.0",
     "micromatch": "^4.0.2",

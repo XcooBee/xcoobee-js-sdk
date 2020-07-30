@@ -11,19 +11,24 @@ const { fetchOpenpgp } = require('../lib/Openpgp');
  *   Needed to decrypt the private key.
  */
 const decryptWithEncryptedPrivateKey = async (cipherText, armoredPrivKey, passphrase) => {
-  const openpgp = await fetchOpenpgp();
-  const privKeyObj = (await openpgp.key.readArmored(armoredPrivKey)).keys[0];
-  if (passphrase) {
-    await privKeyObj.decrypt(passphrase);
+  try {
+    const openpgp = await fetchOpenpgp();
+    const privKeyObj = (await openpgp.key.readArmored(armoredPrivKey)).keys[0];
+    if (passphrase) {
+      await privKeyObj.decrypt(passphrase);
+    }
+
+    const options = {
+      message: await openpgp.message.readArmored(cipherText), // parse armored message
+      privateKeys: [privKeyObj], // for decryption
+    };
+
+    const plainText = await openpgp.decrypt(options);
+    return JSON.parse(plainText.data);
+  } catch (e) {
+    // payload can't be decrypted, return encrypted
+    return cipherText;
   }
-
-  const options = {
-    message: await openpgp.message.readArmored(cipherText), // parse armored message
-    privateKeys: [privKeyObj], // for decryption
-  };
-
-  const plainText = await openpgp.decrypt(options);
-  return plainText.data;
 };
 
 module.exports = {

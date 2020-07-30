@@ -528,13 +528,13 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
     .then(async (response) => {
       if (privateKey && passphrase) {
         return Promise.all(response.data_package.map(async (dataPackage) => {
-          const payloadJson = await decryptWithEncryptedPrivateKey(
+          const payload = await decryptWithEncryptedPrivateKey(
             dataPackage.data,
             privateKey,
             passphrase
           );
 
-          return { payload: JSON.parse(payloadJson) };
+          return { payload };
         }));
       }
 

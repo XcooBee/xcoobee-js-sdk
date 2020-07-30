@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');
@@ -24,7 +22,7 @@ describe('EventsApi', () => {
         },
       }));
 
-      EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue('{"decrypted": "test"}');
+      EncryptionUtils.decryptWithEncryptedPrivateKey.mockReturnValue({ decrypted: 'test' });
 
       return getEvents('apiUrlRoot', 'accessToken', 'userId', 'privateKey', 'passphrase')
         .then((res) => expect(res.data[0].payload.decrypted).toBe('test'));

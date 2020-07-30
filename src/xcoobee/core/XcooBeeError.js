@@ -11,7 +11,11 @@ class XcooBeeError extends Error {
   constructor(...args) {
     // See https://medium.com/@xjamundx/custom-javascript-errors-in-es6-aa891b173f87
     super(...args);
-    Error.captureStackTrace(this, XcooBeeError);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, XcooBeeError);
+    } else {
+      this.stack = (new Error(...args)).stack;
+    }
   }
 
 }

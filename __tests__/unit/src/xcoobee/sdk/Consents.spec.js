@@ -1,5 +1,3 @@
-const jest = require('jest');
-
 jest.mock('../../../../../src/xcoobee/api/CampaignApi');
 jest.mock('../../../../../src/xcoobee/api/ConsentsApi');
 jest.mock('../../../../../src/xcoobee/api/ConversationsApi');
@@ -247,7 +245,7 @@ describe('Consents', () => {
       return consents
         .registerConsents()
         .then(() => expect(false).toBeTruthy())
-        .catch(err => expect(err.message).toBe('At least one of arguments [filename, targets] must be provided'));
+        .catch((err) => expect(err.message).toBe('At least one of arguments [filename, targets] must be provided'));
     });
 
     it('should return response', () => {
