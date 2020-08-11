@@ -108,7 +108,36 @@ const triggerEvent = (apiUrlRoot, apiAccessToken, topic) => {
     });
 };
 
+/**
+ *
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {number[]} eventIds - Ids of events, that should be deleted.
+ *
+ * @returns {Promise<Object>} - The result.
+ * @property {Event} result - Deleted events data.
+ *
+ * @throws {XcooBeeError}
+ */
+const deleteEvents = (apiUrlRoot, apiAccessToken, eventIds) => {
+  const query = `
+    mutation deleteEvents($ids: [Int] ){
+      delete_events(event_ids: $ids){
+          event_id
+      }
+    }
+  `;
+  return ApiUtils.createClient(apiUrlRoot, apiAccessToken).request(query, {
+    ids: eventIds,
+  })
+    .then((response) => response.delete_events)
+    .catch((err) => {
+      throw ApiUtils.transformError(err);
+    });
+};
+
 module.exports = {
   getEvents,
   triggerEvent,
+  deleteEvents,
 };

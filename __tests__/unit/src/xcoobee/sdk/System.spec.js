@@ -142,6 +142,24 @@ describe('System', () => {
 
   });
 
+  describe('deleteEvents', () => {
+
+    it('should return response with deleted events', () => {
+      EventsApi.deleteEvents.mockReturnValue(Promise.resolve([{ event_id: 123 }]));
+
+      return system.deleteEvents([123])
+        .then((res) => {
+          expect(EventsApi.deleteEvents).toHaveBeenCalledWith('apiUrlRoot', 'apiAccessToken', [123]);
+
+          expect(res).toBeInstanceOf(SuccessResponse);
+          expect(res.code).toBe(200);
+          expect(res.result[0].event_id).toBe(123);
+          expect(res.hasNextPage()).toBeFalsy();
+        });
+    });
+
+  });
+
   describe('getEvents', () => {
 
     it('should return response with events', () => {

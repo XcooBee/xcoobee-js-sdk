@@ -2,7 +2,12 @@ jest.mock('graphql-request');
 
 const { GraphQLClient } = require('graphql-request');
 
-const { getCampaignInfo, getCampaigns, getCampaignIdByRef } = require('../../../../../src/xcoobee/api/CampaignApi');
+const {
+  getCampaignInfo,
+  getCampaigns,
+  getCampaignIdByRef,
+  validateCampaignExists,
+} = require('../../../../../src/xcoobee/api/CampaignApi');
 
 describe('CampaignApi', () => {
 
@@ -65,6 +70,27 @@ describe('CampaignApi', () => {
           expect(GraphQLClient.prototype.request).toHaveBeenCalledTimes(1);
           expect(GraphQLClient.prototype.request.mock.calls[0][1].campaignRef).toBe('campaignRef');
         });
+    });
+
+  });
+
+  describe('validateCampaignExists', () => {
+
+    it('should return true if campaign exists', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ campaign: 'campaignData' }));
+
+      return validateCampaignExists('apiUrlRoot', 'accessToken', 'campaignId')
+        .then((res) => {
+          expect(res).toBe(true);
+        });
+    });
+
+    it('should throw error if campaign doesn`t exist', () => {
+      GraphQLClient.prototype.request.mockReturnValue(Promise.resolve({ campaign: undefined }));
+
+      return validateCampaignExists('apiUrlRoot', 'accessToken', 'campaignId')
+        .then(() => expect(true).toBe(false))
+        .catch((err) => expect(err.message).toBe('Campaign not found'));
     });
 
   });

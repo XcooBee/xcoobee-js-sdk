@@ -1,4 +1,5 @@
 const ApiUtils = require('./ApiUtils');
+const XcooBeeError = require('../core/XcooBeeError');
 
 /**
  * Fetches the campaign information for the given campaign ID.
@@ -126,8 +127,32 @@ const getCampaignIdByRef = (apiUrlRoot, apiAccessToken, campaignRef) => {
     .catch(() => ''); // campaign not found
 };
 
+/**
+ * Fetches the campaign information for the given campaign ID.
+ *
+ * @async
+ * @param {string} apiUrlRoot - The root of the API URL.
+ * @param {ApiAccessToken} apiAccessToken - A valid API access token.
+ * @param {CampaignId} campaignId - The campaign ID.
+ *
+ * @returns {boolean} - true if campaign exists.
+ *
+ * @throws {XcooBeeError}
+ */
+const validateCampaignExists = (apiUrlRoot, apiAccessToken, campaignId) => {
+  return getCampaignInfo(apiUrlRoot, apiAccessToken, campaignId)
+    .then(({ campaign }) => {
+      if (!campaign) {
+        throw new XcooBeeError('Campaign not found');
+      }
+
+      return true;
+    });
+};
+
 module.exports = {
   getCampaignInfo,
   getCampaigns,
   getCampaignIdByRef,
+  validateCampaignExists,
 };
