@@ -188,6 +188,9 @@ class Consents {
   async getCampaignInfo(campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+
+    await CampaignApi.validateCampaignExists(resolvedCampaignId);
+
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
@@ -262,6 +265,9 @@ class Consents {
   async getCookieConsent(xcoobeeId, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+
+    await CampaignApi.validateCampaignExists(resolvedCampaignId);
+
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
@@ -386,6 +392,9 @@ class Consents {
   async requestConsent(xid, requestRef = null, campaignId = null, config = null) {
     this._assertValidState();
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+
+    await CampaignApi.validateCampaignExists(resolvedCampaignId);
+
     const apiCfg = SdkUtils.resolveApiCfg(config, this._.config);
     const { apiKey, apiSecret, apiUrlRoot } = apiCfg;
 
@@ -537,6 +546,9 @@ class Consents {
     }
 
     const resolvedCampaignId = SdkUtils.resolveCampaignId(campaignId, config, this._.config);
+
+    await CampaignApi.validateCampaignExists(resolvedCampaignId);
+
     const sdkCfg = SdkUtils.resolveSdkCfg(config, this._.config);
     const {
       apiKey,
@@ -625,7 +637,7 @@ class Consents {
 
     try {
       const apiAccessToken = await this._.apiAccessTokenCache.get(apiUrlRoot, apiKey, apiSecret);
-      const result = await CampaignApi.shareConsents(apiUrlRoot, apiAccessToken, campaignRef, campaignId, consentIds);
+      const result = await ConsentsApi.shareConsents(apiUrlRoot, apiAccessToken, campaignRef, campaignId, consentIds);
       const response = new SuccessResponse(result);
       return response;
     } catch (err) {

@@ -41,6 +41,7 @@
     - [triggerEvent](#triggereventtopic-config)
     - [handleEvents](#handleeventshandlers-events-payload-headers)
     - [getEvents](#geteventsconfig)
+    - [deleteEvents](#deleteeventseventids-config)
 - [Consent Administration API](#consent-administration-api)
     - [getCampaignInfo](#getcampaigninfocampaignid-config)
     - [listCampaigns](#listcampaignsconfig)
@@ -638,6 +639,23 @@ standard response object
 - status 200 if success:
   - result will contain events with payload
     The SDK will decrypt this for you if it has access to PGP keys otherwise you have to decrypt this object
+- status 400 if error
+
+
+## deleteEvents(eventIds[, config])
+Deletes events by provided IDs
+
+options:
+```
+eventIds => IDs of events, that should be deleted
+config    => optional: the config object
+```
+
+### response
+
+standard response object
+- status 200 if success:
+    - result will contain deleted events
 - status 400 if error
 
 # Consent Administration API
