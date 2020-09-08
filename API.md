@@ -18,6 +18,7 @@
         - [ConsentRenewed](#consentrenewed)
         - [UserDataRequest](#userdatarequest)
         - [UserMessage](#usermessage)
+        - [ConsentFormOpen](#consentformopen)
     - [Data Events](#data-events)
         - [DataApproved](#dataapproved)
         - [DataDeclined](#datadeclined)
@@ -27,6 +28,7 @@
         - [DataRenewed](#datarenewed)
         - [UserDataRequest](#userdatarequest-1)
         - [UserMessage](#usermessage-1)
+        - [ConsentFormOpen](#consentformopen-1)
     - [Breach Events](#breach-events)
         - [BreachPresented](#breachpresented)
         - [BreachBeeUsed](#breachbeeused)
@@ -224,11 +226,13 @@ It contains:
 - data types
 - consent type
 - expiration date
+- tracking reference
 
 ### ConsentDeclined
 Fires when a consent request is declined. You should remove user data and sent a XcooBee confirmation via [`confirmDataDelete()`](#confirmdatadeleteconsentid-config).
 The data submitted contains:
 - consent reference
+- tracking reference
 
 ### ConsentChanged
 Fires when consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via [`confirmConsentChange()`](#confirmconsentchangeconsentid-config).
@@ -278,6 +282,12 @@ It contains:
 - xcoobeeId
 - message
 
+### ConsentFormOpen
+Fires when user is opening consent form with tracking reference.
+It contains:
+- campaign reference
+- tracking reference
+
 ## Data Events
 
 Events submitted by XooBee to your system.
@@ -289,11 +299,13 @@ It contains:
 - data types with data
 - consent types
 - expiration
+- tracking reference
 
 ### DataDeclined
 Fires when user declined to provide data and consent. You should remove user data and sent XcooBee confirmation via [`confirmDataDelete()`](#confirmdatadeleteconsentid-config).
 It contains:
 - consent reference
+- tracking reference
 
 ### DataChanged
 Fires when data or consent is changed. A standard consent object is returned. You should confirm update and send XcooBee confirmation via [`confirmConsentChange()`](#confirmconsentchangeconsentid-config).
@@ -346,6 +358,12 @@ It contains:
 - consent reference
 - xcoobeeId
 - message
+
+### ConsentFormOpen
+Fires when user is opening consent form with tracking reference.
+It contains:
+- campaign reference
+- tracking reference
 
 ## Breach Events
 
