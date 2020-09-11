@@ -1,4 +1,4 @@
-const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
+const { decryptWithEncryptedPrivateKey, initializeOpenpgp } = require('../core/EncryptionUtils');
 const ApiUtils = require('./ApiUtils');
 
 /**
@@ -58,6 +58,8 @@ const getEvents = (apiUrlRoot, apiAccessToken, userCursor, privateKey, passphras
       // If a private key and its passphrase are supplied, then decrypt payload for SDK
       // user.
       if (privateKey && passphrase) {
+        await initializeOpenpgp();
+
         events.data = await Promise.all(events.data.map(async (event) => {
           const payload = await decryptWithEncryptedPrivateKey(
             event.payload,

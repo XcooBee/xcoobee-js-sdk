@@ -31,6 +31,15 @@ const decryptWithEncryptedPrivateKey = async (cipherText, armoredPrivKey, passph
   }
 };
 
+/**
+ * Initializes openpgp lib.
+ * Needed to avoid multiple workers load on multiple events decryption
+ *
+ * @returns {Promise}
+ */
+const initializeOpenpgp = () => fetchOpenpgp();
+
 module.exports = {
   decryptWithEncryptedPrivateKey,
+  initializeOpenpgp,
 };

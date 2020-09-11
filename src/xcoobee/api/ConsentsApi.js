@@ -3,7 +3,7 @@ const ApiUtils = require('./ApiUtils');
 const ConsentDataTypes = require('./ConsentDataTypes');
 const ConsentStatuses = require('./ConsentStatuses');
 const ConsentTypes = require('./ConsentTypes');
-const { decryptWithEncryptedPrivateKey } = require('../core/EncryptionUtils');
+const { decryptWithEncryptedPrivateKey, initializeOpenpgp } = require('../core/EncryptionUtils');
 
 /**
  * Allows a company to confirm consent data modification.
@@ -527,6 +527,8 @@ const getDataPackage = (apiUrlRoot, apiAccessToken, consentId, privateKey, passp
   })
     .then(async (response) => {
       if (privateKey && passphrase) {
+        await initializeOpenpgp();
+
         return Promise.all(response.data_package.map(async (dataPackage) => {
           const payload = await decryptWithEncryptedPrivateKey(
             dataPackage.data,
