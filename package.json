@@ -93,7 +93,7 @@
     "micromatch": "^4.0.2",
     "regenerator-runtime": "^0.13.2",
     "webpack": "^4.44.1",
-    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-bundle-analyzer": "^4.4.0",
     "webpack-cli": "^3.1.0"
   },
   "files": [
