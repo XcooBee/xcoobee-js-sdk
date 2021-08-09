@@ -89,7 +89,7 @@
     "jest": "^26.1.0",
     "jest-config": "^26.1.0",
     "klaw-sync": "^6.0.0",
-    "lint-staged": "^10.1.0",
+    "lint-staged": "^11.1.2",
     "micromatch": "^4.0.2",
     "regenerator-runtime": "^0.13.2",
     "webpack": "^4.44.1",
