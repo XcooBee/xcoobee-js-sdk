@@ -92,7 +92,7 @@
     "lint-staged": "^12.1.5",
     "micromatch": "^4.0.2",
     "regenerator-runtime": "^0.13.2",
-    "webpack": "^4.44.1",
+    "webpack": "^5.72.1",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^4.9.1"
   },
