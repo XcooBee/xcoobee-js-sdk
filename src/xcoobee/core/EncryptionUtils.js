@@ -13,14 +13,17 @@ const { fetchOpenpgp } = require('../lib/Openpgp');
 const decryptWithEncryptedPrivateKey = async (cipherText, armoredPrivKey, passphrase) => {
   try {
     const openpgp = await fetchOpenpgp();
-    const privKeyObj = (await openpgp.key.readArmored(armoredPrivKey)).keys[0];
+    let privKeyObj = (await openpgp.readKey({ armoredKey: armoredPrivKey }));
     if (passphrase) {
-      await privKeyObj.decrypt(passphrase);
+      privKeyObj = await openpgp.decryptKey({
+        privateKey: privKeyObj,
+        passphrase,
+      });
     }
 
     const options = {
-      message: await openpgp.message.readArmored(cipherText), // parse armored message
-      privateKeys: [privKeyObj], // for decryption
+      message: await openpgp.readMessage({ armoredMessage: cipherText }), // parse armored message
+      decryptionKeys: [privKeyObj], // for decryption
     };
 
     const plainText = await openpgp.decrypt(options);

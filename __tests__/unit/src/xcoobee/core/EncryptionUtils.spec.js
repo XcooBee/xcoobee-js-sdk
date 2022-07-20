@@ -9,12 +9,11 @@ describe('EncryptionUtils', () => {
   describe('decryptWithEncryptedPrivateKey', () => {
 
     it('should read passphrase and decrypt message', () => {
-      openpgp.key.readArmored
-        .mockReturnValue(Promise.resolve({
-          keys: [{ decrypt: (passphrase) => expect(passphrase).toBe(12345) }],
-        }));
+      openpgp.readKey.mockReturnValue(Promise.resolve({
+        keys: [{ decrypt: (passphrase) => expect(passphrase).toBe(12345) }],
+      }));
 
-      openpgp.message.readArmored.mockReturnValue(Promise.resolve('message'));
+      openpgp.readMessage.mockReturnValue(Promise.resolve('message'));
 
       openpgp.decrypt.mockReturnValue(Promise.resolve({ data: '["decryptedData"]' }));
 
@@ -23,11 +22,11 @@ describe('EncryptionUtils', () => {
     });
 
     it('should only decrypt message', () => {
-      openpgp.key.readArmored.mockReturnValue(Promise.resolve({
+      openpgp.readKey.mockReturnValue(Promise.resolve({
         keys: [{ decrypt: () => expect(false).toBe(true) }], // this will never happen
       }));
 
-      openpgp.message.readArmored.mockReturnValue(Promise.resolve('message'));
+      openpgp.readMessage.mockReturnValue(Promise.resolve('message'));
 
       openpgp.decrypt.mockReturnValue(Promise.resolve({ data: '["decryptedData"]' }));
 

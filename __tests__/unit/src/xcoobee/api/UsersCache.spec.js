@@ -64,7 +64,7 @@ describe('UsersCache', () => {
           expect(res.xcoobee_id).toBe('~user');
 
           expect(UsersApi.getUser).toHaveBeenCalledTimes(2);
-          expect(UsersApi.getUser).toHaveNthReturnedWith(1, Promise.reject({ code: 403 }));
+          expect(UsersApi.getUser).toHaveNthReturnedWith(1, Promise.resolve({ code: 403 }));
           expect(UsersApi.getUser).toHaveNthReturnedWith(2, Promise.resolve({ xcoobee_id: '~user' }));
 
           expect(usersCacheInstance._.internalCache['apiKey:apiSecret'].xcoobee_id).toBe('~user');
