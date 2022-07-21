@@ -1,6 +1,6 @@
 {
   "name": "xcoobee-sdk",
-  "version": "1.4.5",
+  "version": "1.5.0",
   "description": "",
   "keywords": [
     "javascript",
@@ -70,7 +70,7 @@
     "cross-fetch": "^3.0.5",
     "crypto-js": "^4.1.1",
     "form-data": "^3.0.0",
-    "graphql-request": "^3.7.0",
+    "graphql-request": "^4.3.0",
     "jwt-decode": "^2.2.0",
     "openpgp": "^5.3.0",
     "qc-to_bool": "^1.1.2"
@@ -81,9 +81,9 @@
     "babel-jest": "^28.1.1",
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "documentation": "^13.0.2",
+    "documentation": "^13.2.5",
     "dotenv": "^10.0.0",
-    "eslint": "^7.8.1",
+    "eslint": "^8.20.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.13.0",
     "husky": "^7.0.4",
@@ -94,7 +94,7 @@
     "micromatch": "^4.0.2",
     "regenerator-runtime": "^0.13.2",
     "webpack": "^4.44.1",
-    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1"
   },
   "files": [
