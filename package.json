@@ -78,7 +78,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "babel-jest": "^28.1.1",
+    "babel-jest": "^29.5.0",
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "documentation": "^13.2.5",
